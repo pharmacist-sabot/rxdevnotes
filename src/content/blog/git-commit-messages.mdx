@@ -1,0 +1,238 @@
+---
+title: คู่มือการเขียน Git Commit Message อย่างมืออาชีพ
+description: เรียนรู้วิธีการเขียนข้อความ Commit ที่ดีตั้งแต่พื้นฐานจนถึงระดับมืออาชีพ เพื่อการสื่อสารที่มีประสิทธิภาพในทีมพัฒนา
+pubDate: 2025-09-16
+heroImage: '/blog-placeholder-4.png'
+---
+
+import BlogPostCard from "../../components/BlogPostCard.astro";
+import CodeExplainer from "../../components/CodeExplainer.astro";
+import FeatureCard from "../../components/FeatureCard.astro";
+import FeatureGrid from "../../components/FeatureGrid.astro";
+import InfoBox from "../../components/InfoBox.astro";
+import ProsCons from "../../components/ProsCons.astro";
+
+# คู่มือการเขียน Git Commit Message อย่างมืออาชีพ
+
+การเขียน Git Commit Message ที่ดีเป็นทักษะที่สำคัญมากๆ สำหรับนักพัฒนาทุกคน ไม่ใช่แค่การบันทึกการเปลี่ยนแปลง แต่เป็นการสื่อสารกับเพื่อนร่วมทีมและกับตัวเราเองในอนาคตด้วย
+
+## ทำไมการเขียน Commit Message ที่ดีถึงสำคัญ?
+
+ก่อนจะไปดูว่า "เขียนอย่างไร" เรามาเข้าใจ "ทำไม" กันก่อนครับ
+
+<FeatureGrid>
+  <FeatureCard title="เข้าใจประวัติโปรเจกต์" icon="book-open">
+    เมื่อย้อนกลับมาดู เราจะรู้ได้ทันทีว่าแต่ละ commit ทำอะไรไปบ้างโดยไม่ต้องไปไล่อ่านโค้ดทั้งหมด ซึ่งช่วยประหยัดเวลาในการทำความเข้าใจโค้ดเก่าอย่างมหาศาล
+  </FeatureCard>
+  <FeatureCard title="ช่วยในการรีวิวโค้ด" icon="magnifying-glass-circle">
+    เพื่อนร่วมทีมจะเข้าใจบริบทของการเปลี่ยนแปลงได้ง่ายขึ้น ทำให้รีวิวโค้ดได้เร็วและมีประสิทธิภาพ เพราะสามารถโฟกัสที่ตรรกะของโค้ดแทนที่จะต้องเดาเจตนาของผู้เขียน
+  </FeatureCard>
+  <FeatureCard title="ช่วยในการหาบั๊ก" icon="bug-ant">
+    เมื่อเกิดปัญหา เราสามารถใช้ `git blame` หรือ `git bisect` เพื่อย้อนรอยหา commit ที่เป็นต้นเหตุของบั๊กได้ง่ายขึ้นมาก ทำให้การ Debug เป็นระบบและรวดเร็ว
+  </FeatureCard>
+  <FeatureCard title="สร้างเอกสารอัตโนมัติ" icon="document-duplicate">
+    สามารถใช้เครื่องมือดึงข้อมูลจาก commit message เพื่อสร้าง Changelog (รายการการเปลี่ยนแปลง) ของเวอร์ชันใหม่ได้โดยอัตโนมัติ ช่วยลดภาระงานเอกสารและลดความผิดพลาด
+  </FeatureCard>
+</FeatureGrid>
+
+## โครงสร้างของ Commit Message ที่ดี (มาตรฐานสากล)
+
+โครงสร้างที่นิยมใช้กันมากที่สุดเรียกว่า **Conventional Commits** ซึ่งมีรูปแบบดังนี้:
+
+```plaintext
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+เรามาเจาะลึกแต่ละส่วนกันครับ
+
+### ส่วนที่ 1: Header (บรรทัดแรก)
+
+นี่คือส่วนที่สำคัญที่สุด ประกอบด้วย `type`, `scope` (ไม่บังคับ), และ `subject`
+
+#### `<type>`: ประเภทของการเปลี่ยนแปลง
+
+บอกว่า commit นี้เป็นการเปลี่ยนแปลงประเภทไหน ประเภทที่ใช้บ่อยๆ ได้แก่:
+
+<CodeExplainer title="ประเภท Commit ที่พบบ่อย">
+<details>
+  <summary><code>feat</code>: (Feature)</summary>
+  <p>ใช้สำหรับการเพิ่มฟีเจอร์ใหม่เข้ามาในระบบ เช่น <code>feat(auth): Add Google OAuth login</code></p>
+</details>
+<details>
+  <summary><code>fix</code>: (Bug Fix)</summary>
+  <p>ใช้สำหรับการแก้ไขบั๊กที่เกิดขึ้น เช่น <code>fix(api): Correct user data caching issue</code></p>
+</details>
+<details>
+  <summary><code>docs</code>: (Documentation)</summary>
+  <p>ใช้สำหรับการแก้ไขหรือเพิ่มเติมเอกสารต่างๆ เช่น <code>docs: Update installation guide</code></p>
+</details>
+<details>
+  <summary><code>style</code>: (Styling)</summary>
+  <p>ใช้สำหรับการแก้ไขการจัดรูปแบบโค้ด (เช่น เว้นวรรค, semicolon) โดยไม่กระทบการทำงานของโปรแกรม เช่น <code>style: Format code with Prettier</code></p>
+</details>
+<details>
+  <summary><code>refactor</code>: (Refactoring)</summary>
+  <p>ใช้สำหรับการปรับปรุงโครงสร้างโค้ดภายใน แต่ไม่ได้เพิ่มฟีเจอร์หรือแก้บั๊ก เช่น <code>refactor: Simplify user authentication logic</code></p>
+</details>
+<details>
+  <summary><code>test</code>: (Testing)</summary>
+  <p>ใช้สำหรับการเพิ่มหรือแก้ไขเทสต่างๆ เช่น <code>test: Add unit tests for login service</code></p>
+</details>
+<details>
+  <summary><code>chore</code>: (Chore)</summary>
+  <p>ใช้สำหรับการเปลี่ยนแปลงอื่นๆ ที่ไม่เกี่ยวกับโค้ดหลัก เช่น แก้ไขไฟล์คอนฟิก, อัปเดต build script เช่น <code>chore: Update dependencies</code></p>
+</details>
+</CodeExplainer>
+
+#### `<scope>`: ขอบเขตของการเปลี่ยนแปลง (ไม่บังคับ)
+
+ระบุว่าการเปลี่ยนแปลงนี้กระทบส่วนไหนของโปรเจกต์ เช่น `(api)`, `(auth)`, `(ui)`, `(payment)` ช่วยให้เห็นภาพรวมได้เร็วขึ้น
+
+#### `<subject>`: สรุปการเปลี่ยนแปลงสั้นๆ
+
+นี่คือกฎเหล็กของการเขียน subject:
+
+<InfoBox title="กฎทองของการเขียน Subject">
+- **ขึ้นต้นด้วยคำกริยาเชิงคำสั่ง (Imperative Mood)**: ให้เขียนเหมือนเรากำลัง "สั่ง" ให้ Git ทำอะไร เช่น <br/>
+  ✅ ดี: <code>Add user login page</code> (เพิ่มหน้าล็อกอิน) <br/>
+  ❌ ไม่ดี: <code>Added user login page</code> หรือ <code>Adds user login page</code>
+
+- **ความยาวไม่เกิน 50 ตัวอักษร**: เพื่อให้อ่านง่ายใน `git log`
+
+- **ขึ้นต้นด้วยตัวพิมพ์ใหญ่ (Capitalize)**: <code>Add</code> ไม่ใช่ <code>add</code>
+
+- **ไม่ต้องลงท้ายด้วยจุด (.)**
+</InfoBox>
+
+<ProsCons>
+  <div slot="pros">
+    <ul>
+      <li>ทำให้ประวัติการ commit อ่านง่ายและเป็นระเบียบ</li>
+      <li>ช่วยให้เครื่องมืออัตโนมัติสามารถวิเคราะห์และจัดการเวอร์ชันได้</li>
+      <li>สร้างมาตรฐานที่ทีมสามารถยึดถือร่วมกันได้</li>
+    </ul>
+  </div>
+  <div slot="cons">
+    <ul>
+      <li>ในช่วงแรกอาจรู้สึกว่ามีกฎเยอะและยุ่งยาก</li>
+      <li>ต้องใช้เวลาในการเรียนรู้และปรับตัว</li>
+      <li>บางครั้ง scope อาจไม่ชัดเจนสำหรับโปรเจกต์เล็กๆ</li>
+    </ul>
+  </div>
+</ProsCons>
+
+### ส่วนที่ 2: Body (ส่วนเนื้อหา - ไม่บังคับ)
+
+ถ้าการเปลี่ยนแปลงซับซ้อนและ subject ไม่สามารถอธิบายได้หมด ให้เว้น 1 บรรทัดแล้วเขียนเนื้อหาอธิบายเพิ่มเติมในส่วน Body
+
+<CodeExplainer title="ตัวอย่างการเขียน Body">
+feat(api): Implement password reset functionality via email
+
+The previous system required administrators to manually reset passwords,
+which was inefficient and not scalable.
+
+This commit introduces a new endpoint `/api/auth/request-reset` that
+generates a secure, single-use token and sends it to the user's
+registered email address. A corresponding endpoint `/api/auth/reset-password`
+validates the token and updates the user's password.
+</CodeExplainer>
+
+- **อธิบาย "ทำไม" ถึงเปลี่ยน**: ปัญหาเดิมคืออะไร? ทำไมถึงต้องแก้ไขด้วยวิธีนี้?
+- **อธิบาย "อย่างไร" (ถ้าจำเป็น)**: วิธีการแก้ปัญหานี้ส่งผลกระทบต่อส่วนอื่นอย่างไรบ้าง
+- **ควรตัดประโยคให้ความยาวไม่เกิน 72 ตัวอักษรต่อบรรทัด**: เพื่อให้อ่านง่ายใน Terminal
+
+### ส่วนที่ 3: Footer (ส่วนท้าย - ไม่บังคับ)
+
+ใช้สำหรับใส่ข้อมูลอ้างอิงต่างๆ โดยเฉพาะการลิงก์ไปยัง Issue Tracker (เช่น Jira, GitHub Issues)
+
+<InfoBox title="การใช้งาน Footer อย่างมีประสิทธิภาพ">
+- **ปิด Issue**: ใช้ Keyword เช่น <code>Closes #123</code>, <code>Fixes #456</code> เพื่อให้ GitHub หรือ GitLab ปิด Issue นั้นๆ อัตโนมัติเมื่อ commit นี้ถูก merge เข้า branch หลัก
+- **ระบุ Breaking Change**: หากการเปลี่ยนแปลงนี้ทำให้โค้ดเก่าไม่สามารถทำงานร่วมกันได้ (Backward Incompatible) ให้ระบุไว้ตรงนี้ โดยขึ้นต้นว่า <code>BREAKING CHANGE:</code> แล้วตามด้วยคำอธิบาย
+</InfoBox>
+
+## ตัวอย่างเปรียบเทียบ
+
+### ❌ ตัวอย่างที่ไม่ดี
+
+```bash
+git commit -m "update"
+```
+**ปัญหา**: ไม่รู้ว่าอัปเดตอะไร ที่ไหน อย่างไร
+
+```bash
+git commit -m "fixed bugs in user page"
+```
+**ปัญหา**: ดีขึ้นมาหน่อย แต่ยังไม่เฉพาะเจาะจงว่าบั๊กอะไร
+
+### ✅ ตัวอย่างที่ดี
+
+#### ตัวอย่าง 1: แก้บั๊กง่ายๆ
+
+```bash
+git commit -m "fix(profile): Prevent crash when user avatar is missing"
+```
+
+#### ตัวอย่าง 2: เพิ่มฟีเจอร์ที่ซับซ้อน
+
+```bash
+# ใช้ git commit (โดยไม่ใส่ -m) เพื่อเปิด Text Editor สำหรับเขียนข้อความยาวๆ
+git commit
+```
+
+แล้วพิมพ์ข้อความใน Editor:
+
+```plaintext
+feat(api): Implement password reset functionality via email
+
+The previous system required administrators to manually reset passwords,
+which was inefficient and not scalable.
+
+This commit introduces a new endpoint `/api/auth/request-reset` that
+generates a secure, single-use token and sends it to the user's
+registered email address. A corresponding endpoint `/api/auth/reset-password`
+validates the token and updates the user's password.
+
+Closes: #88
+```
+
+## วิธีการเขียน Commit Message
+
+### แบบสั้น (สำหรับ commit ง่ายๆ):
+
+```bash
+git commit -m "feat(lang): Add Thai language support"
+```
+
+### แบบยาว (แนะนำสำหรับ commit ส่วนใหญ่):
+
+1. รันคำสั่ง `git commit` (ไม่ต้องมี `-m`)
+2. ระบบจะเปิดโปรแกรม Text Editor ขึ้นมา (เช่น Vim, Nano)
+3. พิมพ์ Header ในบรรทัดแรก
+4. เว้น 1 บรรทัด
+5. พิมพ์ Body และ Footer (ถ้ามี)
+6. Save และปิด Editor, commit ก็จะถูกสร้างขึ้น
+
+## สรุปเคล็ดลับ
+
+<FeatureGrid>
+  <FeatureCard title="One Change Per Commit" icon="clipboard-document-list">
+    หนึ่ง Commit ต่อหนึ่งการเปลี่ยนแปลง (One Logical Change per Commit): อย่าจับฉ่าย รวมทุกอย่างไว้ใน commit เดียว จะทำให้ย้อนรอยยากและรีวิวโค้ดลำบาก
+  </FeatureCard>
+  <FeatureCard title="ใช้ภาษาอังกฤษ" icon="language">
+    เขียนเป็นภาษาอังกฤษ: เป็นมาตรฐานสากลที่คนในวงการซอฟต์แวร์เข้าใจตรงกัน (ยกเว้นทีมตกลงกันว่าจะใช้ภาษาอื่น)
+  </FeatureCard>
+  <FeatureCard title="อธิบาย 'ทำไม'" icon="question-mark-circle">
+    เขียนเพื่ออธิบาย "ทำไม" ไม่ใช่ "อะไร": โค้ดบอกอยู่แล้วว่าคุณทำ "อะไร" แต่ commit message ควรอธิบาย "ทำไม" คุณถึงทำแบบนั้น
+  </FeatureCard>
+  <FeatureCard title="Conventional Commits" icon="check-badge">
+    ใช้โครงสร้าง Conventional Commits: <code>type(scope): subject</code> จะทำให้ชีวิตคุณและทีมดีขึ้นมากในระยะยาว
+  </FeatureCard>
+</FeatureGrid>
+
+ลองนำหลักการเหล่านี้ไปปรับใช้ดูนะครับ ช่วงแรกอาจจะรู้สึกว่ายุ่งยาก แต่เมื่อทำจนเป็นนิสัยแล้ว จะเห็นประโยชน์ของมันอย่างมหาศาลครับ
+
+
