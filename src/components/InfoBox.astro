@@ -1,0 +1,41 @@
+---
+// src/components/InfoBox.astro
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<div class="info-box">
+  <div class="title-bar">💡 {title}</div>
+  <div class="content">
+    <slot /> 
+  </div>
+</div>
+
+<style>
+  .info-box {
+    border: 1px solid #3b82f6; 
+    border-radius: 8px;
+    margin: 2rem 0;
+    background-color: rgba(59, 130, 246, 0.1);
+    overflow: hidden;
+  }
+  .title-bar {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+  }
+  .content {
+    padding: 1rem;
+  }
+
+  html.dark .info-box {
+    border-color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.1);
+  }
+  html.dark .title-bar {
+    background-color: #60a5fa;
+    color: var(--bg-color);
+  }
+</style>

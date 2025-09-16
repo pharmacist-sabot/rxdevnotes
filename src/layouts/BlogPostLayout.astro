@@ -1,0 +1,78 @@
+---
+// src/layouts/BlogPostLayout.astro
+import BaseLayout from './BaseLayout.astro';
+const { frontmatter } = Astro.props;
+const { title, description, pubDate, heroImage } = frontmatter;
+const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+<BaseLayout title={title}>
+  <article>
+    <div class="prose">
+      <div class="title">
+        {heroImage && <img width={720} height={360} src={heroImage} alt="" class="hero-image"/>}
+        <h1>{title}</h1>
+        <p>{description}</p>
+        <time>{formattedDate}</time>
+      </div>
+      <hr/>
+      <slot /> 
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .hero-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  .title {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .title h1 {
+    font-size: 2rem;
+  }
+  .title p {
+    font-size: 1.25rem;
+    color: #555;
+  }
+  time {
+    color: #666;
+  }
+
+  .prose {
+  }
+  .prose :global(h2) {
+    font-size: 2rem;
+    margin-top: 2.5rem;
+  }
+  .prose :global(p) {
+    line-height: 1.6;
+  }
+  .prose :global(pre) {
+    background-color: #282c34; 
+    color: #abb2bf; 
+    padding: 1em;
+    border-radius: 8px;
+    overflow-x: auto;
+  }
+  .prose :global(code) {
+    font-family: 'Fira Code', 'Courier New', monospace;
+  }
+
+  @media (max-width: 700px) {
+    .title h1 {
+      font-size: 2.25rem; 
+    }
+
+    .title p {
+      font-size: 1.1rem;
+    }
+  }
+</style>

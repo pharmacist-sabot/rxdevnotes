@@ -1,0 +1,48 @@
+---
+// src/components/BlogPostCard.astro
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate } = post.data;
+const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+<article class="card">
+  <a href={`/blog/${post.slug}`}>
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+  </a>
+</article>
+
+<style>
+   .card {
+    border: 1px solid var(--card-border-color); 
+    border-radius: 8px;
+    padding: 1.5rem;
+    background-color: var(--card-bg-color); 
+    transition: box-shadow 0.2s ease-in-out;
+  }
+  .card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .card a {
+    text-decoration: none;
+    color: inherit;
+  }
+  h3 {
+    margin-top: 0;
+    color: var(--font-color); 
+  }
+  time {
+    font-size: 0.875rem;
+    color: #666;
+  }
+</style>

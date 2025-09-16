@@ -1,0 +1,55 @@
+---
+// src/pages/index.astro 
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogPostCard from '../components/BlogPostCard.astro'; 
+
+// Get all blog posts
+const allPosts = await getCollection('blog');
+
+// Sort posts by date, newest first
+const sortedPosts = allPosts.sort(
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Get the 5 most recent posts
+const latestPosts = sortedPosts.slice(0, 5);
+---
+<BaseLayout title="My Awesome Blog - Home">
+  <div class="hero">
+    <h1>👋 Welcome to my Blog!</h1>
+    <p>
+      This is where I share my programming journey, tips, and tutorials.
+    </p>
+  </div>
+
+  <h2>Latest Articles</h2>
+  <div class="post-list">
+    {latestPosts.map((post: CollectionEntry<'blog'>) => (
+      <BlogPostCard post={post} />
+    ))}
+  </div>
+  
+  <div class="all-posts-link">
+     <a href="/blog">View all articles &rarr;</a>
+  </div>
+
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 2rem 0;
+    margin-bottom: 1rem;
+  }
+
+  .post-list {
+    display: grid;
+    gap: 1rem;
+  }
+  .all-posts-link {
+    text-align: right;
+    margin-top: 2rem;
+  }
+</style>

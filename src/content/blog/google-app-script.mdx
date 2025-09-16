@@ -1,0 +1,431 @@
+---
+title: 'สร้างเว็บแอปกรอกข้อมูลด้วย Google Sheets + Apps Script (ฉบับมือใหม่)'
+description: 'เรียนรู้วิธีสร้างเว็บฟอร์มสำหรับกรอกข้อมูลที่บันทึกลง Google Sheets แบบเรียลไทม์ โดยใช้ Google Apps Script เหมาะสำหรับผู้เริ่มต้นที่ไม่มีพื้นฐานโปรแกรมมิ่ง'
+pubDate: '2025-08-27'
+heroImage: '/blog-placeholder-3.png'
+---
+
+import InfoBox from '../../components/InfoBox.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import CodeExplainer from '../../components/CodeExplainer.astro';
+import ProsCons from '../../components/ProsCons.astro';
+
+เคยไหมที่อยากทำเว็บฟอร์มง่ายๆ สำหรับกรอกข้อมูล เช่น ฟอร์มลงทะเบียน, ฟอร์มบันทึกข้อมูลลูกค้า หรือฟอร์มสำรวจเล็กๆ แต่ไม่อยากไปยุ่งกับเรื่องเซิร์ฟเวอร์, ฐานข้อมูล หรือการเขียนโค้ดที่ซับซ้อน?
+
+บทความนี้จะเปลี่ยน Google Sheets ที่คุณคุ้นเคยให้กลายเป็น **ฐานข้อมูล** และใช้ **Google Apps Script** (เครื่องมือเขียนโค้ดฟรีที่ติดมากับ Google) เพื่อสร้างหน้าเว็บสำหรับกรอกข้อมูล โดยข้อมูลทั้งหมดจะถูกบันทึกลงใน **Google Sheets** ของคุณแบบเรียลไทม์
+
+---
+<FeatureGrid>
+  <FeatureCard title="Google Sheets คือฐานข้อมูล" icon="circle-stack">
+    เราจะใช้ Google Sheets ที่คุ้นเคยเป็นที่เก็บข้อมูลทั้งหมด ไม่ต้องตั้งค่าฐานข้อมูลให้วุ่นวาย จัดการและดูข้อมูลง่ายเหมือนใช้สเปรดชีตทั่วไป
+  </FeatureCard>
+  <FeatureCard title="Apps Script คือสมองกล" icon="cpu-chip">
+    Google Apps Script จะทำหน้าที่เป็นโค้ดฝั่ง "หลังบ้าน" (Backend) คอยรับข้อมูลจากหน้าเว็บฟอร์มแล้วนำไปบันทึกลงในชีตที่เรากำหนด
+  </FeatureCard>
+  <FeatureCard title="HTML คือหน้าตาเว็บ" icon="code-bracket">
+    เราจะใช้โค้ด HTML พื้นฐานในการสร้างหน้าเว็บฟอร์ม (Frontend) ที่ให้ผู้ใช้กรอกข้อมูล ซึ่งเป็นมาตรฐานการสร้างเว็บที่เรียนรู้ง่าย
+  </FeatureCard>
+  <FeatureCard title="ฟรีและพร้อมใช้งาน" icon="gift">
+    เครื่องมือทุกอย่างที่เราใช้ในบทความนี้มีให้ใช้ฟรี แค่มีบัญชี **Google (Gmail)** ก็สามารถเริ่มต้นสร้างเว็บแอปของตัวเองได้ทันที
+  </FeatureCard>
+</FeatureGrid>
+---
+
+## ขั้นตอนที่ 1: เตรียม Google Sheet ของเรา
+
+ก่อนอื่น เราต้องสร้าง "บ้าน" ให้ข้อมูลของเราก่อน ซึ่งก็คือ Google Sheet นั่นเอง
+
+1.  ไปที่ [sheets.google.com](https://sheets.google.com) แล้วสร้างสเปรดชีตใหม่
+2.  ตั้งชื่อไฟล์ตามใจชอบ เช่น "WebApp Data"
+3.  ที่ชีทแรก (Sheet1) ให้เปลี่ยนชื่อเป็น **`Data`** (สำคัญมาก เพราะเราจะอ้างอิงชื่อนี้ในโค้ด)
+4.  ในแถวแรกของชีท `Data` ให้สร้างหัวข้อคอลัมน์ที่เราต้องการเก็บข้อมูล:
+    *   **column A1:** `Timestamp` (สำหรับเก็บเวลาที่ข้อมูลถูกส่งมา)
+    *   **column B1:** `name`
+    *   **column C1:** `phone`
+    *   **column D1:** `email`
+    
+*column อื่นๆ ตามที่เราต้องการให้ข้อมูลถูกบันทึกที่ google sheet*
+
+<InfoBox title="ข้อควรรู้: ชื่อชีทต้องตรงกัน">
+  1. โค้ด Apps Script ของเราถูกเขียนให้มองหาชีทที่มีชื่อเฉพาะเจาะจง หากชื่อชีทในไฟล์ Google Sheets ของคุณไม่ตรงกับชื่อที่ระบุในโค้ด โปรแกรมจะทำงานผิดพลาดทันที
+  2. บรรทัดที่สำคัญคือ: 
+  <code>const sheet = ss.getSheetByName('Data');</code>
+  3. ดังนั้น คุณต้องมั่นใจว่าชีทที่จะใช้เก็บข้อมูลใน Google Sheets ของคุณนั้น **ตั้งชื่อว่า `Data` เป๊ะๆ** (ตัวพิมพ์เล็ก-ใหญ่มีความสำคัญ) หากต้องการเปลี่ยนชื่อ ก็ต้องแก้ทั้งในชีทและในโค้ดให้ตรงกันครับ
+</InfoBox>
+
+# ตอนนี้ Google Sheet ของเราพร้อมรับข้อมูลแล้ว ✅
+---
+
+## ขั้นตอนที่ 2: เปิดโปรแกรมเขียนโค้ด (Apps Script)
+
+เครื่องมือนี้ซ่อนอยู่ใน Google Sheets ของเรานี่เอง
+
+1.  ในไฟล์ Google Sheet ที่เราสร้างไว้ ไปที่เมนู **Extensions (ส่วนขยาย) > Apps Script**
+2.  หน้าต่างใหม่จะเปิดขึ้นมา นี่คือหน้าสำหรับเขียนโค้ดของเรา ในหน้าต่างนี้คุณจะเห็นไฟล์ชื่อ `Code.gs`
+---
+## ขั้นตอนที่ 3: เขียนโค้ดฝั่ง "หลังบ้าน" (ไฟล์ Code.gs)
+
+ไฟล์ `Code.gs` จะทำหน้าที่เป็นเหมือน "สมอง" ของเว็บแอป คอยรับคำสั่งและจัดการข้อมูล
+
+ลบโค้ดเดิมทิ้งทั้งหมด แล้วคัดลอกโค้ดข้างล่างนี้ไปวางแทนที่:
+
+````javascript
+// ฟังก์ชันนี้จะทำงานเมื่อมีคนเปิดหน้าเว็บแอปของเรา
+function doGet() {
+  // คำสั่งให้ไปแสดงผลหน้าเว็บที่ชื่อว่า index.html
+  return HtmlService.createHtmlOutputFromFile('index');
+}
+
+// ฟังก์ชันนี้จะทำงานเมื่อมีการกด "บันทึกข้อมูล" จากหน้าเว็บ
+function saveData(formData) {
+  try {
+    // เข้าถึงไฟล์ Google Sheet ที่เราทำงานอยู่
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    // เลือกชีทที่ชื่อว่า 'Data'
+    const sheet = ss.getSheetByName('Data');
+    
+    // สร้างแถวข้อมูลใหม่
+    // new Date() คือการดึงเวลาปัจจุบัน
+    // formData.name, formData.phone, formData.email คือข้อมูลที่ส่งมาจากฟอร์ม
+    const newRow = [
+      new Date(), 
+      formData.name, 
+      formData.phone, 
+      formData.email
+    ];
+    
+    // นำแถวข้อมูลใหม่ไปต่อท้ายข้อมูลที่มีอยู่เดิมในชีท
+    sheet.appendRow(newRow);
+    
+    // ส่งข้อความกลับไปบอกหน้าเว็บว่า "บันทึกสำเร็จ"
+    return "บันทึกข้อมูลสำเร็จ";
+    
+  } catch (error) {
+    // หากเกิดข้อผิดพลาด ให้ส่งข้อความข้อผิดพลาดกลับไป
+    return "เกิดข้อผิดพลาด: " + error.toString();
+  }
+}
+````
+ 
+<CodeExplainer title="อธิบายโค้ด Code.gs">
+<details>
+<summary>ฟังก์ชัน <code>doGet()</code></summary>
+<p>
+เป็นฟังก์ชันมาตรฐานของ Google Apps Script ที่จะทำงานโดยอัตโนมัติเมื่อ URL ของเว็บแอปถูกเรียก (เมื่อมีคนเปิดหน้าเว็บ) หน้าที่ของมันในโค้ดนี้คือการบอกให้ Apps Script ไปเอาไฟล์ <code>index.html</code> มาแสดงผลเป็นหน้าเว็บให้ผู้ใช้เห็น
+</p>
+</details>
+<details>
+<summary>ฟังก์ชัน <code>saveData(formData)</code></summary>
+<p>
+เป็นฟังก์ชันที่เราสร้างขึ้นเองเพื่อจัดการข้อมูลที่ถูกส่งมาจากฟอร์ม มันจะทำหน้าที่ 3 อย่างหลักๆ คือ:
+1. <strong>เชื่อมต่อชีต:</strong> ใช้คำสั่ง <code>SpreadsheetApp</code> เพื่อเข้าถึงไฟล์ Google Sheet และชีตที่ชื่อว่า <code>Data</code>
+2. <strong>เตรียมข้อมูล:</strong> นำข้อมูลที่ได้รับ (<code>formData</code>) มาจัดเรียงเป็นแถวใหม่ (<code>newRow</code>) พร้อมกับเพิ่มเวลาปัจจุบัน (<code>new Date()</code>) เข้าไปในคอลัมน์แรก
+3. <strong>บันทึกข้อมูล:</strong> ใช้คำสั่ง <code>sheet.appendRow()</code> เพื่อนำข้อมูลแถวใหม่ไปต่อท้ายข้อมูลที่มีอยู่เดิมในชีต
+4. <strong>ส่งผลลัพธ์กลับ:</strong> ส่งข้อความ <code>"บันทึกข้อมูลสำเร็จ"</code> กลับไปแสดงที่หน้าเว็บ
+</p>
+</details>
+</CodeExplainer>
+
+---
+##  ขั้นตอนที่ 4: สร้างหน้าเว็บฟอร์ม "หน้าบ้าน" (ไฟล์ index.html)
+ตอนนี้เราจะมาสร้างหน้าตาของเว็บฟอร์มที่ผู้ใช้จะเห็นกันครับ
+ในหน้าต่าง Apps Script ที่มุมบนซ้าย ให้คลิกที่เครื่องหมายบวก (+) ข้างๆคำว่า "Files"
+เลือก HTML และตั้งชื่อไฟล์ว่า index (ไม่ต้องใส่ .html) แล้วกด Enter
+ลบโค้ดเดิมทิ้งทั้งหมด แล้วคัดลอกโค้ดข้างล่างนี้ไปวางแทนที่:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      /* ทำให้หน้าเว็บดูดีขึ้นนิดหน่อย */
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      form { display: flex; flex-direction: column; width: 300px; }
+      input, button { margin-bottom: 10px; padding: 8px; font-size: 16px; }
+      button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+      #status { margin-top: 15px; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <h1>ฟอร์มบันทึกข้อมูล</h1>
+    
+    <form id="myForm">
+      <label for="name">ชื่อ-สกุล:</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="phone">เบอร์โทร:</label>
+      <input type="tel" id="phone" name="phone">
+      
+      <label for="email">อีเมล:</label>
+      <input type="email" id="email" name="email" required>
+      
+      <button type="submit">บันทึกข้อมูล</button>
+    </form>
+    
+    <div id="status"></div>
+
+    <script>
+      document.getElementById("myForm").addEventListener("submit", function(e) {
+        e.preventDefault(); 
+        const statusDiv = document.getElementById("status");
+        statusDiv.textContent = "กำลังบันทึก...";
+
+        // คำสั่งพิเศษ! ใช้เรียกฟังก์ชันใน Code.gs จากหน้าเว็บ
+        google.script.run
+          .withSuccessHandler(function(response) {
+            statusDiv.textContent = response; 
+            document.getElementById("myForm").reset(); 
+          })
+          .withFailureHandler(function(error) {
+            statusDiv.textContent = "เกิดข้อผิดพลาด: " + error.message;
+          })
+          .saveData(this); // เรียกใช้ฟังก์ชัน saveData และส่งข้อมูลฟอร์มไป
+      });
+    </script>
+  </body>
+</html>
+```
+ 
+<CodeExplainer title="อธิบายโค้ด index.html">
+<details>
+<summary>ส่วนของ <code>&lt;form&gt;</code></summary>
+<p>
+นี่คือโครงสร้างของฟอร์มที่เราเห็น แต่ละช่องกรอกข้อมูล (<code>&lt;input&gt;</code>) จะมีป้ายชื่อ <code>name</code> ที่สำคัญมาก เช่น <code>name="name"</code>, <code>name="phone"</code> ซึ่งชื่อเหล่านี้จะถูกใช้เพื่ออ้างอิงข้อมูลในไฟล์ <code>Code.gs</code> (เช่น <code>formData.name</code>)
+</p>
+</details>
+<details>
+<summary>ส่วนของ <code>&lt;script&gt;</code></summary>
+<p>
+นี่คือ "ตัวเชื่อม" ที่สำคัญที่สุด! มันใช้ JavaScript เพื่อดักจับเหตุการณ์เมื่อผู้ใช้กดปุ่ม "บันทึกข้อมูล" (<code>submit</code>) และทำงานดังนี้:
+1. <strong>ป้องกันการรีเฟรช:</strong> <code>e.preventDefault()</code> ป้องกันไม่ให้หน้าเว็บโหลดใหม่หลังกดปุ่ม
+2. <strong>เรียกใช้โค้ดหลังบ้าน:</strong> <code>google.script.run</code> เป็นคำสั่งพิเศษที่ทำให้หน้าเว็บสามารถเรียกใช้ฟังก์ชันในไฟล์ <code>Code.gs</code> ได้
+3. <strong>จัดการผลลัพธ์:</strong> <code>.withSuccessHandler()</code> จะทำงานเมื่อฟังก์ชัน <code>saveData</code> ทำงานเสร็จและส่งข้อความกลับมา ส่วน <code>.withFailureHandler()</code> จะทำงานเมื่อเกิดข้อผิดพลาด
+4. <strong>ส่งข้อมูล:</strong> <code>.saveData(this)</code> คือการเรียกฟังก์ชัน <code>saveData</code> และส่งข้อมูลทั้งหมดในฟอร์ม (<code>this</code>) ไปให้
+</p>
+</details>
+</CodeExplainer>
+
+---
+## ขั้นตอนที่ 5: เผยแพร่ (Deploy) ให้เป็นเว็บแอป
+ตอนนี้โค้ดของเราพร้อมแล้ว ถึงเวลาเอามันขึ้นออนไลน์ให้คนอื่นใช้งานได้
+1. ที่มุมบนขวาของหน้าจอ Apps Script คลิกที่ปุ่ม Deploy สีฟ้า (ภาษาไทยจะใช้คำว่า "การทำให้ใช้งานได้") > เลือก New deployment ("การทำให้ใช้งานได้รายการใหม่")
+2. คลิกที่รูป เฟือง (⚙️) ข้างๆคำว่า "Select type (เลือกประเภท)" แล้วเลือกประเภทเป็น Web app.
+
+ตั้งค่าดังนี้:
+1. Description: (ไม่บังคับ) ใส่คำอธิบายสั้นๆ เช่น "Web App กรอกข้อมูล"
+2. Execute as: เลือก Me (บัญชีของคุณ)
+3. Who has access: เลือก Anyone (เพื่อให้ทุกคนที่มีลิงก์สามารถเข้าได้)
+4. คลิกปุ่ม Deploy.
+
+<InfoBox title="ข้อควรรู้: การให้สิทธิ์ครั้งแรก (Authorize access)">
+ในการ Deploy ครั้งแรก Google จะขออนุญาตให้สคริปต์นี้เข้าถึง Google Sheets ของคุณ <br/>
+1. คลิก <strong>Authorize access</strong><br/>
+2. เลือกบัญชี Google ของคุณ<br/>
+3. คุณอาจเห็นหน้าจอเตือนว่า "Google hasn't verified this app" ไม่ต้องตกใจ เพราะเราเป็นคนสร้างแอปนี้เอง ให้คลิก <strong>Advanced</strong> > แล้วคลิก <strong>Go to [ชื่อโปรเจกต์ของคุณ] (unsafe)</strong><br/>
+4. กด <strong>Allow</strong> เพื่ออนุญาต
+</InfoBox>
+
+เมื่อให้สิทธิ์สำเร็จ คุณจะได้รับ Web app URL มา ให้คัดลอกลิงก์นี้เก็บไว้ นี่คือลิงก์เว็บแอปของคุณ สามาถนำไปเผยแพร่เพื่อให้ผู้อื่นเข้าถึงเว็บแอปของเราได้
+
+---
+## ทดสอบการใช้งาน
+1. เปิดลิงก์ Web app URL ที่คุณคัดลอกมาในเบราว์เซอร์
+2. คุณจะเห็นหน้าฟอร์มที่เราสร้างไว้ ลองกรอกข้อมูล แล้วกดปุ่ม "บันทึกข้อมูล"
+3. รอสักครู่ จะมีข้อความ "บันทึกข้อมูลสำเร็จ" ปรากฏขึ้นมา
+4. กลับไปดูที่ไฟล์ Google Sheets ของคุณ จะเห็นว่ามีข้อมูลแถวใหม่เพิ่มเข้ามาพร้อมกับเวลาที่บันทึก
+
+สรุปและก้าวต่อไป
+ยินดีด้วย คุณเพิ่งสร้างเว็บแอปสำหรับกรอกข้อมูลด้วยตัวเองสำเร็จแล้ว วิธีนี้มีทั้งข้อดีและข้อจำกัดที่ควรรู้
+
+<ProsCons>
+<ul slot="pros">
+<li><strong>ฟรี 100%:</strong> ไม่ต้องเสียค่าเซิร์ฟเวอร์หรือฐานข้อมูล</li>
+<li><strong>ง่ายสำหรับมือใหม่:</strong> ไม่ต้องติดตั้งโปรแกรมหรือตั้งค่าสภาพแวดล้อมที่ซับซ้อน</li>
+<li><strong>เชื่อมต่อกับ Google Ecosystem:</strong> นำข้อมูลไปใช้ต่อกับบริการอื่นของ Google ได้ง่าย</li>
+<li><strong>ปลอดภัย:</strong> ทำงานบนโครงสร้างพื้นฐานที่ปลอดภัยของ Google</li>
+</ul>
+<ul slot="cons">
+<li><strong>หน้าตาปรับแต่งได้จำกัด:</strong> การปรับแต่ง UI/UX ให้สวยงามซับซ้อนทำได้ยากกว่าเฟรมเวิร์คสมัยใหม่</li>
+<li><strong>ความเร็วในการตอบสนอง:</strong> อาจไม่เร็วเท่าเว็บแอปที่ทำงานบนเซิร์ฟเวอร์โดยตรง เป็นข้อเสียที่อาจทำให้ขัดใจเวลาเห็นเว็บโหลดช้า</li>
+</ul>
+</ProsCons>
+
+นี่เป็นเพียงจุดเริ่มต้นที่แสดงให้เห็นถึงพลังของ Google Sheets และ Apps Script คุณสามารถนำไปต่อยอดได้อีกมากมาย เช่น:
+1. เพิ่มช่องกรอกข้อมูล: แค่เพิ่ม `<input>` ในไฟล์ index.html และเพิ่มคอลัมน์ใน Google Sheet กับในโค้ด saveData
+2. ปรับแต่งหน้าตา: ใช้ CSS ในแท็ก `<style>` เพื่อทำให้หน้าเว็บสวยงามขึ้น
+3. ทำระบบแจ้งเตือน: เพิ่มโค้ดให้ส่งอีเมลแจ้งเตือนทุกครั้งที่มีคนกรอกข้อมูลเข้ามา
+
+---
+## แก้ปัญหาที่พบบ่อย (Troubleshooting)
+
+เป็นเรื่องปกติมากที่การทำตามขั้นตอนครั้งแรกอาจเจอปัญหาเล็กๆ น้อยๆ ไม่ต้องกังวลครับ ปัญหาส่วนใหญ่มักเกิดจากจุดเล็กๆ ที่มองข้ามไป ลองตรวจสอบตามอาการยอดฮิตเหล่านี้ดูครับ
+
+---
+
+### อาการที่ 1: กดปุ่ม "บันทึก" แล้วข้อมูลไม่เข้า Google Sheet (แต่หน้าเว็บไม่ขึ้น Error)
+
+นี่เป็นปัญหาที่พบบ่อยที่สุดครับ กดปุ่มแล้วอาจจะขึ้นว่า "บันทึกสำเร็จ" หรือบางทีข้อความก็ค้างที่ "กำลังบันทึก..." แต่พอไปดูในชีทกลับไม่มีข้อมูลใหม่เพิ่มเข้ามา
+
+<InfoBox title="สาเหตุและวิธีแก้ไข">
+  <ol>
+    <li>
+      <strong>ชื่อชีทไม่ตรงกัน (พบบ่อยที่สุด):</strong> ตรวจสอบว่าคุณได้เปลี่ยนชื่อชีทใน Google Sheets เป็น <strong><code>Data</code></strong> แล้วหรือยัง? ชื่อจะต้องตรงกับในโค้ด <code>Code.gs</code> เป๊ะๆ (ตัวพิมพ์ใหญ่-เล็กมีผล)
+      <ul>
+        <li><strong>โค้ดบอกว่า:</strong> <code>ss.getSheetByName('Data');</code></li>
+        <li><strong>ชีทของคุณต้องชื่อ:</strong> <code>Data</code> (ไม่ใช่ <code>data</code> หรือ <code>Sheet1</code>)</li>
+      </ul>
+    </li>
+    <li>
+      <strong><code>name</code> ในฟอร์ม HTML ไม่ตรงกับในโค้ด .gs:</strong> ตรวจสอบว่าป้ายชื่อ <code>name</code> ในแท็ก <code>&lt;input&gt;</code> ของไฟล์ <code>index.html</code> ตรงกับที่คุณเรียกใช้ในไฟล์ <code>Code.gs</code> หรือไม่
+      <ul>
+        <li><strong>ตัวอย่าง:</strong> ถ้าใน HTML เป็น <code>&lt;input name="username"&gt;</code></li>
+        <li>แต่ใน <code>Code.gs</code> คุณเขียนว่า <code>formData.name</code> แบบนี้ข้อมูลจะไม่เข้าครับ ต้องแก้ให้เป็น <code>formData.username</code> ให้ตรงกัน</li>
+      </ul>
+    </li>
+  </ol>
+</InfoBox>
+
+---
+
+### อาการที่ 2: หน้าเว็บขึ้น Error สีแดงว่า "Script function not found: saveData"
+
+เมื่อกดปุ่มบันทึกแล้วมีกล่องข้อความสีแดงขึ้นมาที่หน้าเว็บฟอร์ม
+
+<InfoBox title="สาเหตุและวิธีแก้ไข">
+  <p>
+    ปัญหานี้เกิดจากการพิมพ์ชื่อฟังก์ชันผิด ทำให้ JavaScript ในหน้าเว็บ (<code>index.html</code>) เรียกหาฟังก์ชันหลังบ้าน (<code>Code.gs</code>) ไม่เจอ
+  </p>
+  <ul>
+    <li>
+      <strong>ตรวจสอบไฟล์ <code>Code.gs</code>:</strong> ดูว่าฟังก์ชันของคุณชื่อ <code>function saveData(formData)</code> เป๊ะๆ หรือไม่ (ไม่ใช่ <code>savedata</code> หรือ <code>SaveData</code>)
+    </li>
+    <li>
+      <strong>ตรวจสอบไฟล์ <code>index.html</code>:</strong> ในส่วน <code>&lt;script&gt;</code> ดูบรรทัดสุดท้ายของการเรียกใช้ ต้องเป็น <code>.saveData(this)</code> เป๊ะๆ เช่นกัน
+    </li>
+  </ul>
+  <p>
+    <strong>สรุป:</strong> ชื่อฟังก์ชันในทั้งสองไฟล์ต้องสะกดเหมือนกันทุกตัวอักษร
+  </p>
+</InfoBox>
+
+---
+
+### อาการที่ 3: แก้ไขโค้ดแล้ว แต่หน้าเว็บยังแสดงผลแบบเดิม
+
+คุณอาจจะเพิ่มช่องกรอกข้อมูลใหม่ หรือเปลี่ยนข้อความในหน้าเว็บ แต่พอเปิดลิงก์ URL ดูกลับไม่เห็นการเปลี่ยนแปลงใดๆ
+
+<InfoBox title="สาเหตุและวิธีแก้ไข">
+  <p>
+    นี่เป็นคอนเซ็ปต์ที่สำคัญที่สุดของการใช้ Apps Script Web App ครับ <strong>ทุกครั้งที่คุณแก้ไขโค้ด คุณต้องทำการ Deploy ใหม่เสมอ</strong>
+  </p>
+  <p>
+    การ Deploy เปรียบเสมือนการ "กด Save เวอร์ชั่นใหม่" เพื่อเอาขึ้นออนไลน์ ลิงก์ URL เดิมจะอ้างอิงถึงเวอร์ชั่นเก่าที่คุณ Deploy ไว้เสมอจนกว่าคุณจะ Deploy ทับด้วยเวอร์ชั่นใหม่
+  </p>
+  <p><strong>วิธีแก้ไข:</strong></p>
+  <ol>
+    <li>ไปที่หน้า Apps Script</li>
+    <li>คลิกที่ปุ่ม <strong>Deploy</strong> > เลือก <strong>New deployment</strong></li>
+    <li>ทำตามขั้นตอนเดิมอีกครั้ง ระบบจะให้ URL ใหม่ หรืออัปเดต URL เดิมให้ (แนะนำให้ใช้ URL ใหม่เสมอเพื่อความแน่นอน)</li>
+  </ol>
+  <p>
+    <strong>เคล็ดลับ:</strong> ในระหว่างการพัฒนา ให้ใช้ "Test deployments" จะสะดวกกว่า แต่สำหรับบทความนี้ การใช้ "New deployment" จะเข้าใจง่ายที่สุดสำหรับมือใหม่ครับ
+  </p>
+</InfoBox>
+
+---
+
+### อาการที่ 4: เปิดลิงก์ URL แล้วเป็นหน้าขาวๆ หรือหน้า Error ของ Google
+
+หน้าเว็บไม่แสดงฟอร์มที่เราสร้างไว้เลย
+
+<InfoBox title="สาเหตุและวิธีแก้ไข">
+  <ul>
+    <li>
+      <strong>พิมพ์ชื่อฟังก์ชัน <code>doGet</code> ผิด:</strong> ฟังก์ชันหลักที่ใช้แสดงหน้าเว็บต้องชื่อ <code>doGet</code> เท่านั้น ตรวจสอบในไฟล์ <code>Code.gs</code> ว่าคุณไม่ได้พิมพ์เป็น <code>DoGet</code>, <code>Doget</code> หรือชื่ออื่น
+    </li>
+    <li>
+      <strong>ตั้งชื่อไฟล์ HTML ผิด:</strong> ในโค้ด <code>doGet</code> เราสั่งให้เปิดไฟล์ชื่อ <code>index</code> (<code>createHtmlOutputFromFile('index')</code>) ดังนั้นไฟล์ HTML ของคุณต้องชื่อ <code>index.html</code> เท่านั้น (และต้องเป็นตัวพิมพ์เล็กทั้งหมด)
+    </li>
+    <li>
+      <strong>ตั้งค่าสิทธิ์การเข้าถึงผิด:</strong> ตอน Deploy ตรงหัวข้อ "Who has access" คุณอาจจะเลือกเป็น "Only myself" ลองกลับไปแก้การ Deploy (Manage deployments) แล้วตั้งค่าเป็น <strong>"Anyone"</strong>
+    </li>
+  </ul>
+</InfoBox>
+
+---
+## ให้ AI ช่วยเขียนโค้ดสร้างเว็บแอปในแบบของคุณ
+
+เมื่อคุณเข้าใจโครงสร้างพื้นฐานของเว็บแอป (HTML + Apps Script) แล้ว คุณไม่จำเป็นต้องเขียนโค้ดทั้งหมดด้วยตัวเองเสมอไป คุณสามารถใช้ AI อย่าง ChatGPT, Google Gemini, หรือ Claude มาเป็นผู้ช่วยเขียนโค้ดให้คุณได้ แต่กุญแจสำคัญคือการเขียน "คำสั่ง" หรือ "Prompt" ที่ดีและชัดเจน
+
+<InfoBox title="โครงสร้าง Prompt ที่ดีสำหรับสั่ง AI เขียนโค้ด">
+  AI จะทำงานได้ดีที่สุดเมื่อเราให้ข้อมูลที่ครบถ้วนและเป็นระบบ ลองใช้โครงสร้างนี้เป็นแม่แบบในการสั่งงาน:
+
+  <ol>
+    <li>
+      <strong>บอกบทบาทและเป้าหมาย (Role & Goal):</strong> เริ่มต้นด้วยการบอกให้ AI รู้ว่ามันต้องทำอะไร และเป้าหมายสุดท้ายคืออะไร
+      <ul>
+        <li>ตัวอย่าง: <em>"คุณคือผู้เชี่ยวชาญด้าน Google Apps Script ฉันต้องการสร้าง Web App สำหรับ..."</em></li>
+      </ul>
+    </li>
+    <li>
+      <strong>ระบุข้อมูลที่ต้องการเก็บ (Define the Data):</strong> บอกให้ชัดเจนว่าใน Google Sheet จะมีคอลัมน์อะไรบ้าง นี่คือการออกแบบ "ฐานข้อมูล" ของเรา
+      <ul>
+        <li>ตัวอย่าง: <em>"ข้อมูลที่จะบันทึกลง Google Sheet มีดังนี้: Timestamp, ชื่องาน, วันที่จัดงาน, ชื่อผู้ลงทะเบียน, อีเมล"</em></li>
+      </ul>
+    </li>
+    <li>
+      <strong>ออกแบบหน้าฟอร์ม (Design the Form):</strong> อธิบายหน้าตาเว็บฟอร์ม (HTML) ว่าต้องการช่องกรอกข้อมูลอะไรบ้าง บอกทั้ง "ป้ายกำกับ (Label)" และ "ประเภทของช่อง (Input Type)"
+      <ul>
+        <li>ตัวอย่าง: <em>"หน้าเว็บฟอร์มต้องมีช่องกรอกข้อมูลต่อไปนี้: 1. ชื่องาน (text input), 2. วันที่จัดงาน (date input), 3. ชื่อผู้ลงทะเบียน (text input), 4. อีเมล (email input)"</em></li>
+      </ul>
+    </li>
+    <li>
+      <strong>ให้คำสั่งทางเทคนิค (Technical Instructions):</strong> บอกรายละเอียดสำคัญที่ AI ต้องรู้
+      <ul>
+        <li><strong>ชื่อชีท:</strong> <em>"ให้บันทึกข้อมูลลงในชีทที่ชื่อว่า 'Events'"</em></li>
+        <li><strong>การเชื่อมต่อ:</strong> <em>"ใช้ <code>google.script.run</code> เพื่อส่งข้อมูลจาก HTML ไปยังฟังก์ชัน Apps Script"</em></li>
+        <li><strong>การแยกไฟล์:</strong> <em>"ช่วยเขียนโค้ดแยกเป็น 2 ส่วน คือไฟล์ <code>Code.gs</code> และไฟล์ <code>index.html</code>"</em></li>
+        <li><strong>เพิ่มคำอธิบาย:</strong> <em>"ช่วยใส่ Comment อธิบายการทำงานของโค้ดในแต่ละส่วนด้วย"</em></li>
+      </ul>
+    </li>
+  </ol>
+</InfoBox>
+
+---
+
+### ตัวอย่าง Prompt ที่นำไปใช้งานได้จริง
+
+ลองคัดลอก Prompt นี้ไปทดสอบกับ AI ที่คุณชื่นชอบได้เลย เพื่อสร้าง "เว็บแอปฟอร์มลงทะเบียนเข้าร่วมกิจกรรม"
+
+```text
+คุณคือผู้เชี่ยวชาญด้านการเขียน Google Apps Script
+
+ฉันต้องการสร้าง Web App สำหรับเป็นฟอร์มลงทะเบียนเข้าร่วมกิจกรรม โดยให้ข้อมูลบันทึกลงใน Google Sheet โดยอัตโนมัติ
+
+**ความต้องการ:**
+
+1.  **ข้อมูลที่จะบันทึกลง Google Sheet:**
+    *   Timestamp (เวลาที่ลงทะเบียน)
+    *   ชื่อ-สกุล (Full Name)
+    *   อีเมล (Email)
+    *   จำนวนผู้เข้าร่วม (Number of Attendees)
+
+2.  **หน้าเว็บฟอร์ม (index.html):**
+    *   มีช่องกรอก "ชื่อ-สกุล" (เป็น text input)
+    *   มีช่องกรอก "อีเมล" (เป็น email input)
+    *   มีช่องกรอก "จำนวนผู้เข้าร่วม" (เป็น number input)
+    *   มีปุ่มสำหรับกด "ลงทะเบียน"
+
+3.  **ข้อกำหนดทางเทคนิค:**
+    *   ให้บันทึกข้อมูลทั้งหมดลงในชีทที่ชื่อว่า "Registrations"
+    *   ใช้ `google.script.run` ในการสื่อสารระหว่าง Frontend (HTML) และ Backend (Apps Script)
+    *   เมื่อบันทึกข้อมูลสำเร็จ ให้แสดงข้อความว่า "ลงทะเบียนเรียบร้อยแล้ว"
+    *   ช่วยเขียนโค้ดแยกเป็น 2 ส่วนให้ชัดเจน คือส่วนของไฟล์ `Code.gs` และไฟล์ `index.html`
+    *   กรุณาใส่ Comment อธิบายโค้ดในส่วนที่สำคัญด้วย
+```
+
+เมื่อคุณใช้ Prompt นี้ AI จะสร้างโค้ดทั้ง 2 ไฟล์มาให้คุณ ซึ่งคุณสามารถนำไปวางในโปรเจกต์ Apps Script ของคุณ, ทำการ Deploy, และใช้งานได้ทันที การเรียนรู้ที่จะสร้าง Prompt ที่ดี คือทักษะสำคัญที่จะช่วยให้คุณสร้างสรรค์โปรเจกต์ต่างๆ ได้อย่างรวดเร็วและง่ายดายยิ่งขึ้น
+
+
