@@ -1,0 +1,147 @@
+---
+// src/components/Navbar.astro
+import ThemeToggleButton from './ThemeToggleButton.astro';
+---
+
+<nav class="navbar">
+  <div class="container navbar-content">
+    <a href="/" class="logo">RxDev Notes</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/blog">Blog</a>
+      <a href="/hosxp">HOSxP</a>
+      <a href="/about">About Me</a>
+    </div>
+    <ThemeToggleButton />
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.querySelector('.nav-links');
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    });
+  }
+</script>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(to bottom, rgba(124, 58, 237, 0.1), transparent);
+    backdrop-filter: blur(10px); 
+    border-bottom: 1px solid var(--card-border-color);
+    z-index: 1000;
+    transition: background 0.3s ease;
+  }
+
+  .navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--brand-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .logo:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 5px var(--brand-color);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .nav-links a {
+    color: var(--font-color);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--brand-color);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--brand-color);
+    transform: translateY(-2px);
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    width: 25px;
+    height: 3px;
+    background: var(--font-color);
+    transition: all 0.3s ease;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: var(--card-bg-color);
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .nav-links.active {
+      display: flex;
+    }
+
+    .hamburger {
+      display: flex;
+    }
+  }
+</style>
