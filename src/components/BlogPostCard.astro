@@ -1,7 +1,6 @@
 ---
 // src/components/BlogPostCard.astro
 import type { CollectionEntry } from 'astro:content';
-
 interface Props {
   post: CollectionEntry<'blog'>;
 }
@@ -23,15 +22,16 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 </article>
 
 <style>
-   .card {
+  .card {
     border: 1px solid var(--card-border-color); 
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 1.5rem;
     background-color: var(--card-bg-color); 
-    transition: box-shadow 0.2s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   .card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2); /* Unique purple glow */
   }
   .card a {
     text-decoration: none;

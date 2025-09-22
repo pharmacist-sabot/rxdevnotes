@@ -1,0 +1,46 @@
+---
+// src/pages/about.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About Me - RxDev Notes">
+  <div class="about-container">
+    <h1>About Me</h1>
+    <img src="/profile-placeholder.jpg" alt="Profile" class="profile-img" /> <!-- Add your image in public/ -->
+    <p>
+      Hi, I'm [Your Name], a passionate programmer specializing in frontend development, Astro, and healthcare software like HOSxP. I share my experiences through this blog to help others in the coding journey.
+    </p>
+    <p>
+      In my free time, I explore new tech stacks and contribute to open-source projects.
+    </p>
+    <a href="mailto:your.email@example.com" class="cta-button">Contact Me</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-container {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeIn 1s ease-in;
+  }
+
+  .profile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid var(--brand-color);
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+  }
+
+  .profile-img:hover {
+    transform: rotate(5deg) scale(1.1);
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+</style>

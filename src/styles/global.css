@@ -1,6 +1,7 @@
 /* src/styles/global.css */
 :root {
-  --brand-color: #7c3aed;
+  --brand-color: #7c3aed; /* Purple */
+  --accent-color: #06b6d4; /* Cyan for uniqueness */
   --font-color: #111827;
   --bg-color: #f3f4f6;
   --card-bg-color: #ffffff;
@@ -10,6 +11,7 @@
 /* Theme: Dark Mode */
 html.dark {
   --brand-color: #a78bfa;
+  --accent-color: #22d3ee;
   --font-color: #e5e7eb;
   --bg-color: #111827;
   --card-bg-color: #1f2937;
@@ -17,15 +19,16 @@ html.dark {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Premium font */
   margin: 0;
   background-color: var(--bg-color);
   color: var(--font-color);
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.6;
 }
 
 .container {
-  max-width: 800px;
+  max-width: 1200px; 
   margin: 0 auto;
   padding: 2rem;
 }
@@ -33,25 +36,37 @@ body {
 a {
   color: var(--brand-color);
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 a:hover {
-  text-decoration: underline;
+  color: var(--accent-color);
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1rem 0;
   line-height: 1.2;
+  font-weight: 700;
 }
 
 img {
   max-width: 100%;
   height: auto;
+  border-radius: 8px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding: 1rem;
   }
+}
+
+/* Global animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

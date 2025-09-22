@@ -3,7 +3,7 @@
 import ThemeToggleButton from './ThemeToggleButton.astro';
 ---
 
-<nav class="navbar">
+<nav class="navbar" id="navbar"> 
   <div class="container navbar-content">
     <a href="/" class="logo">RxDev Notes</a>
     <div class="nav-links">
@@ -24,12 +24,26 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
 <script>
   const hamburger = document.getElementById('hamburger');
   const navLinks = document.querySelector('.nav-links');
+  const navbar = document.getElementById('navbar'); 
 
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
       navLinks.classList.toggle('active');
       hamburger.classList.toggle('active');
     });
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!navbar) return;
+    if (window.scrollY > 10) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  if (navbar && window.scrollY > 10) {
+    navbar.classList.add('scrolled');
   }
 </script>
 
@@ -38,19 +52,26 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     position: sticky;
     top: 0;
     background: linear-gradient(to bottom, rgba(124, 58, 237, 0.1), transparent);
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--card-border-color);
     z-index: 1000;
     transition: background 0.3s ease;
+    width: 100%;
   }
-
+  .navbar.scrolled {
+    background: var(--card-bg-color);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--card-border-color);
+  }
   .navbar-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
   }
-
   .logo {
     font-size: 1.5rem;
     font-weight: bold;
@@ -58,17 +79,14 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     text-decoration: none;
     transition: color 0.3s ease;
   }
-
   .logo:hover {
     color: var(--accent-color);
     text-shadow: 0 0 5px var(--brand-color);
   }
-
   .nav-links {
     display: flex;
     gap: 1.5rem;
   }
-
   .nav-links a {
     color: var(--font-color);
     text-decoration: none;
@@ -76,7 +94,6 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     position: relative;
     transition: color 0.3s ease, transform 0.3s ease;
   }
-
   .nav-links a::after {
     content: '';
     position: absolute;
@@ -87,43 +104,39 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     background: var(--brand-color);
     transition: width 0.3s ease;
   }
-
   .nav-links a:hover {
     color: var(--brand-color);
     transform: translateY(-2px);
   }
-
   .nav-links a:hover::after {
     width: 100%;
   }
-
   .hamburger {
     display: none;
     flex-direction: column;
     gap: 5px;
     cursor: pointer;
   }
-
   .hamburger span {
     width: 25px;
     height: 3px;
     background: var(--font-color);
     transition: all 0.3s ease;
   }
-
   .hamburger.active span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
   }
-
   .hamburger.active span:nth-child(2) {
     opacity: 0;
   }
-
   .hamburger.active span:nth-child(3) {
     transform: rotate(-45deg) translate(7px, -6px);
   }
-
   @media (max-width: 768px) {
+    .navbar-content {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
     .nav-links {
       display: none;
       flex-direction: column;
@@ -135,11 +148,9 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
       padding: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
     .nav-links.active {
       display: flex;
     }
-
     .hamburger {
       display: flex;
     }

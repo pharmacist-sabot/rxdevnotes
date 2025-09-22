@@ -16,12 +16,13 @@ const sortedPosts = allPosts.sort(
 // Get the 5 most recent posts
 const latestPosts = sortedPosts.slice(0, 5);
 ---
-<BaseLayout title="My Awesome Blog - Home">
+<BaseLayout title="RxDev Notes - Home">
   <div class="hero">
-    <h1>👋 Welcome to my Blog!</h1>
+    <h1 class="animated-tagline">Exploring Code, One Byte at a Time 🚀</h1>
     <p>
-      This is where I share my programming journey, tips, and tutorials.
+      Dive into programming insights, tutorials, and my journey as a developer.
     </p>
+    <a href="/blog" class="cta-button">Explore Blog</a>
   </div>
 
   <h2>Latest Articles</h2>
@@ -34,22 +35,53 @@ const latestPosts = sortedPosts.slice(0, 5);
   <div class="all-posts-link">
      <a href="/blog">View all articles &rarr;</a>
   </div>
-
 </BaseLayout>
 
 <style>
   .hero {
     text-align: center;
-    padding: 2rem 0;
-    margin-bottom: 1rem;
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-in;
   }
 
+  .animated-tagline {
+    background: linear-gradient(90deg, var(--brand-color), var(--accent-color));
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: gradientShift 5s infinite;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0%; }
+    50% { background-position: 100%; }
+    100% { background-position: 0%; }
+  }
+  .cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--brand-color);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--brand-color);
+  }
   .post-list {
     display: grid;
-    gap: 1rem;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
   .all-posts-link {
-    text-align: right;
-    margin-top: 2rem;
+    text-align: center;
+    margin-top: 3rem;
   }
 </style>
