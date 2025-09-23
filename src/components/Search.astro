@@ -1,0 +1,43 @@
+---
+// src/components/Search.astro
+---
+
+<div id="search-container"></div>
+
+<script is:inline>
+  function initPagefind() {
+    if (window.PagefindUI) {
+      try {
+        new window.PagefindUI({ 
+          element: "#search-container",
+          showSubResults: true,
+        });
+      } catch (error) {
+        console.error("Failed to initialize Pagefind UI:", error);
+      }
+    } else {
+
+      setTimeout(initPagefind, 50);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', initPagefind);
+</script>
+
+<style>
+  :global(.pagefind-ui__search-input) {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--card-border-color);
+    background-color: var(--card-bg-color);
+    color: var(--font-color);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  :global(.pagefind-ui__search-input:focus) {
+    outline: none;
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-color) 25%, transparent);
+  }
+</style>

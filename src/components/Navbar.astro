@@ -1,48 +1,64 @@
 ---
 // src/components/Navbar.astro
 import ThemeToggleButton from './ThemeToggleButton.astro';
+import Search from './Search.astro'; 
 ---
 <nav class="navbar" id="navbar">
   <div class="container navbar-content">
-    <a href="/" class="logo">RxDev Man</a>
+    <a href="/" class="logo" aria-label="RxDev Man Homepage">
+      <svg width="32" height="32" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-svg">
+        <path d="M128 24C65.34 24 16 73.34 16 136C16 182.2 44.53 221.33 86.66 235.93C89.5 236.46 92.49 236.73 95.53 236.73C104.93 236.73 113.84 230.93 116.89 221.84L128 185.07L139.11 221.84C142.16 230.93 151.07 236.73 160.47 236.73C163.51 236.73 166.5 236.46 169.34 235.93C211.47 221.33 240 182.2 240 136C240 73.34 190.66 24 128 24ZM183.1 192.61C182.16 195.73 179.31 197.87 176 197.87C174.52 197.87 173.07 197.48 171.74 196.75L128 172.93L84.26 196.75C82.93 197.48 81.48 197.87 80 197.87C76.69 197.87 73.84 195.73 72.9 192.61C71.96 189.47 72.58 185.96 74.61 183.6L123.01 128L74.61 72.4C72.58 70.04 71.96 66.53 72.9 63.39C73.84 60.27 76.69 58.13 80 58.13C81.48 58.13 82.93 58.52 84.26 59.25L128 83.07L171.74 59.25C173.07 58.52 174.52 58.13 176 58.13C179.31 58.13 182.16 60.27 183.1 63.39C184.04 66.53 183.42 70.04 181.39 72.4L132.99 128L181.39 183.6C183.42 185.96 184.04 189.47 183.1 192.61Z" fill="currentColor"/>
+      </svg>
+      <span class="logo-text">RxDev Man</span>
+    </a>
+    
     <div class="nav-links" id="nav-links">
       <a href="/" data-nav-link>Home</a>
       <a href="/blog" data-nav-link>Blog</a>
-      <a href="/hosxp" data-nav-link>HOSxP</a>
-      <a href="/about" data-nav-link>About Me</a>
+      <a href="/hosxp" data-nav-link>HOSxP</a> 
+      <a href="/about" data-nav-link>About</a>
     </div>
-    <ThemeToggleButton />
-    <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
+
+    <div class="nav-actions">
+      <div class="search-wrapper">
+        <Search />
+      </div>
+      <ThemeToggleButton />
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
   </div>
 </nav>
 
 <script>
   const hamburger = document.getElementById('hamburger');
   const navLinks = document.getElementById('nav-links');
+  const navbar = document.getElementById('navbar');
 
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
+      const isExpanded = navLinks.classList.toggle('active');
       hamburger.classList.toggle('active');
-      document.body.classList.toggle('no-scroll'); 
+      hamburger.setAttribute('aria-expanded', isExpanded.toString());
+      document.body.classList.toggle('no-scroll');
     });
 
-    const navItems = document.querySelectorAll('[data-nav-link]');
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
+    const allNavLinks = document.querySelectorAll('[data-nav-link]');
+    allNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
         navLinks.classList.remove('active');
         hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
         document.body.classList.remove('no-scroll');
       });
     });
   }
 
+  let lastScrollY = window.scrollY;
   window.addEventListener('scroll', () => {
-    const navbar = document.getElementById('navbar');
     if (!navbar) return;
 
     if (window.scrollY > 50) {
@@ -50,6 +66,13 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     } else {
       navbar.classList.remove('scrolled');
     }
+    
+    if (window.scrollY > lastScrollY && window.scrollY > 200) {
+        navbar.style.transform = 'translateY(-100%)';
+    } else {
+        navbar.style.transform = 'translateY(0)';
+    }
+    lastScrollY = window.scrollY;
   });
 </script>
 
@@ -58,143 +81,159 @@ import ThemeToggleButton from './ThemeToggleButton.astro';
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    width: 100%;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+  }
+  .navbar.scrolled {
+    background-color: color-mix(in srgb, var(--card-bg-color) 85%, transparent);
+    border-bottom-color: var(--card-border-color);
   }
   .navbar-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.25rem 0;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 1rem 0;
+    transition: padding 0.3s ease;
   }
+
+  /* Logo */
   .logo {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--brand-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     text-decoration: none;
-    transition: all 0.3s ease;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: -0.5px;
+    color: var(--brand-color);
   }
-  .logo:hover {
-    color: var(--accent-color);
-    transform: scale(1.05);
+  .logo-svg {
+    height: 32px;
+    width: 32px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  .logo:hover .logo-svg {
+    transform: rotate(-15deg) scale(1.1);
+  }
+  .logo-text {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--font-color);
+    transition: color 0.2s ease;
+  }
+  .logo:hover .logo-text {
+    color: var(--brand-color);
+  }
+
+  /* Navigation Links */
   .nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 2.5rem;
   }
   .nav-links a {
     color: var(--font-color);
     text-decoration: none;
     font-weight: 500;
-    font-size: 1.05rem;
     position: relative;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-bottom: 4px;
+    transition: color 0.2s ease;
   }
   .nav-links a::after {
     content: '';
     position: absolute;
-    bottom: -5px;
+    bottom: 0;
     left: 0;
     width: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--brand-color), var(--accent-color));
-    border-radius: 3px;
-    transition: width 0.3s ease;
+    height: 2px;
+    background: var(--brand-color);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .nav-links a:hover {
     color: var(--brand-color);
-    transform: translateY(-2px);
   }
   .nav-links a:hover::after {
     width: 100%;
   }
+
+  /* Right-side Actions */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .search-wrapper {
+    position: relative;
+  }
+
+  /* Hamburger Menu Button */
   .hamburger {
     display: none;
     flex-direction: column;
     justify-content: space-around;
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
-    z-index: 10;
-    transition: all 0.3s ease;
+    z-index: 1001;
   }
   .bar {
-    width: 30px;
+    width: 28px;
     height: 3px;
     background-color: var(--font-color);
     border-radius: 10px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Mobile Styles */
   @media (max-width: 768px) {
-    .navbar-content {
-      padding: 1rem 1.5rem;
-
-    }
     .nav-links {
       display: none;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100vh;
       background: var(--card-bg-color);
-      padding: 5rem 2rem 2rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       transform: translateX(100%);
       transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 999;
-      overflow-y: auto;
+      z-index: 1000;
     }
     .nav-links.active {
       display: flex;
       transform: translateX(0);
     }
+    .nav-links a {
+      font-size: 2rem;
+    }
+    .logo-text {
+      display: none;
+    }
+    .search-wrapper {
+      display: none; 
+    }
     .hamburger {
       display: flex;
-      z-index: 1000;
     }
+    /* Hamburger "X" animation */
     .hamburger.active .bar:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-      background-color: var(--accent-color);
+      transform: translateY(10px) rotate(45deg);
     }
     .hamburger.active .bar:nth-child(2) {
       opacity: 0;
     }
     .hamburger.active .bar:nth-child(3) {
-      transform: rotate(-45deg) translate(7px, -6px);
-      background-color: var(--accent-color);
-    }
-    .nav-links a {
-      font-size: 1.5rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--card-border-color);
-      margin-bottom: 1rem;
-    }
-    .nav-links a:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
+      transform: translateY(-10px) rotate(-45deg);
     }
   }
-  .navbar.scrolled {
-    background: var(--card-bg-color);
-    box-shadow: 0 4px 20px var(--shadow-color);
-    padding: 0.5rem 0;
-  }
-  .navbar.scrolled .logo {
-    font-size: 1.5rem;
-  }
+
+  /* Prevent body scroll when mobile menu is open */
   body.no-scroll {
     overflow: hidden;
   }

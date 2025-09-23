@@ -5,12 +5,15 @@ import { Icon } from 'astro-icon/components';
 interface Props {
   title: string;
 }
-
 const { title } = Astro.props;
 ---
 <div class="explainer-box">
   <div class="header">
-    <Icon name="heroicons:code-bracket-square-solid" class="header-icon" />
+    <div class="window-buttons">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+    </div>
     <span class="title">{title}</span>
   </div>
   <div class="content">
@@ -22,81 +25,69 @@ const { title } = Astro.props;
   .explainer-box {
     background-color: var(--card-bg-color);
     border: 1px solid var(--card-border-color);
-    border-radius: 8px;
+    border-radius: 12px;
     margin: 2rem 0;
     overflow: hidden;
+    box-shadow: 0 4px 12px var(--shadow-color);
   }
-
   .header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1.25rem;
-    background-color: color-mix(in srgb, var(--card-bg-color) 80%, var(--card-border-color));
+    background-color: color-mix(in srgb, var(--card-bg-color) 85%, var(--card-border-color));
     border-bottom: 1px solid var(--card-border-color);
   }
-  
-  .header-icon {
-    color: var(--brand-color);
-    font-size: 1.25rem;
+  .window-buttons {
+    display: flex;
+    gap: 0.5rem;
   }
-
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  .red { background-color: #ff5f56; }
+  .yellow { background-color: #ffbd2e; }
+  .green { background-color: #27c93f; }
   .title {
-    font-weight: 600;
-    color: var(--font-color);
+    font-weight: 500;
+    color: var(--font-color-light);
+    font-family: var(--font-mono);
   }
-
   .content {
-    padding: 1.25rem;
-    padding-top: 0.75rem;
+    padding: 1rem 1.25rem;
   }
-
   .content :global(details) {
     border-bottom: 1px solid var(--card-border-color);
-    padding: 0.75rem 0;
+    padding: 1rem 0;
   }
-
-  .content :global(details:last-of-type) {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
+  .content :global(details:first-child) { padding-top: 0; }
+  .content :global(details:last-child) { border-bottom: none; padding-bottom: 0; }
   .content :global(summary) {
     cursor: pointer;
-    font-weight: 500;
-    list-style: none; 
+    font-weight: 600;
+    list-style: none;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: var(--font-color);
   }
-  
-  .content :global(summary::-webkit-details-marker) {
-    display: none; 
-  }
-
+  .content :global(summary::-webkit-details-marker) { display: none; }
   .content :global(summary::before) {
     content: '▶';
     font-size: 0.6em;
-    margin-right: 0.5rem;
+    color: var(--brand-color);
     transition: transform 0.2s ease-in-out;
   }
-
   .content :global(details[open] > summary::before) {
     transform: rotate(90deg);
   }
-
   .content :global(details p) {
     margin-top: 0.75rem;
     margin-bottom: 0;
     padding-left: 1.5rem;
-    opacity: 0.9;
-    line-height: 1.6;
-  }
-
-  .content :global(code) {
-    background-color: var(--card-border-color);
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
-    font-size: 0.9em;
+    color: var(--font-color-light);
+    line-height: 1.7;
   }
 </style>

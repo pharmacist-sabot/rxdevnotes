@@ -1,87 +1,97 @@
 ---
-// src/pages/index.astro 
+// src/pages/index.astro
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BlogPostCard from '../components/BlogPostCard.astro'; 
+import BlogPostCard from '../components/BlogPostCard.astro';
+import CategoryCard from '../components/CategoryCard.astro'; 
 
-// Get all blog posts
+// 1. Get all posts and sort them
 const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Sort posts by date, newest first
-const sortedPosts = allPosts.sort(
-  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
-    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+// 2. Find the featured post
+const featuredPost = sortedPosts.find(post => post.data.featured);
 
-// Get the 5 most recent posts
-const latestPosts = sortedPosts.slice(0, 5);
+// 3. Get latest posts (exclude featured post if it exists)
+const nonFeaturedPosts = featuredPost ? sortedPosts.filter(p => p.slug !== featuredPost.slug) : sortedPosts;
+const latestPosts = nonFeaturedPosts.slice(0, 4);
+
+// 4. Get all unique categories
+const categories = [...new Set(allPosts.map(post => post.data.category))];
 ---
-<BaseLayout title="RxDev Man - Home">
-  <div class="hero">
-    <h1 class="animated-tagline">Exploring Code, One Byte at a Time</h1>
-    <p>
-      Dive into programming insights, tutorials, and my journey as a developer.
-    </p>
-    <a href="/blog" class="cta-button">Explore Blog</a>
+<BaseLayout title="Home">
+  <div class="hero-section">
+    <h1 class="tagline">RxDev Man</h1>
+    <p class="subtitle">สั่งจ่ายความรู้ Dev ครบโดส บันทึกการเดินทางสู่โลกแห่งการเขียนโค้ด</p>
+    <a href="/blog" class="cta-button">Explore All Articles</a>
   </div>
 
-  <h2>Latest Articles</h2>
-  <div class="post-list">
-    {latestPosts.map((post: CollectionEntry<'blog'>) => (
-      <BlogPostCard post={post} />
-    ))}
-  </div>
-  
-  <div class="all-posts-link">
-     <a href="/blog">View all articles &rarr;</a>
-  </div>
+  <!-- Featured Post Section -->
+  {featuredPost && (
+    <section class="featured-section">
+      <h2>Featured Guide</h2>
+      <a href={`/blog/${featuredPost.slug}`} class="featured-card">
+        <img src={featuredPost.data.heroImage} alt="" class="featured-image"/>
+        <div class="featured-content">
+          <p class="featured-category">{featuredPost.data.category}</p>
+          <h3>{featuredPost.data.title}</h3>
+          <p class="featured-description">{featuredPost.data.description}</p>
+          <span class="read-more">Read more &rarr;</span>
+        </div>
+      </a>
+    </section>
+  )}
+
+  <!-- Categories Section -->
+  <section class="categories-section">
+    <h2>Knowledge Domains</h2>
+    <div class="category-grid">
+      {categories.map(category => (
+        <CategoryCard category={category} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Latest Posts Section -->
+  <section class="latest-section">
+    <h2>Latest Articles</h2>
+    <div class="post-grid">
+      {latestPosts.map(post => (
+        <BlogPostCard post={post} />
+      ))}
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .hero {
-    text-align: center;
-    padding: 4rem 0;
-    margin-bottom: 2rem;
-    animation: fadeIn 1s ease-in;
-  }
+  /* Hero Section */
+  .hero-section { text-align: center; padding: 4rem 0; }
+  .tagline { margin: 0; }
+  .subtitle { max-width: 600px; margin: 1rem auto 2rem; font-size: 1.25rem; color: var(--font-color-light); }
+  .cta-button { /* General button styles are in global.css */ }
+  
+  h2 { text-align: center; margin-bottom: 2rem; }
+  
+  /* Featured Section */
+  .featured-section { margin-bottom: 4rem; }
+  .featured-card { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; text-decoration: none; color: inherit; background-color: var(--card-bg-color); border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .featured-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px var(--shadow-hover-color); }
+  .featured-image { width: 100%; height: 100%; object-fit: cover; margin: 0; border-radius: 0; }
+  .featured-content { padding: 2rem; }
+  .featured-category { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-color); margin-bottom: 0.5rem; text-transform: uppercase; }
+  .featured-content h3 { font-size: 1.8rem; margin: 0 0 1rem; }
+  .featured-description { color: var(--font-color-light); }
+  .read-more { color: var(--brand-color); font-weight: 600; margin-top: 1rem; display: inline-block; }
+  
+  /* Categories Section */
+  .categories-section { margin-bottom: 4rem; }
+  .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+  
+  /* Latest Posts Section */
+  .post-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
 
-  .animated-tagline {
-    background: linear-gradient(90deg, var(--brand-color), var(--accent-color));
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: gradientShift 5s infinite;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes gradientShift {
-    0% { background-position: 0%; }
-    50% { background-position: 100%; }
-    100% { background-position: 0%; }
-  }
-  .cta-button {
-    display: inline-block;
-    padding: 1rem 2rem;
-    background: var(--brand-color);
-    color: white;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .cta-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px var(--brand-color);
-  }
-  .post-list {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-  .all-posts-link {
-    text-align: center;
-    margin-top: 3rem;
+  @media (max-width: 768px) {
+    .featured-card { grid-template-columns: 1fr; }
+    .featured-image { aspect-ratio: 16/9; }
   }
 </style>

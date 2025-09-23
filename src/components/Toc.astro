@@ -1,0 +1,86 @@
+---
+// src/components/Toc.astro
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const filteredHeadings = headings.filter(h => h.depth > 1 && h.depth < 4);
+---
+{filteredHeadings.length > 0 && (
+  <nav class="toc">
+    <h3 class="toc-title">On this page</h3>
+    <ul class="toc-list">
+      {filteredHeadings.map(heading => (
+        <li class={`toc-item depth-${heading.depth}`}>
+          <a href={`#${heading.slug}`}>{heading.text}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const tocLinks = document.querySelectorAll('.toc-item a');
+    if (tocLinks.length === 0) return;
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const tocLink = document.querySelector(`.toc-item a[href="#${id}"]`);
+        
+        if (entry.isIntersecting) {
+          tocLinks.forEach(link => link.classList.remove('active'));
+          tocLink?.classList.add('active');
+        }
+      });
+    }, { rootMargin: '0px 0px -80% 0px' });
+
+    document.querySelectorAll('.prose h2, .prose h3').forEach(heading => {
+      observer.observe(heading);
+    });
+  });
+</script>
+
+<style>
+  .toc {
+    padding: 1rem 0;
+  }
+  .toc-title {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    margin-bottom: 1rem;
+    color: var(--font-color);
+  }
+  .toc-list {
+    list-style: none;
+    padding: 0;
+  }
+  .toc-item a {
+    display: block;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--font-color-light);
+    border-left: 2px solid var(--card-border-color);
+    padding-left: 1rem;
+    transition: all 0.2s ease;
+  }
+  .toc-item a:hover {
+    color: var(--font-color);
+    border-left-color: var(--font-color);
+  }
+  .toc-item a.active {
+    color: var(--brand-color);
+    border-left-color: var(--brand-color);
+    font-weight: 500;
+    transform: translateX(4px);
+  }
+  .toc-item.depth-3 a {
+    padding-left: 2rem;
+  }
+</style>

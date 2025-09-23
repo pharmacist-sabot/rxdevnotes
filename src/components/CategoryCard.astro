@@ -1,0 +1,46 @@
+---
+// src/components/CategoryCard.astro
+import { Icon } from 'astro-icon/components';
+import { slugify } from '../utils/slugify';
+
+interface Props {
+  category: string;
+}
+const { category } = Astro.props;
+
+const icons = {
+  'Version Control': 'heroicons:command-line',
+  'Frontend': 'heroicons:paint-brush',
+  'Backend': 'heroicons:server-stack',
+  'default': 'heroicons:document-text'
+};
+
+type IconKeys = keyof typeof icons;
+const iconName = (category in icons) 
+  ? icons[category as IconKeys] 
+  : icons['default'];
+---
+<a href={`/blog/categories/${slugify(category)}`} class="card category-card">
+  <Icon name={iconName} class="card-icon" />
+  <h3 class="card-title">{category}</h3>
+</a>
+<style>
+  .category-card {
+    text-align: center;
+    padding: 2rem;
+    text-decoration: none;
+    color: var(--font-color);
+  }
+  .card-icon {
+    font-size: 2.5rem;
+    color: var(--brand-color);
+    margin-bottom: 1rem;
+    display: inline-block; 
+  }
+  .card-title {
+    font-size: 1.25rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    margin: 0;
+  }
+</style>

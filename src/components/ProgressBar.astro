@@ -1,0 +1,35 @@
+---
+// src/components/ProgressBar.astro
+---
+<div id="progress-bar" class="progress-bar"></div>
+
+<script>
+  function updateProgressBar() {
+    const bar = document.getElementById('progress-bar');
+    if (!bar) return;
+    
+    const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (window.scrollY / totalHeight) * 100;
+    
+    bar.style.width = `${progress}%`;
+  }
+
+  window.addEventListener('scroll', updateProgressBar);
+  document.addEventListener('astro:after-swap', updateProgressBar);
+  
+  // Initial call
+  updateProgressBar();
+</script>
+
+<style>
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand-color), var(--accent-color));
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s linear;
+  }
+</style>

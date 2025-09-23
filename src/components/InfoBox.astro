@@ -2,11 +2,22 @@
 // src/components/InfoBox.astro
 interface Props {
   title: string;
+  type?: 'info' | 'success' | 'warning' | 'danger';
 }
-const { title } = Astro.props;
+const { title, type = 'info' } = Astro.props;
+
+const icons = {
+  info: '💡',
+  success: '✅',
+  warning: '⚠️',
+  danger: '🔥'
+};
 ---
-<div class="info-box">
-  <div class="title-bar">💡 {title}</div>
+<div class={`info-box ${type}`}>
+  <div class="title-bar">
+    <span class="icon">{icons[type]}</span>
+    {title}
+  </div>
   <div class="content">
     <slot /> 
   </div>
@@ -14,28 +25,35 @@ const { title } = Astro.props;
 
 <style>
   .info-box {
-    border: 1px solid #3b82f6; 
     border-radius: 8px;
     margin: 2rem 0;
-    background-color: rgba(59, 130, 246, 0.1);
+    background-color: var(--card-bg-color);
     overflow: hidden;
+    border-left: 4px solid;
   }
   .title-bar {
-    background-color: #3b82f6;
-    color: white;
-    padding: 0.5rem 1rem;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
   }
   .content {
-    padding: 1rem;
+    padding: 0.25rem 1.25rem 1.25rem;
+    color: var(--font-color-light);
+  }
+  .content :global(p:last-child) {
+    margin-bottom: 0;
   }
 
-  html.dark .info-box {
-    border-color: #60a5fa;
-    background-color: rgba(96, 165, 250, 0.1);
-  }
-  html.dark .title-bar {
-    background-color: #60a5fa;
-    color: var(--bg-color);
-  }
+  /* Type Variants */
+  .info-box.info { border-color: var(--brand-color); }
+  .info-box.info .title-bar { color: var(--brand-color); }
+  .info-box.success { border-color: var(--success-color); }
+  .info-box.success .title-bar { color: var(--success-color); }
+  .info-box.warning { border-color: var(--warning-color); }
+  .info-box.warning .title-bar { color: var(--warning-color); }
+  .info-box.danger { border-color: var(--danger-color); }
+  .info-box.danger .title-bar { color: var(--danger-color); }
 </style>

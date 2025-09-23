@@ -6,43 +6,94 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate } = post.data;
+const { title, description, pubDate, tags, category } = post.data;
 const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'short',
   day: 'numeric',
 });
 ---
-<article class="card">
-  <a href={`/blog/${post.slug}`}>
-    <h3>{title}</h3>
-    <p>{description}</p>
-    <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+<article class="card blog-card">
+  <a href={`/blog/${post.slug}`} class="card-link">
+    <div class="card-content">
+      <p class="category">{category}</p>
+      <h3 class="title">{title}</h3>
+      <p class="description">{description}</p>
+    </div>
+    <div class="card-footer">
+      <div class="tags">
+        {tags.slice(0, 3).map(tag => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+    </div>
   </a>
 </article>
 
 <style>
-  .card {
-    border: 1px solid var(--card-border-color); 
-    border-radius: 12px;
-    padding: 1.5rem;
-    background-color: var(--card-bg-color); 
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
   }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2);
-  }
-  .card a {
+  .card-link {
     text-decoration: none;
     color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 1.5rem;
   }
-  h3 {
-    margin-top: 0;
-    color: var(--font-color); 
+  .card-content {
+    flex-grow: 1;
+  }
+  .category {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .title {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    margin: 0 0 0.75rem;
+    color: var(--font-color);
+  }
+  .description {
+    font-size: 1rem;
+    color: var(--font-color-light);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .card-footer {
+    border-top: 1px solid var(--card-border-color);
+    padding-top: 1rem;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tag {
+    background-color: var(--card-border-color);
+    color: var(--font-color-light);
+    padding: 0.2rem 0.6rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
   time {
     font-size: 0.875rem;
-    color: #666;
+    color: var(--font-color-light);
+    white-space: nowrap;
   }
 </style>

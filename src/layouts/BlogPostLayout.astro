@@ -1,78 +1,144 @@
 ---
 // src/layouts/BlogPostLayout.astro
 import BaseLayout from './BaseLayout.astro';
-const { frontmatter } = Astro.props;
-const { title, description, pubDate, heroImage } = frontmatter;
+import Toc from '../components/Toc.astro';
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import { slugify } from '../utils/slugify';
+
+interface Props {
+  frontmatter: CollectionEntry<'blog'>['data'];
+  headings: MarkdownHeading[];
+}
+
+const { frontmatter, headings } = Astro.props;
+const { title, description, pubDate, heroImage, category, tags } = frontmatter;
+
 const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   year: 'numeric',
-  month: 'short',
+  month: 'long',
   day: 'numeric',
 });
 ---
-<BaseLayout title={title}>
-  <article>
-    <div class="prose">
-      <div class="title">
-        {heroImage && <img width={720} height={360} src={heroImage} alt="" class="hero-image"/>}
+<BaseLayout title={title} description={description}>
+  <div class="layout-grid">
+    <aside class="left-sidebar">
+      <!-- Future use: Author bio, share buttons -->
+    </aside>
+
+    <article class="prose">
+      <header class="post-header">
+         <a href={`/blog/categories/${slugify(category)}`} class="category-link">{category}</a>
         <h1>{title}</h1>
-        <p>{description}</p>
-        <time>{formattedDate}</time>
+        <p class="description">{description}</p>
+        <div class="meta">
+          <span>{formattedDate}</span>
+        </div>
+        {heroImage && <img src={heroImage} alt={`Hero image for ${title}`} class="hero-image"/>}
+      </header>
+      
+      <div class="post-content">
+        <slot />
       </div>
-      <hr/>
-      <slot /> 
-    </div>
-  </article>
+
+      <footer class="post-footer">
+        <h3>Tags</h3>
+        <div class="tags-list">
+          {tags.map(tag => (
+            <a href={`/blog/tags/${slugify(tag)}`} class="tag-chip">{tag}</a>
+          ))}
+        </div>
+      </footer>
+    </article>
+
+    <aside class="right-sidebar">
+      <Toc headings={headings} />
+    </aside>
+  </div>
 </BaseLayout>
 
 <style>
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 800px) 1fr;
+    gap: 2rem;
+  }
+  .prose {
+    grid-column: 2;
+  }
+  .right-sidebar {
+    position: sticky;
+    top: 80px; 
+    align-self: start;
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+  
+  .post-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .category-link {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  h1 {
+    margin: 0.5rem 0 1rem;
+  }
+  .description {
+    font-size: 1.25rem;
+    color: var(--font-color-light);
+    max-width: 650px;
+    margin: 0 auto 1.5rem;
+  }
+  .meta {
+    font-size: 0.9rem;
+    color: var(--font-color-light);
+  }
   .hero-image {
     width: 100%;
-    height: auto;
-    border-radius: 8px;
+    margin-top: 2rem;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .post-footer {
+    margin-top: 4rem;
+    border-top: 1px solid var(--card-border-color);
+    padding-top: 2rem;
+  }
+  .post-footer h3 {
+    font-family: var(--font-serif);
     margin-bottom: 1rem;
   }
-  .title {
-    margin-bottom: 2rem;
-    text-align: center;
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
-  .title h1 {
-    font-size: 2rem;
+  .tag-chip {
+    background: var(--card-border-color);
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    color: var(--font-color-light);
+    font-size: 0.9rem;
+    transition: background-color 0.2s, color 0.2s;
   }
-  .title p {
-    font-size: 1.25rem;
-    color: #555;
-  }
-  time {
-    color: #666;
-  }
-
-  .prose {
-  }
-  .prose :global(h2) {
-    font-size: 2rem;
-    margin-top: 2.5rem;
-  }
-  .prose :global(p) {
-    line-height: 1.6;
-  }
-  .prose :global(pre) {
-    background-color: #282c34; 
-    color: #abb2bf; 
-    padding: 1em;
-    border-radius: 8px;
-    overflow-x: auto;
-  }
-  .prose :global(code) {
-    font-family: 'Fira Code', 'Courier New', monospace;
+  .tag-chip:hover {
+    background: var(--brand-color);
+    color: white;
   }
 
-  @media (max-width: 700px) {
-    .title h1 {
-      font-size: 2.25rem; 
+  @media (max-width: 1024px) {
+    .layout-grid {
+      grid-template-columns: 1fr;
     }
-
-    .title p {
-      font-size: 1.1rem;
+    .left-sidebar, .right-sidebar {
+      display: none;
+    }
+    .prose {
+      grid-column: 1;
     }
   }
 </style>
