@@ -1,4 +1,4 @@
-# 🧠 RxDev Notes: The Developer's Living Knowledge Base
+# 🧠 RxDev Man: The Developer's Living Knowledge Base
 
 > **Your ultimate, ever-growing knowledge base for modern software development.** From Git workflows to system architecture, debugging tricks to UI/UX best practices — meticulously curated by a developer, for developers.
 
