@@ -22,14 +22,14 @@ const categories = [...new Set(allPosts.map(post => post.data.category))];
 <BaseLayout title="Home">
   <div class="hero-section">
     <h1 class="tagline">RxDev Man</h1>
-    <p class="subtitle">สั่งจ่ายความรู้ Dev ครบโดส บันทึกการเดินทางสู่โลกแห่งการเขียนโค้ด</p>
-    <a href="/blog" class="cta-button">Explore All Articles</a>
+    <p class="subtitle">บันทึกการเดินทางสู่โลกแห่งการเขียนโค้ด</p>
+    <a href="/blog" class="cta-button">ดูบทความทั้งหมด</a>
   </div>
 
   <!-- Featured Post Section -->
   {featuredPost && (
     <section class="featured-section">
-      <h2>Featured Guide</h2>
+      <h2>บทความแนะนำ</h2>
       <a href={`/blog/${featuredPost.slug}`} class="featured-card">
         <img src={featuredPost.data.heroImage} alt="" class="featured-image"/>
         <div class="featured-content">
@@ -44,7 +44,7 @@ const categories = [...new Set(allPosts.map(post => post.data.category))];
 
   <!-- Categories Section -->
   <section class="categories-section">
-    <h2>Knowledge Domains</h2>
+    <h2>บทความตามหมวดหมู่</h2>
     <div class="category-grid">
       {categories.map(category => (
         <CategoryCard category={category} />
@@ -54,7 +54,7 @@ const categories = [...new Set(allPosts.map(post => post.data.category))];
 
   <!-- Latest Posts Section -->
   <section class="latest-section">
-    <h2>Latest Articles</h2>
+    <h2>บทความล่าสุด</h2>
     <div class="post-grid">
       {latestPosts.map(post => (
         <BlogPostCard post={post} />
