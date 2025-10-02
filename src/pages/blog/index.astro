@@ -6,16 +6,22 @@ import BlogPostCard from '../../components/BlogPostCard.astro';
 
 const allPosts = await getCollection('blog');
 
+// Sort posts by date, newest first
 const sortedPosts = allPosts.sort(
   (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
     b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---
-<BaseLayout title="My Blog Articles">
-  <h1>All Articles</h1>
-  <p>Here are all the articles I've written on my journey.</p>
+<BaseLayout title="All Articles">
+  <div class="blog-header">
+    <h1>All Articles</h1>
+    <p>
+      An archive of everything I've written. Dive into my notes on web development,
+      best practices, and personal discoveries.
+    </p>
+  </div>
 
-  <div class="post-list">
+  <div class="post-grid">
     {sortedPosts.map((post: CollectionEntry<'blog'>) => (
       <BlogPostCard post={post} />
     ))}
@@ -23,9 +29,25 @@ const sortedPosts = allPosts.sort(
 </BaseLayout>
 
 <style>
-  .post-list {
+  .blog-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .blog-header h1 {
+    margin-bottom: 0.5rem;
+  }
+  .blog-header p {
+    font-size: 1.2rem;
+    color: var(--font-color-light);
+  }
+
+  .post-grid {
     display: grid;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
     margin-top: 2rem;
   }
 </style>

@@ -23,7 +23,6 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 <BaseLayout title={title} description={description}>
   <div class="layout-grid">
     <aside class="left-sidebar">
-      <!-- Future use: Author bio, share buttons -->
     </aside>
 
     <article class="prose">
@@ -32,17 +31,17 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
         <h1>{title}</h1>
         <p class="description">{description}</p>
         <div class="meta">
-          <span>{formattedDate}</span>
+          <span>Published on {formattedDate}</span>
         </div>
-        {heroImage && <img src={heroImage} alt={`Hero image for ${title}`} class="hero-image"/>}
       </header>
       
+      {heroImage && <img src={heroImage} alt={`Hero image for ${title}`} class="hero-image"/>}
+
       <div class="post-content">
         <slot />
       </div>
 
       <footer class="post-footer">
-        <h3>Tags</h3>
         <div class="tags-list">
           {tags.map(tag => (
             <a href={`/blog/tags/${slugify(tag)}`} class="tag-chip">{tag}</a>
@@ -60,74 +59,82 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 <style>
   .layout-grid {
     display: grid;
-    grid-template-columns: 1fr minmax(0, 800px) 1fr;
+    grid-template-columns: minmax(1.5rem, 1fr) minmax(0, 800px) minmax(1.5rem, 1fr);
     gap: 2rem;
   }
   .prose {
     grid-column: 2;
   }
   .right-sidebar {
+    grid-column: 3;
     position: sticky;
-    top: 80px; 
+    top: 100px; 
     align-self: start;
-    height: calc(100vh - 100px);
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
   }
   
   .post-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
   }
   .category-link {
     font-family: var(--font-mono);
     text-transform: uppercase;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 500;
+    color: var(--font-color-light);
+    letter-spacing: 0.05em;
+  }
+  .category-link:hover {
+    color: var(--brand-color);
   }
   h1 {
     margin: 0.5rem 0 1rem;
   }
   .description {
     font-size: 1.25rem;
-    color: var(--font-color-light);
-    max-width: 650px;
+    color: var(--font-color);
+    max-width: 680px;
     margin: 0 auto 1.5rem;
   }
   .meta {
     font-size: 0.9rem;
     color: var(--font-color-light);
+    font-family: var(--font-sans);
   }
   .hero-image {
     width: 100%;
-    margin-top: 2rem;
+    margin-bottom: 3rem;
     aspect-ratio: 16 / 9;
     object-fit: cover;
+    border: 1px solid var(--card-border-color);
   }
   .post-footer {
     margin-top: 4rem;
     border-top: 1px solid var(--card-border-color);
     padding-top: 2rem;
   }
-  .post-footer h3 {
-    font-family: var(--font-serif);
-    margin-bottom: 1rem;
-  }
+
   .tags-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+    justify-content: center;
   }
   .tag-chip {
-    background: var(--card-border-color);
+    background: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
     padding: 0.4rem 1rem;
     border-radius: 99px;
     color: var(--font-color-light);
     font-size: 0.9rem;
-    transition: background-color 0.2s, color 0.2s;
+    transition: all 0.2s ease;
   }
   .tag-chip:hover {
-    background: var(--brand-color);
-    color: white;
+    background: var(--font-color);
+    border-color: var(--font-color);
+    color: var(--card-bg-color);
   }
 
   @media (max-width: 1024px) {

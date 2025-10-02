@@ -2,43 +2,58 @@
 // src/components/CategoryCard.astro
 import { Icon } from 'astro-icon/components';
 import { slugify } from '../utils/slugify';
-
 interface Props {
   category: string;
 }
 const { category } = Astro.props;
 
-const icons = {
-  'Version Control': 'heroicons:command-line',
+const icons: { [key: string]: string } = {
+  'Version Control': 'heroicons:code-bracket-square',
   'Frontend': 'heroicons:paint-brush',
+  'Frontend Frameworks': 'heroicons:squares-2x2',
   'Backend': 'heroicons:server-stack',
+  'Google Apps Script': 'heroicons:table-cells',
   'default': 'heroicons:document-text'
 };
 
-type IconKeys = keyof typeof icons;
-const iconName = (category in icons) 
-  ? icons[category as IconKeys] 
-  : icons['default'];
+const iconName = icons[category] || icons['default'];
 ---
 <a href={`/blog/categories/${slugify(category)}`} class="card category-card">
-  <Icon name={iconName} class="card-icon" />
+  <div class="icon-wrapper">
+    <Icon name={iconName} class="card-icon" />
+  </div>
   <h3 class="card-title">{category}</h3>
 </a>
 <style>
   .category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 2rem;
+    padding: 2.5rem 1.5rem;
     text-decoration: none;
     color: var(--font-color);
+    gap: 1rem;
   }
+
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: color-mix(in srgb, var(--brand-color) 10%, transparent);
+    border-radius: 50%;
+  }
+
   .card-icon {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     color: var(--brand-color);
-    margin-bottom: 1rem;
-    display: inline-block; 
   }
+
   .card-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-family: var(--font-sans);
     font-weight: 600;
     margin: 0;

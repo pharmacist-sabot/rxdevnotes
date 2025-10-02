@@ -9,9 +9,11 @@ interface Props {
 
 const { title, icon } = Astro.props;
 ---
-<div class="card">
+<div class="feature-card">
   <div class="card-header">
-    <Icon name={`heroicons:${icon}-solid`} class="card-icon" />
+    <div class="icon-wrapper">
+      <Icon name={`heroicons:${icon}`} class="card-icon" />
+    </div>
     <h3>{title}</h3>
   </div>
   <div class="card-content">
@@ -20,23 +22,36 @@ const { title, icon } = Astro.props;
 </div>
 
 <style>
-  .card {
-    background-color: var(--card-bg-color);
-    border: 1px solid var(--card-border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  .feature-card {
+    background-color: transparent;
+    padding: 1rem;
     color: var(--font-color); 
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    border-radius: 12px;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .feature-card:hover {
+    background-color: var(--card-bg-color);
   }
 
   .card-header {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     margin-bottom: 1rem;
   }
   
+  .icon-wrapper {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background-color: color-mix(in srgb, var(--brand-color) 10%, transparent);
+    border-radius: 50%;
+  }
+
   .card-icon {
     color: var(--brand-color);
     width: 24px;
@@ -45,14 +60,15 @@ const { title, icon } = Astro.props;
 
   h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    color: var(--brand-color);
+    font-family: var(--font-sans); 
+    color: var(--font-color);
   }
 
   .card-content {
     line-height: 1.6;
-    opacity: 0.9;
+    color: var(--font-color-light);
   }
 
   .card-content :global(a) {

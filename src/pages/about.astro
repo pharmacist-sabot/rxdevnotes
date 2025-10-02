@@ -3,44 +3,112 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About Me - RxDev Notes">
-  <div class="about-container">
-    <h1>About Me</h1>
-    <img src="/profile-placeholder.jpg" alt="Profile" class="profile-img" /> <!-- Add your image in public/ -->
-    <p>
-      Hi, I'm [Your Name], a passionate programmer specializing in frontend development, Astro, and healthcare software like HOSxP. I share my experiences through this blog to help others in the coding journey.
-    </p>
-    <p>
-      In my free time, I explore new tech stacks and contribute to open-source projects.
-    </p>
-    <a href="mailto:your.email@example.com" class="cta-button">Contact Me</a>
+<BaseLayout title="About Me">
+  <div class="about-page-container">
+    <div class="about-grid">
+      <div class="text-content">
+        <h1>From Pharmacy to Pixels</h1>
+        <p class="lead">
+          My journey began behind a pharmacy counter, surrounded by prescriptions and patient care. Today, I build digital solutions, crafting clean code and intuitive user experiences. This is the story of my transition from pharmacist to software developer.
+        </p>
+        <p>
+          I'm Sabot, the creator of RxDev Man. My passion for logic, problem-solving, and efficiency—skills honed in healthcare—led me to discover a new calling in software development. I was fascinated by how technology could solve complex problems at scale, and I decided to dive in headfirst.
+        </p>
+        <p>
+          This website serves as my personal knowledge base and a public journal of my learning process. I write about topics that I'm exploring, from frontend frameworks like Astro and Vue to best practices in version control and even specific challenges in healthcare software like HOSxP. My goal is to solidify my own understanding by teaching others and to share the resources that have helped me along the way.
+        </p>
+
+        <h2>Connect With Me</h2>
+        <p>
+          I'm always open to discussing new projects, sharing knowledge, or just talking about technology. Feel free to reach out.
+        </p>
+        <div class="social-links">
+          <a href="https://github.com/pharmacist-sabot/" target="_blank" rel="noopener noreferrer" class="social-link">GitHub</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="social-link">LinkedIn</a>
+          <a href="mailto:your.email@example.com" class="social-link">Email</a>
+        </div>
+      </div>
+      <div class="image-content">
+        <img 
+          src="/profile-placeholder.jpg" 
+          alt="A portrait of Sabot" 
+          class="profile-image-about"
+        />
+      </div>
+    </div>
   </div>
 </BaseLayout>
 
 <style>
-  .about-container {
-    text-align: center;
-    max-width: 600px;
+  .about-page-container {
+    max-width: 1000px;
     margin: 0 auto;
-    animation: fadeIn 1s ease-in;
+    padding: 4rem 0;
   }
 
-  .profile-img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    border: 4px solid var(--brand-color);
+  .about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--font-color);
     margin-bottom: 2rem;
-    transition: transform 0.3s ease;
-  }
-
-  .profile-img:hover {
-    transform: rotate(5deg) scale(1.1);
-  }
-
-  p {
-    font-size: 1.1rem;
     line-height: 1.6;
-    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--card-border-color);
+    padding-top: 2rem;
+  }
+
+  .image-content {
+    position: sticky;
+    top: 100px; 
+  }
+
+  .profile-image-about {
+    border-radius: 16px;
+    width: 100%;
+    border: 1px solid var(--card-border-color);
+    box-shadow: 0 8px 25px var(--shadow-hover-color);
+  }
+
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .social-link {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
+    color: var(--font-color);
+    padding: 0.5rem 1.2rem;
+    border-radius: 99px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .social-link:hover {
+    background-color: var(--font-color);
+    border-color: var(--font-color);
+    color: var(--card-bg-color);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+    .image-content {
+      order: -1; 
+      position: static;
+      margin-bottom: 2rem;
+    }
   }
 </style>

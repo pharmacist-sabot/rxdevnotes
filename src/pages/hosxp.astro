@@ -3,20 +3,50 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="HOSxP Resources - RxDev Notes">
-  <div class="hosxp-container">
-    <h1>บทความหรือเครื่องมือที่เกี่ยวข้อง</h1>
-    <p>
-      Coming soon.
+<BaseLayout title="HOSxP Resources">
+  <div class="page-container">
+    <h1 class="page-title">HOSxP Resources</h1>
+    <p class="page-subtitle">
+      A dedicated space for tools, guides, and notes related to HOSxP development.
     </p>
+    <div class="status-box">
+      <p>Coming Soon</p>
+    </div>
     <a href="/blog" class="cta-button">Back to Blog</a>
   </div>
 </BaseLayout>
 
 <style>
-  .hosxp-container {
+  .page-container {
     text-align: center;
-    animation: fadeIn 1s ease-in;
+    padding: 4rem 0;
+    max-width: 700px;
+    margin: 0 auto;
   }
 
+  .page-title {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 1.25rem;
+    color: var(--font-color-light);
+    margin-bottom: 3rem;
+  }
+
+  .status-box {
+    border: 2px dashed var(--card-border-color);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .status-box p {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    color: var(--font-color-light);
+    margin: 0;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
 </style>

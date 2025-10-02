@@ -9,11 +9,7 @@ const { title } = Astro.props;
 ---
 <div class="explainer-box">
   <div class="header">
-    <div class="window-buttons">
-      <span class="dot red"></span>
-      <span class="dot yellow"></span>
-      <span class="dot green"></span>
-    </div>
+    <Icon name="heroicons:code-bracket" class="header-icon" />
     <span class="title">{title}</span>
   </div>
   <div class="content">
@@ -26,35 +22,31 @@ const { title } = Astro.props;
     background-color: var(--card-bg-color);
     border: 1px solid var(--card-border-color);
     border-radius: 12px;
-    margin: 2rem 0;
+    margin: 2.5rem 0;
     overflow: hidden;
     box-shadow: 0 4px 12px var(--shadow-color);
   }
+
   .header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1.25rem;
-    background-color: color-mix(in srgb, var(--card-bg-color) 85%, var(--card-border-color));
+    background-color: color-mix(in srgb, var(--card-bg-color) 80%, var(--card-border-color));
     border-bottom: 1px solid var(--card-border-color);
   }
-  .window-buttons {
-    display: flex;
-    gap: 0.5rem;
+  
+  .header-icon {
+    font-size: 1.25rem;
+    color: var(--font-color-light);
   }
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-  }
-  .red { background-color: #ff5f56; }
-  .yellow { background-color: #ffbd2e; }
-  .green { background-color: #27c93f; }
+
   .title {
     font-weight: 500;
-    color: var(--font-color-light);
+    color: var(--font-color);
     font-family: var(--font-mono);
   }
+
   .content {
     padding: 1rem 1.25rem;
   }
@@ -64,6 +56,7 @@ const { title } = Astro.props;
   }
   .content :global(details:first-child) { padding-top: 0; }
   .content :global(details:last-child) { border-bottom: none; padding-bottom: 0; }
+  
   .content :global(summary) {
     cursor: pointer;
     font-weight: 600;
@@ -72,22 +65,31 @@ const { title } = Astro.props;
     align-items: center;
     gap: 0.5rem;
     color: var(--font-color);
+    transition: color 0.2s ease;
   }
+  .content :global(summary:hover) {
+    color: var(--brand-color);
+  }
+
   .content :global(summary::-webkit-details-marker) { display: none; }
+  
   .content :global(summary::before) {
     content: '▶';
     font-size: 0.6em;
     color: var(--brand-color);
     transition: transform 0.2s ease-in-out;
+    margin-right: 0.25rem;
   }
   .content :global(details[open] > summary::before) {
     transform: rotate(90deg);
   }
+  
   .content :global(details p) {
     margin-top: 0.75rem;
     margin-bottom: 0;
     padding-left: 1.5rem;
     color: var(--font-color-light);
     line-height: 1.7;
+    border-left: 2px solid var(--card-border-color);
   }
 </style>

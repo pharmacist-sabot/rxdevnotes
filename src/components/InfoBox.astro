@@ -7,16 +7,17 @@ interface Props {
 const { title, type = 'info' } = Astro.props;
 
 const icons = {
-  info: '💡',
-  success: '✅',
-  warning: '⚠️',
-  danger: '🔥'
+  info: 'heroicons:information-circle',
+  success: 'heroicons:check-circle',
+  warning: 'heroicons:exclamation-triangle',
+  danger: 'heroicons:shield-exclamation'
 };
+import { Icon } from 'astro-icon/components';
 ---
 <div class={`info-box ${type}`}>
   <div class="title-bar">
-    <span class="icon">{icons[type]}</span>
-    {title}
+    <Icon name={icons[type]} class="icon" />
+    <span class="title-text">{title}</span>
   </div>
   <div class="content">
     <slot /> 
@@ -25,35 +26,59 @@ const icons = {
 
 <style>
   .info-box {
-    border-radius: 8px;
-    margin: 2rem 0;
-    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    margin: 2.5rem 0;
     overflow: hidden;
-    border-left: 4px solid;
+    border: 1px solid;
   }
   .title-bar {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1.25rem;
+    padding: 1rem 1.25rem;
     font-weight: 600;
     font-family: var(--font-sans);
   }
+  .icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
   .content {
     padding: 0.25rem 1.25rem 1.25rem;
-    color: var(--font-color-light);
+    color: var(--font-color);
   }
   .content :global(p:last-child) {
     margin-bottom: 0;
   }
+  .content :global(ul), .content :global(ol) {
+    padding-left: 1.5rem;
+  }
+  .content :global(a) {
+    font-weight: 500;
+  }
 
   /* Type Variants */
-  .info-box.info { border-color: var(--brand-color); }
+  .info-box.info { 
+    background-color: color-mix(in srgb, var(--brand-color) 8%, transparent);
+    border-color: color-mix(in srgb, var(--brand-color) 20%, transparent);
+  }
   .info-box.info .title-bar { color: var(--brand-color); }
-  .info-box.success { border-color: var(--success-color); }
+  
+  .info-box.success {
+    background-color: color-mix(in srgb, var(--success-color) 10%, transparent);
+    border-color: color-mix(in srgb, var(--success-color) 25%, transparent);
+  }
   .info-box.success .title-bar { color: var(--success-color); }
-  .info-box.warning { border-color: var(--warning-color); }
+
+  .info-box.warning { 
+    background-color: color-mix(in srgb, var(--warning-color) 10%, transparent);
+    border-color: color-mix(in srgb, var(--warning-color) 30%, transparent);
+  }
   .info-box.warning .title-bar { color: var(--warning-color); }
-  .info-box.danger { border-color: var(--danger-color); }
+  
+  .info-box.danger { 
+    background-color: color-mix(in srgb, var(--danger-color) 10%, transparent);
+    border-color: color-mix(in srgb, var(--danger-color) 25%, transparent);
+  }
   .info-box.danger .title-bar { color: var(--danger-color); }
 </style>

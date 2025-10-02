@@ -8,9 +8,9 @@ interface Props {
 
 const { headings } = Astro.props;
 
-const filteredHeadings = headings.filter(h => h.depth > 1 && h.depth < 4);
+const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 ---
-{filteredHeadings.length > 0 && (
+{filteredHeadings.length > 1 && (
   <nav class="toc">
     <h3 class="toc-title">On this page</h3>
     <ul class="toc-list">
@@ -29,16 +29,24 @@ const filteredHeadings = headings.filter(h => h.depth > 1 && h.depth < 4);
     if (tocLinks.length === 0) return;
 
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        const id = entry.target.getAttribute('id');
-        const tocLink = document.querySelector(`.toc-item a[href="#${id}"]`);
-        
-        if (entry.isIntersecting) {
-          tocLinks.forEach(link => link.classList.remove('active'));
-          tocLink?.classList.add('active');
-        }
-      });
-    }, { rootMargin: '0px 0px -80% 0px' });
+      const intersectingEntries = entries.filter(entry => entry.isIntersecting);
+
+      if (intersectingEntries.length > 0) {
+        intersectingEntries.sort(
+          (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+        );
+
+        const activeEntry = intersectingEntries[0];
+        const id = activeEntry.target.getAttribute('id');
+
+        tocLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+      }
+    }, { 
+      rootMargin: '0px 0px -80% 0px',
+      threshold: 1.0
+    });
 
     document.querySelectorAll('.prose h2, .prose h3').forEach(heading => {
       observer.observe(heading);
@@ -51,11 +59,13 @@ const filteredHeadings = headings.filter(h => h.depth > 1 && h.depth < 4);
     padding: 1rem 0;
   }
   .toc-title {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    font-family: var(--font-sans);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin-bottom: 1rem;
-    color: var(--font-color);
+    color: var(--font-color-light);
   }
   .toc-list {
     list-style: none;

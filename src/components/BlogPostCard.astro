@@ -14,19 +14,15 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 });
 ---
 <article class="card blog-card">
-  <a href={`/blog/${post.slug}`} class="card-link">
+  <a href={`/blog/${post.slug}`} class="card-link" aria-label={`Read more about ${title}`}>
     <div class="card-content">
       <p class="category">{category}</p>
       <h3 class="title">{title}</h3>
       <p class="description">{description}</p>
     </div>
     <div class="card-footer">
-      <div class="tags">
-        {tags.slice(0, 3).map(tag => (
-          <span class="tag">{tag}</span>
-        ))}
-      </div>
       <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+      <span class="read-more">Read More &rarr;</span>
     </div>
   </a>
 </article>
@@ -39,36 +35,48 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
     padding: 0;
     overflow: hidden;
   }
+
   .card-link {
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: 1.5rem;
+    padding: 1.75rem;
   }
+
   .card-content {
     flex-grow: 1;
   }
+
   .category {
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    color: var(--accent-color);
-    margin-bottom: 0.5rem;
+    color: var(--font-color-light);
+    margin-bottom: 0.75rem;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
+
   .title {
     font-family: var(--font-serif);
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
     margin: 0 0 0.75rem;
     color: var(--font-color);
   }
+
   .description {
     font-size: 1rem;
     color: var(--font-color-light);
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
   }
+
   .card-footer {
     border-top: 1px solid var(--card-border-color);
     padding-top: 1rem;
@@ -76,24 +84,21 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    font-size: 0.9rem;
   }
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .tag {
-    background-color: var(--card-border-color);
-    color: var(--font-color-light);
-    padding: 0.2rem 0.6rem;
-    border-radius: 99px;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
+
   time {
-    font-size: 0.875rem;
     color: var(--font-color-light);
-    white-space: nowrap;
   }
+  
+  .read-more {
+    color: var(--brand-color);
+    font-weight: 500;
+    transition: transform 0.2s ease;
+  }
+
+  .card-link:hover .read-more {
+    transform: translateX(4px);
+  }
+
 </style>

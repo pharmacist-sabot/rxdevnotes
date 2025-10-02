@@ -1,97 +1,103 @@
 ---
 // src/pages/index.astro
-import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BlogPostCard from '../components/BlogPostCard.astro';
-import CategoryCard from '../components/CategoryCard.astro'; 
-
-// 1. Get all posts and sort them
-const allPosts = await getCollection('blog');
-const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-// 2. Find the featured post
-const featuredPost = sortedPosts.find(post => post.data.featured);
-
-// 3. Get latest posts (exclude featured post if it exists)
-const nonFeaturedPosts = featuredPost ? sortedPosts.filter(p => p.slug !== featuredPost.slug) : sortedPosts;
-const latestPosts = nonFeaturedPosts.slice(0, 4);
-
-// 4. Get all unique categories
-const categories = [...new Set(allPosts.map(post => post.data.category))];
 ---
-<BaseLayout title="Home">
-  <div class="hero-section">
-    <h1 class="tagline">RxDev Man</h1>
-    <p class="subtitle">บันทึกการเดินทางสู่โลกแห่งการเขียนโค้ด</p>
-    <a href="/blog" class="cta-button">ดูบทความทั้งหมด</a>
+<BaseLayout title="Welcome">
+  <div class="home-container">
+    <div class="intro-grid">
+      <div class="intro-text-content">
+        <p class="greeting">HI, I'M SURADET</p>
+        <h1 class="headline">
+          Pharmacist by Training,<br />Developer by Passion.
+        </h1>
+        <p class="description">
+          ยินดีต้อนรับสู่ RxDev Man ของผม นี่คือที่ที่ผมจะบันทึกเรื่องราวการเปลี่ยนผ่านจากสายงาน เภสัชกรรม (pharmacy) เข้าสู่โลกของ การพัฒนาซอฟต์แวร์ (software development) 
+        </p>
+        <a href="/blog" class="cta-button">Explore My Notes</a>
+      </div>
+      <div class="profile-image-container">
+        <img 
+          src="/profile-placeholder.jpg" 
+          alt="A portrait of the author" 
+          class="profile-image" 
+        />
+      </div>
+    </div>
   </div>
-
-  <!-- Featured Post Section -->
-  {featuredPost && (
-    <section class="featured-section">
-      <h2>บทความแนะนำ</h2>
-      <a href={`/blog/${featuredPost.slug}`} class="featured-card">
-        <img src={featuredPost.data.heroImage} alt="" class="featured-image"/>
-        <div class="featured-content">
-          <p class="featured-category">{featuredPost.data.category}</p>
-          <h3>{featuredPost.data.title}</h3>
-          <p class="featured-description">{featuredPost.data.description}</p>
-          <span class="read-more">Read more &rarr;</span>
-        </div>
-      </a>
-    </section>
-  )}
-
-  <!-- Categories Section -->
-  <section class="categories-section">
-    <h2>บทความตามหมวดหมู่</h2>
-    <div class="category-grid">
-      {categories.map(category => (
-        <CategoryCard category={category} />
-      ))}
-    </div>
-  </section>
-
-  <!-- Latest Posts Section -->
-  <section class="latest-section">
-    <h2>บทความล่าสุด</h2>
-    <div class="post-grid">
-      {latestPosts.map(post => (
-        <BlogPostCard post={post} />
-      ))}
-    </div>
-  </section>
 </BaseLayout>
 
 <style>
-  /* Hero Section */
-  .hero-section { text-align: center; padding: 4rem 0; }
-  .tagline { margin: 0; }
-  .subtitle { max-width: 600px; margin: 1rem auto 2rem; font-size: 1.25rem; color: var(--font-color-light); }
-  .cta-button { /* General button styles are in global.css */ }
-  
-  h2 { text-align: center; margin-bottom: 2rem; }
-  
-  /* Featured Section */
-  .featured-section { margin-bottom: 4rem; }
-  .featured-card { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; text-decoration: none; color: inherit; background-color: var(--card-bg-color); border-radius: 16px; overflow: hidden; border: 1px solid var(--card-border-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-  .featured-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px var(--shadow-hover-color); }
-  .featured-image { width: 100%; height: 100%; object-fit: cover; margin: 0; border-radius: 0; }
-  .featured-content { padding: 2rem; }
-  .featured-category { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-color); margin-bottom: 0.5rem; text-transform: uppercase; }
-  .featured-content h3 { font-size: 1.8rem; margin: 0 0 1rem; }
-  .featured-description { color: var(--font-color-light); }
-  .read-more { color: var(--brand-color); font-weight: 600; margin-top: 1rem; display: inline-block; }
-  
-  /* Categories Section */
-  .categories-section { margin-bottom: 4rem; }
-  .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-  
-  /* Latest Posts Section */
-  .post-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .home-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 280px); 
+    padding: 2rem 0;
+  }
 
-  @media (max-width: 768px) {
-    .featured-card { grid-template-columns: 1fr; }
-    .featured-image { aspect-ratio: 16/9; }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    max-width: 1100px;
+  }
+
+  .greeting {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--font-color-light);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .headline {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .description {
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+  }
+
+  .profile-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .profile-image {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--card-bg-color);
+    box-shadow: 0 10px 30px var(--shadow-hover-color);
+  }
+
+  @media (max-width: 900px) {
+    .intro-grid {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 3rem;
+    }
+    .intro-text-content {
+      order: 2; 
+    }
+    .profile-image-container {
+      order: 1; 
+    }
+    .description {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .profile-image {
+      width: 220px;
+      height: 220px;
+    }
   }
 </style>

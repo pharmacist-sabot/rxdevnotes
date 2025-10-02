@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && npm run pagefind", 
-    "pagefind": "npx pagefind --site dist", 
+    "build": "astro build && npm run pagefind",
+    "pagefind": "npx pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -15,7 +15,7 @@
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/vercel": "^8.2.6",
     "@iconify-json/heroicons": "^1.2.2",
-    "astro": "^5.13.10",
+    "astro": "^5.14.1",
     "astro-icon": "^1.1.5",
     "astro-pagefind": "^1.8.5",
     "zod": "^3.25.76"
