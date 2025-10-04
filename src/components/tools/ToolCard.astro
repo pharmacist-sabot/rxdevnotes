@@ -1,0 +1,61 @@
+---
+// src/components/tools/ToolCard.astro
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  icon: string;
+}
+const { title, description, href, icon } = Astro.props;
+---
+<a href={href} class="card tool-card">
+  <div class="icon-wrapper">
+    <Icon name={icon} class="card-icon" />
+  </div>
+  <div class="text-content">
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </div>
+  <span class="cta-arrow">&rarr;</span>
+</a>
+<style>
+  .tool-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-decoration: none;
+    color: var(--font-color);
+  }
+  .icon-wrapper {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    background-color: color-mix(in srgb, var(--brand-color) 10%, transparent);
+    border-radius: 12px;
+  }
+  .card-icon {
+    font-size: 1.75rem;
+    color: var(--brand-color);
+  }
+  h3 {
+    margin: 0 0 0.25rem;
+  }
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .cta-arrow {
+    margin-left: auto;
+    font-size: 1.5rem;
+    color: var(--font-color-light);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .tool-card:hover .cta-arrow {
+    color: var(--brand-color);
+    transform: translateX(5px);
+  }
+</style>

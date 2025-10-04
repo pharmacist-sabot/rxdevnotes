@@ -1,0 +1,46 @@
+---
+// src/pages/tools/index.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/tools/ToolCard.astro';
+---
+
+<BaseLayout title="Developer Tools">
+  <div class="page-header">
+    <h1>Developer Tools & Projects</h1>
+    <p>
+     รวมเว็บแอปและเครื่องมือที่ผมสร้างขึ้นเพื่อแก้ปัญหาจริงในงานด้านเภสัชกรรมไปจนถึงช่วยให้นักพัฒนาทำงานได้สะดวกขึ้น
+    </p>
+  </div>
+
+  <div class="tools-grid">
+    <ToolCard
+      title="ระบบเบิกจ่ายยาออนไลน์"
+      description="เว็บแอปพลิเคชันสำหรับจัดการการเบิกจ่ายยาภายในคปสอ.สระโบสถ์"
+      href="/tools/cupsabot" 
+      icon="heroicons:beaker"
+    />
+    <!-- You can add more <ToolCard /> here for future tools -->
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .page-header h1 {
+    margin-bottom: 0.5rem;
+  }
+  .page-header p {
+    font-size: 1.2rem;
+    color: var(--font-color-light);
+  }
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+// src/pages/tools/cupsabot.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+
+// IMPORTANT: Replace this with the actual URL of your deployed application
+const appUrl = "http://cupsabot.rxdevman.com";
+---
+
+<BaseLayout title="Project: ระบบเบิกจ่ายยาออนไลน์">
+  <div class="project-showcase">
+    <header class="project-header">
+      <h1>ระบบเบิกจ่ายยาออนไลน์</h1>
+      <p class="subtitle">
+        เว็บแอปพลิเคชันเต็มรูปแบบสำหรับเพิ่มประสิทธิภาพการจัดการและติดตามการเบิกจ่ายยาของคปสอ.สระโบสถ์
+      </p>
+      <a 
+        href={appUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="cta-button launch-button"
+      >
+        เปิดใช้งานระบบ
+      </a>
+    </header>
+
+    <div class="screenshot-container">
+      <!-- IMPORTANT: Replace with the path to your actual screenshot -->
+      <img 
+        src="/images/tools/cupsabot.png" 
+        alt="Screenshot of the medication dispensing app dashboard"
+        class="main-screenshot"
+      />
+    </div>
+    
+    <div class="project-details">
+      <h2>คุณสมบัติหลัก</h2>
+      <FeatureGrid>
+        <FeatureCard title="ระบบเบิกยาของรพ.สต." icon="clock">
+          สร้างใบเบิกยาสำหรับ รพ.สต. ในพื้นที่คปสอ.สระโบสถ์ได้อย่างรวดเร็ว ง่าย สะดวก
+        </FeatureCard>
+        <FeatureCard title="ระบบบริหารจัดการยาและใบเบิก" icon="lock-closed">
+          จัดการรายการยาและใบเบิกได้อย่างมีประสิทธิภาพ
+        </FeatureCard>
+      </FeatureGrid>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .project-header {
+    text-align: center;
+    margin: 2rem 0 4rem;
+  }
+  .subtitle {
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 1rem auto 2rem;
+  }
+  .launch-button {
+    font-size: 1.1rem;
+    padding: 1rem 2.5rem;
+  }
+  .screenshot-container {
+    max-width: 1000px;
+    margin: 0 auto 4rem;
+  }
+  .main-screenshot {
+    border-radius: 16px;
+    border: 1px solid var(--card-border-color);
+    box-shadow: 0 15px 40px var(--shadow-hover-color);
+  }
+  .project-details {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .tech-stack {
+    margin-top: 4rem;
+  }
+  .stack-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    justify-content: center;
+  }
+  .stack-item {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .project-header {
+      margin: 1rem 0 3rem;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+    }
+    .launch-button {
+      font-size: 1rem;
+      padding: 0.8rem 2rem;
+    }
+    .screenshot-container {
+      margin-bottom: 3rem;
+    }
+    .tech-stack {
+      margin-top: 3rem;
+    }
+    .stack-items {
+      justify-content: center;
+    }
+  }
+</style>
