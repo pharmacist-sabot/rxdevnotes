@@ -21,7 +21,6 @@
     <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
       <span class="bar"></span>
       <span class="bar"></span>
-      <span class="bar"></span>
     </button>
   </div>
 </header>
@@ -42,7 +41,6 @@
 
   window.addEventListener('scroll', () => {
     if (!navbar) return;
-
     if (window.scrollY > 20) { 
       navbar.classList.add('scrolled');
     } else {
@@ -85,8 +83,8 @@
     color: var(--brand-color);
   }
   .logo-svg {
-    height: 32px;
-    width: 32px;
+    height: 40px;
+    width: 40px;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .logo:hover .logo-svg {
@@ -106,6 +104,7 @@
   .nav-links {
     display: flex;
     gap: 2.5rem;
+     font-size: 1.2rem;
   }
   .nav-links a {
     color: var(--font-color);
@@ -135,23 +134,33 @@
 
   .hamburger {
     display: none;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--card-border-color);
+    border-radius: 50%;
     flex-direction: column;
-    justify-content: space-around;
-    width: 28px;
-    height: 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px; 
+
     background: transparent;
-    border: none;
     cursor: pointer;
     padding: 0;
     z-index: 1001;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
+  .hamburger:hover {
+    background-color: var(--card-bg-color);
+    border-color: var(--font-color-light);
+  }
+
   .bar {
-    width: 28px;
-    height: 3px;
+    width: 16px; 
+    height: 2px;
     background-color: var(--font-color);
     border-radius: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center; 
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
   }
 
   @media (max-width: 768px) {
@@ -160,7 +169,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2rem;
+      gap: 1rem;
       position: fixed;
       top: 0;
       left: 0;
@@ -176,19 +185,17 @@
       transform: translateX(0);
     }
     .nav-links a {
-      font-size: 2rem;
+      font-size: 1.2rem;
     }
     .hamburger {
       display: flex;
     }
+
     .hamburger.active .bar:nth-child(1) {
-      transform: translateY(8.5px) rotate(45deg);
+      transform: translateY(3px) rotate(45deg);
     }
     .hamburger.active .bar:nth-child(2) {
-      opacity: 0;
-    }
-    .hamburger.active .bar:nth-child(3) {
-      transform: translateY(-8.5px) rotate(-45deg);
+      transform: translateY(-3px) rotate(-45deg);
     }
   }
 
