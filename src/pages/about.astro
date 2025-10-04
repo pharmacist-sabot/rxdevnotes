@@ -7,25 +7,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="about-page-container">
     <div class="about-grid">
       <div class="text-content">
-        <h1>From Pharmacy to Pixels</h1>
+        <h1>จากเภสัชกรสู่โปรแกรมเมอร์</h1>
         <p class="lead">
-          My journey began behind a pharmacy counter, surrounded by prescriptions and patient care. Today, I build digital solutions, crafting clean code and intuitive user experiences. This is the story of my transition from pharmacist to software developer.
+          เส้นทางของผมเริ่มต้นที่เคาน์เตอร์จ่ายยาท่ามกลางใบสั่งยาและการดูแลผู้ป่วย มาวันนี้ผมเปลี่ยนมาสร้างสรรค์โซลูชันดิจิทัล เขียนโค้ดที่สะอาดตา และออกแบบประสบการณ์ผู้ใช้ที่เข้าใจง่าย นี่คือเรื่องราวการเดินทางของผมจากบทบาทเภสัชกรสู่การเป็นนักพัฒนาซอฟต์แวร์
         </p>
         <p>
-          I'm Sabot, the creator of RxDev Man. My passion for logic, problem-solving, and efficiency—skills honed in healthcare—led me to discover a new calling in software development. I was fascinated by how technology could solve complex problems at scale, and I decided to dive in headfirst.
+          ผมคือเภสัชกรสุรเดช ประถมศักดิ์ ผู้สร้าง RxDev Man ด้วยความหลงใหลในตรรกะ การแก้ปัญหา และประสิทธิภาพ ซึ่งเป็นทักษะที่ได้ฝึกฝนจากงานสายสาธารณสุข ทำให้ผมได้ค้นพบเส้นทางใหม่ในการพัฒนาซอฟต์แวร์ ผมทึ่งกับวิธีที่เทคโนโลยีสามารถแก้ปัญหาที่ซับซ้อนในวงกว้างได้ และตัดสินใจที่จะกระโดดเข้ามาเรียนรู้อย่างเต็มตัว
         </p>
         <p>
-          This website serves as my personal knowledge base and a public journal of my learning process. I write about topics that I'm exploring, from frontend frameworks like Astro and Vue to best practices in version control and even specific challenges in healthcare software like HOSxP. My goal is to solidify my own understanding by teaching others and to share the resources that have helped me along the way.
+          เว็บไซต์นี้เปรียบเสมือนคลังความรู้ส่วนตัวและบันทึกการเรียนรู้ที่ผมเปิดเผยสู่สาธารณะ ผมเขียนเกี่ยวกับหัวข้อต่างๆ ที่กำลังศึกษา ตั้งแต่ frontend frameworks อย่าง Astro และ Vue ไปจนถึงความท้าทายเฉพาะทางในซอฟต์แวร์โรงพยาบาลอย่าง HOSxP เป้าหมายของผมคือการสร้างความเข้าใจที่ลึกซึ้งยิ่งขึ้นผ่านการแบ่งปันความรู้ให้ผู้อื่น และเผยแพร่แหล่งข้อมูลที่เป็นประโยชน์ซึ่งผมได้ใช้ตลอดเส้นทางนี้
         </p>
 
-        <h2>Connect With Me</h2>
+        <h2>ช่องทางการติดต่อ</h2>
         <p>
-          I'm always open to discussing new projects, sharing knowledge, or just talking about technology. Feel free to reach out.
+          ผมเปิดรับการพูดคุยเกี่ยวกับโปรเจกต์ใหม่ๆ แลกเปลี่ยนความรู้ หรือเรื่องราวเกี่ยวกับเทคโนโลยีเสมอ อย่าลังเลที่จะติดต่อมานะครับ
         </p>
         <div class="social-links">
           <a href="https://github.com/pharmacist-sabot/" target="_blank" rel="noopener noreferrer" class="social-link">GitHub</a>
-          <a href="#" target="_blank" rel="noopener noreferrer" class="social-link">LinkedIn</a>
-          <a href="mailto:your.email@example.com" class="social-link">Email</a>
+          <a href="mailto:pharmacistsabot@gmail.com" class="social-link">อีเมล</a>
         </div>
       </div>
       <div class="image-content">
@@ -43,7 +42,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .about-page-container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 4rem 0;
+    padding: 4rem 1.5rem; 
   }
 
   .about-grid {
@@ -102,6 +101,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   @media (max-width: 768px) {
+    .about-page-container {
+      padding: 2rem 1.5rem;
+    }
     .about-grid {
       grid-template-columns: 1fr;
     }
