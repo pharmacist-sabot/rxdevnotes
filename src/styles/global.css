@@ -122,6 +122,8 @@ img {
 .prose {
   max-width: 800px;
   margin: 0 auto;
+  overflow-wrap: break-word; 
+  word-wrap: break-word;    
 }
 .prose > :first-child { 
   margin-top: 0; 

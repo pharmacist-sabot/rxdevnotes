@@ -91,7 +91,7 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   }
   h1 {
     margin: 0.5rem 0 1rem;
-    font-size: clamp(2.2rem, 6vw, 3.2rem); 
+    font-size: clamp(1.5rem, 5vw, 2rem); 
   }
   .description {
     font-size: clamp(1.1rem, 3vw, 1.25rem);
@@ -104,13 +104,15 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
     color: var(--font-color-light);
     font-family: var(--font-sans);
   }
-  .hero-image {
-    width: 100%;
-    margin-bottom: 3rem;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border: 1px solid var(--card-border-color);
-  }
+.hero-image {
+  width: 100%;
+  max-height: 600px;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--card-border-color);
+  margin-bottom: 3rem;
+  background-color: var(--card-bg-color);
+}
   .post-footer {
     margin-top: 4rem;
     border-top: 1px solid var(--card-border-color);
