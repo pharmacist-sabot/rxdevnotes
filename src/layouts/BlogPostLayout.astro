@@ -59,8 +59,8 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 <style>
   .layout-grid {
     display: grid;
-    grid-template-columns: minmax(1.5rem, 1fr) minmax(0, 800px) minmax(1.5rem, 1fr);
-    gap: 2rem;
+    grid-template-columns: minmax(1.5rem, 1fr) minmax(0, 800px) minmax(1.5rem, 240px);
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
   .prose {
     grid-column: 2;
@@ -76,7 +76,7 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   
   .post-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
   }
   .category-link {
     font-family: var(--font-mono);
@@ -91,9 +91,10 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   }
   h1 {
     margin: 0.5rem 0 1rem;
+    font-size: clamp(2.2rem, 6vw, 3.2rem); 
   }
   .description {
-    font-size: 1.25rem;
+    font-size: clamp(1.1rem, 3vw, 1.25rem);
     color: var(--font-color);
     max-width: 680px;
     margin: 0 auto 1.5rem;
@@ -140,12 +141,26 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   @media (max-width: 1024px) {
     .layout-grid {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
     .left-sidebar, .right-sidebar {
       display: none;
     }
     .prose {
       grid-column: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .post-header {
+      margin-bottom: 2rem;
+    }
+    .hero-image {
+      border-radius: 0; 
+      margin-left: -1rem; 
+      margin-right: -1rem;
+      width: calc(100% + 2rem);
+      max-width: calc(100% + 2rem);
     }
   }
 </style>
