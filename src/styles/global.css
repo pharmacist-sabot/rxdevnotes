@@ -168,6 +168,8 @@ img {
   font-size: 0.95rem;
   line-height: 1.6;
   font-weight: 400;
+  white-space: pre-wrap;   
+  word-break: break-word;
 }
 
 @media (max-width: 900px) {
