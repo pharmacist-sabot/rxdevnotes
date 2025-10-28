@@ -1,0 +1,878 @@
+---
+title: "สร้างระบบสืบค้นบัญชียาของโรงพยาบาล ด้วย Google Sheets และ Google Apps Script"
+description: "คู่มือฉบับสมบูรณ์ในการสร้างเว็บแอปค้นหาข้อมูลบัญชียาของโรงพยาบาลแบบเรียลไทม์"
+pubDate: "2025-10-28"
+heroImage: "/blog-placeholder-8.png"
+category: "Google Apps Script"
+tags:
+  [
+    "Google App Script",
+    "Google Sheets",
+    "Web Development",
+    "JavaScript",
+    "Project",
+  ]
+featured: true
+---
+
+import InfoBox from "../../components/InfoBox.astro";
+import FeatureGrid from "../../components/FeatureGrid.astro";
+import FeatureCard from "../../components/FeatureCard.astro";
+import CodeExplainer from "../../components/CodeExplainer.astro";
+import ProsCons from "../../components/ProsCons.astro";
+
+เคยไหมที่อยากสร้างเครื่องมือค้นหาข้อมูลจากตาราง Excel หรือ Google Sheets ที่มีข้อมูลอยู่มหาศาล ให้กลายเป็นเว็บแอปที่ทุกคนในองค์กรสามารถใช้งานได้ง่ายๆ ผ่านเบราว์เซอร์ โดยไม่ต้องติดตั้งโปรแกรมอะไรเพิ่มเติม?
+
+บทความนี้จะเปลี่ยน Google Sheets ธรรมดาให้กลายเป็น **ฐานข้อมูลบัญชียาของโรงพยาบาล** และใช้ **Google Apps Script** เป็น "สมองกลหลังบ้าน" เพื่อสร้างเว็บแอปสำหรับสืบค้นข้อมูลบัญชียาแบบเรียลไทม์ ที่มีทั้งระบบฟิลเตอร์และหน้าแสดงรายละเอียดครบถ้วน
+
+---
+
+<FeatureGrid>
+  <FeatureCard title="Google Sheets คือฐานข้อมูล" icon="circle-stack">
+    ใช้ Google Sheets ที่คุ้นเคยเป็นที่เก็บข้อมูลยา
+    ไม่ต้องตั้งค่าฐานข้อมูลที่ซับซ้อน อัปเดตข้อมูลง่ายเหมือนกรอกสเปรดชีตทั่วไป
+  </FeatureCard>
+  <FeatureCard title="Apps Script คือ Backend" icon="cpu-chip">
+    Google Apps Script จะทำหน้าที่เป็นโค้ดฝั่ง "หลังบ้าน" (Backend) ทั้งหมด
+    คอยรับคำสั่งค้นหาจากหน้าเว็บ แล้วไปดึงข้อมูลจากชีตส่งกลับไป
+  </FeatureCard>
+  <FeatureCard title="HTML/CSS/JS คือ Frontend" icon="code-bracket">
+    เราจะใช้เทคโนโลยีเว็บมาตรฐาน (HTML, CSS, JavaScript) ในการสร้างหน้าตาเว็บ
+    (Frontend) ที่สวยงามและตอบสนองได้ดี
+  </FeatureCard>
+  <FeatureCard title="ฟรี 100% ไม่มีค่าใช้จ่าย" icon="gift">
+    โปรเจกต์นี้ทำงานบนโครงสร้างพื้นฐานของ Google ทั้งหมด แค่มีบัญชี Gmail
+    ก็สามารถสร้างและเผยแพร่เว็บแอปให้คนอื่นใช้งานได้ทันทีโดยไม่มีค่าใช้จ่ายแอบแฝง
+  </FeatureCard>
+</FeatureGrid>
+
+---
+
+## 1. เตรียมฐานข้อมูล: Google Sheet
+
+ขั้นตอนแรกคือการสร้าง Google Sheet เพื่อเก็บข้อมูลยาของเรา
+
+1.  **สร้าง Google Sheet ใหม่** และตั้งชื่อไฟล์ตามต้องการ
+2.  **ตั้งชื่อชีท** ที่จะใช้เก็บข้อมูลว่า `DrugList` (สำคัญมาก เพราะโค้ดจะอ้างอิงชื่อนี้)
+3.  **สร้างหัวข้อคอลัมน์** ดังต่อไปนี้ตั้งแต่ A1 ถึง J1:
+    - `generic_name`
+    - `trade_name`
+    - `dosage_form`
+    - `drug_category` (เช่น 'Antibiotic', 'Cardiovascular drug')
+    - `ned_category` (เช่น 'ก', 'ข', 'ค')
+    - `guideline` (ข้อกำหนดการใช้)
+    - `special_property` (เช่น 'High Alert Drug')
+    - `note` (หมายเหตุ)
+    - `last_update`
+    - `search_key` (คอลัมน์ลับสำหรับช่วยค้นหา)
+
+<InfoBox title="เทคนิค: คอลัมน์ `search_key` เพื่อการค้นหาที่รวดเร็ว" type="success">
+  แทนที่จะค้นหาทีละหลายๆ คอลัมน์ใน Apps Script ซึ่งทำงานช้า เราจะสร้างคอลัมน์ `search_key` ขึ้นมาเพื่อรวมข้อมูลสำคัญ (เช่น ชื่อสามัญ, ชื่อการค้า, กลุ่มยา) ไว้ในเซลล์เดียว โดยใช้สูตร Google Sheet ง่ายๆ ในเซลล์ J2:
+
+`=A2 & " " & B2 & " " & C2 & " " & D2`
+
+จากนั้นลากสูตรลงมาทุกแถว วิธีนี้จะทำให้การค้นหาด้วย `searchText` ใน Apps Script เร็วขึ้นอย่างมหาศาล เพราะค้นหาแค่คอลัมน์เดียว
+
+</InfoBox>
+
+4.  **คัดลอก Sheet ID:** ไปที่ URL ของ Google Sheet ของคุณ แล้วคัดลอกส่วนที่อยู่ระหว่าง `/d/` และ `/edit` นี่คือ ID ของชีทคุณ เช่น `1Ei2KJZ8g7bW40CF2L8WWfcOCTxlIj1vZ4FA9nCkkD-Q`
+
+---
+
+## 2. โครงสร้างโปรเจกต์ใน Apps Script
+
+ในโปรเจกต์นี้ เราจะสร้างไฟล์ทั้งหมด 4 ไฟล์ใน Apps Script Editor:
+
+1.  **`Code.gs`**: ไฟล์หลักสำหรับโค้ดฝั่ง Backend ทั้งหมด
+2.  **`index.html`**: โครงสร้างหลักของหน้าเว็บ
+3.  **`css.html`**: ไฟล์สำหรับเก็บโค้d CSS ทั้งหมด
+4.  **`js.html`**: ไฟล์สำหรับเก็บโค้ด JavaScript ฝั่งผู้ใช้
+
+<InfoBox title="ทำไมต้องแยกไฟล์ CSS/JS เป็น .html ?" type="info">
+  Google Apps Script มีฟังก์ชัน `include()` ที่อนุญาตให้เราแทรกเนื้อหาจากไฟล์หนึ่งเข้าไปในอีกไฟล์หนึ่งได้ แต่ฟังก์ชันนี้ทำงานกับไฟล์ `.html` เท่านั้น เราจึงต้องสร้างไฟล์ `css.html` และ `js.html` แล้วครอบโค้ดด้วยแท็ก `<style>` และ `<script>` ตามลำดับ เพื่อให้สามารถจัดการโค้ดเป็นสัดส่วนและนำไปใช้งานได้
+</InfoBox>
+
+---
+
+## 3. เจาะลึกโค้ดแต่ละส่วน
+
+### ส่วนที่ 1: `Code.gs` - สมองกลหลังบ้าน (Backend)
+
+นี่คือหัวใจของระบบ ทำหน้าที่เชื่อมต่อกับ Google Sheet และจัดการคำขอจากหน้าเว็บ
+
+<CodeExplainer title="เจาะลึกการทำงานของ Code.gs">
+  <details>
+    <summary>
+      <code>doGet()</code> และ <code>include()</code>
+    </summary>
+    <p>
+      <code>doGet()</code> เป็นฟังก์ชันมาตรฐานที่จะทำงานเมื่อมีคนเปิด URL
+      ของเว็บแอป หน้าที่ของมันคือการสร้างหน้าเว็บจากไฟล์ <code>index.html</code>{" "}
+      ส่วน <code>include()</code>{" "}
+      เป็นฟังก์ชันที่เราสร้างขึ้นเพื่อดึงเนื้อหาจากไฟล์ <code>css.html</code>{" "}
+      และ <code>js.html</code> เข้ามาแทรกในหน้าเว็บหลัก
+    </p>
+  </details>
+  <details>
+    <summary>
+      <code>getInitialData()</code>
+    </summary>
+    <p>
+      ฟังก์ชันนี้จะทำงานเมื่อหน้าเว็บโหลดเสร็จครั้งแรก มันจะไปดึงข้อมูล
+      "กลุ่มยา" และ "บัญชียาหลัก" ทั้งหมดที่ไม่ซ้ำกันจากชีต
+      เพื่อนำไปสร้างเป็นตัวเลือกใน Dropdown Filter
+      ทำให้ผู้ใช้สามารถกรองข้อมูลได้สะดวกขึ้น
+    </p>
+  </details>
+  <details>
+    <summary>
+      <code>searchDrugs(criteria)</code>
+    </summary>
+    <p>
+      ฟังก์ชันที่สำคัญที่สุด! รับเงื่อนไขการค้นหา (<code>criteria</code>)
+      จากหน้าเว็บ แล้วนำไปกรองข้อมูลใน Google Sheet โดยใช้เงื่อนไขทั้ง{" "}
+      <code>searchText</code>, <code>category</code>, และ <code>ned</code>{" "}
+      จากนั้นจะจัดรูปแบบข้อมูลให้อยู่ในรูปแบบที่สะอาด (JSON object)
+      แล้วส่งกลับไปให้ JavaScript เพื่อแสดงผลต่อไป
+      สังเกตว่าเราจะจำกัดผลลัพธ์ไว้ที่ 100 รายการเพื่อประสิทธิภาพ
+    </p>
+  </details>
+</CodeExplainer>
+
+```javascript
+// ===================================================================
+// Code.gs - ระบบจัดการข้อมูลหลังบ้าน
+// ===================================================================
+
+// ****** แก้ไขตรงนี้ ******
+// ใส่ ID ของ Google Sheet ของคุณระหว่างเครื่องหมายคำพูด
+const SHEET_ID = "1Ei2KJZ8g7bW40CF2L8WWfcOCTxlIj1vZ4FA9nCkkD-Q";
+// ***********************
+
+const SHEET_NAME = "DrugList";
+
+/**
+ * ฟังก์ชันหลักที่ถูกเรียกเมื่อเปิดเว็บแอป
+ */
+function doGet(e) {
+  const html = HtmlService.createTemplateFromFile("index").evaluate();
+  html
+    .setTitle("ระบบสืบค้นบัญชียา รพ.สระโบสถ์")
+    .addMetaTag("viewport", "width=device-width, initial-scale=1.0");
+  return html;
+}
+
+/**
+ * ฟังก์ชันสำหรับเรียกใช้ไฟล์อื่นๆ ใน HTML (CSS และ JS)
+ */
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
+
+/**
+ * ดึงข้อมูลตั้งต้นสำหรับสร้างฟิลเตอร์ในหน้าเว็บ (กลุ่มยา, บัญชียาหลัก)
+ * @returns {object} ออบเจ็กต์ที่ประกอบด้วยรายการที่ไม่ซ้ำกันของ drug_category และ ned_category
+ */
+function getInitialData() {
+  try {
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+    // ดึงข้อมูลคอลัมน์ D (drug_category) และ E (ned_category)
+    const dataRange = sheet
+      .getRange(2, 4, sheet.getLastRow() - 1, 2)
+      .getValues();
+
+    // สร้าง list ที่ไม่ซ้ำกัน
+    const categories = [
+      ...new Set(dataRange.map((row) => row[0]).filter(Boolean)),
+    ];
+    const nedCategories = [
+      ...new Set(dataRange.map((row) => row[1]).filter(Boolean)),
+    ];
+
+    return {
+      categories: categories.sort(),
+      nedCategories: nedCategories.sort(),
+    };
+  } catch (error) {
+    console.error("getInitialData Error: ", error);
+    return { error: "ไม่สามารถดึงข้อมูลเริ่มต้นได้: " + error.toString() };
+  }
+}
+
+/**
+ * ค้นหายาตามเงื่อนไขที่ระบุจาก Frontend
+ * @param {object} criteria - ออบเจ็กต์เงื่อนไขการค้นหา { searchText, category, ned }
+ * @returns {Array<object>} อาร์เรย์ของออบเจ็กต์ยาที่ตรงกับเงื่อนไข
+ */
+function searchDrugs(criteria) {
+  try {
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+    // ดึงข้อมูลทั้งหมดตั้งแต่แถวที่ 2, คอลัมน์ A ถึง J (10 คอลัมน์)
+    const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 10).getValues();
+
+    const searchText = criteria.searchText
+      ? criteria.searchText.toLowerCase().trim()
+      : "";
+    const category = criteria.category || "";
+    const ned = criteria.ned || "";
+
+    const results = data
+      .filter((row) => {
+        // row[9] คือคอลัมน์ search_key ที่เราซ่อนไว้
+        const searchKey = row[9] ? row[9].toString().toLowerCase() : "";
+
+        const matchSearchText = searchText
+          ? searchKey.includes(searchText)
+          : true;
+        const matchCategory = category ? row[3] === category : true; // คอลัมน์ D
+        const matchNed = ned ? row[4] === ned : true; // คอลัมน์ E
+
+        return matchSearchText && matchCategory && matchNed;
+      })
+      .map((row) => ({
+        // สร้าง Object ที่สะอาดเพื่อส่งกลับไปให้ Frontend
+        genericName: row[0],
+        tradeName: row[1],
+        dosageForm: row[2],
+        category: row[3],
+        ned: row[4],
+        guideline: row[5],
+        specialProperty: row[6],
+        note: row[7],
+      }));
+
+    // จำกัดผลลัพธ์ไม่เกิน 100 รายการ เพื่อประสิทธิภาพ
+    return results.slice(0, 100);
+  } catch (error) {
+    console.error("searchDrugs Error: ", error);
+    return { error: "เกิดข้อผิดพลาดในการค้นหา: " + error.toString() };
+  }
+}
+```
+
+### ส่วนที่ 2: `index.html` - โครงสร้างหน้าเว็บ (Frontend)
+
+ไฟล์นี้คือโครงกระดูกของเว็บแอป กำหนดว่าจะมีองค์ประกอบอะไรบ้าง เช่น กล่องค้นหา, Dropdown, ตารางแสดงผล และ Modal สำหรับแสดงรายละเอียด
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <!-- Google Font: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    />
+
+    <?!= include('css'); ?>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <i class="fa-solid fa-pills logo-icon"></i>
+        <h1>ระบบสืบค้นรายการยา โรงพยาบาลสระโบสถ์</h1>
+        <p>ค้นหาข้อมูลยาที่ให้บริการในโรงพยาบาลได้อย่างรวดเร็ว</p>
+      </header>
+
+      <main>
+        <div class="search-controls">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="พิมพ์ชื่อสามัญ, ชื่อการค้า, หรือกลุ่มยา..."
+          />
+          <select id="categoryFilter">
+            <option value="">-- ทุกกลุ่มยา --</option>
+          </select>
+          <select id="nedFilter">
+            <option value="">-- ทุกบัญชียาหลักฯ --</option>
+          </select>
+        </div>
+
+        <div id="loading" class="hidden">
+          <div class="spinner"></div>
+          <p>กำลังค้นหาข้อมูล...</p>
+        </div>
+
+        <div id="results-container">
+          <p id="result-summary"></p>
+          <table id="resultsTable">
+            <thead>
+              <tr>
+                <th>ชื่อสามัญ (Generic Name)</th>
+                <th>ชื่อการค้า (Trade Name)</th>
+                <th>รูปแบบ/ความแรง</th>
+                <th>กลุ่มยา</th>
+                <th>บัญชียาหลักฯ</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody">
+              <!-- ผลลัพธ์จะถูกสร้างโดย JavaScript -->
+            </tbody>
+          </table>
+          <p id="no-results" class="hidden">
+            -- ไม่พบข้อมูลยาที่ตรงกับเงื่อนไข --
+          </p>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          ฝ่ายเภสัชกรรม โรงพยาบาลสระโบสถ์ | ข้อมูลปรับปรุงล่าสุด:
+          <span id="last-updated-time"></span>
+        </p>
+      </footer>
+    </div>
+
+    <!-- Modal for Drug Details -->
+    <div id="detailsModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">×</span>
+        <h2 id="modal-generic-name"></h2>
+        <p><strong>ชื่อการค้า:</strong> <span id="modal-trade-name"></span></p>
+        <p>
+          <strong>รูปแบบยา/ความแรง:</strong>
+          <span id="modal-dosage-form"></span>
+        </p>
+        <p><strong>กลุ่มยา:</strong> <span id="modal-category"></span></p>
+        <p>
+          <strong>บัญชียาหลักแห่งชาติ:</strong> <span id="modal-ned"></span>
+        </p>
+        <hr />
+        <p><strong>ข้อกำหนดการใช้ใน รพ.:</strong></p>
+        <div id="modal-guideline" class="details-box"></div>
+        <p><strong>คุณสมบัติพิเศษ:</strong></p>
+        <div id="modal-special-property" class="details-box"></div>
+        <p><strong>หมายเหตุ:</strong></p>
+        <div id="modal-note" class="details-box"></div>
+      </div>
+    </div>
+
+    <?!= include('js'); ?>
+  </body>
+</html>
+```
+
+### ส่วนที่ 3: `css.html` - แต่งหน้าทาปาก (Styling)
+
+ไฟล์นี้เก็บโค้ด CSS ทั้งหมดเพื่อให้เว็บแอปของเราดูสวยงาม มีการกำหนดสี, font, และ layout ต่างๆ
+
+```html
+<style>
+  :root {
+    /* Color Palette */
+    --primary-color: #adebb3; /* เขียวมินต์ */
+    --accent-color: #ff857a; /* แดงคอรัล */
+    --secondary-accent: #ebaee6; /* ชมพูอ่อน */
+    --text-color: #6b403c; /* น้ำตาลเข้ม */
+
+    /* Supporting Colors */
+    --background-color: #fcfbfb;
+    --light-gray: #f1f1f1;
+    --white-color: #ffffff;
+
+    /* Font */
+    --font-family: "Prompt", sans-serif;
+  }
+
+  body {
+    font-family: var(--font-family);
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background-color: var(--primary-color);
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .logo-icon {
+    font-size: 3rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    color: var(--text-color);
+    margin: 0.5rem 0;
+    font-weight: 700;
+  }
+  header p {
+    opacity: 0.8;
+  }
+
+  .search-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .search-controls input[type="text"],
+  .search-controls select {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition:
+      border-color 0.3s,
+      box-shadow 0.3s;
+  }
+  .search-controls input[type="text"]:focus,
+  .search-controls select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(255, 133, 122, 0.25);
+  }
+  .search-controls input[type="text"] {
+    flex-grow: 2;
+  }
+  .search-controls select {
+    flex-grow: 1;
+    background-color: var(--white-color);
+  }
+
+  #loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+  }
+  .spinner {
+    border: 5px solid var(--light-gray);
+    border-top: 5px solid var(--accent-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  #resultsTable {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  #resultsTable thead {
+    background-color: var(--text-color);
+    color: var(--white-color);
+  }
+  #resultsTable th,
+  #resultsTable td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid #eef0f2;
+  }
+  #resultsTable tbody tr {
+    background-color: var(--white-color);
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      transform 0.2s;
+  }
+  #resultsTable tbody tr:hover {
+    background-color: #fff8f7;
+    transform: scale(1.01);
+  }
+  #resultsTable tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .hidden {
+    display: none;
+  }
+  #no-results {
+    text-align: center;
+    margin-top: 2rem;
+    color: #aaa;
+    font-size: 1.2rem;
+  }
+  #result-summary {
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: var(--text-color);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+    color: #888;
+    font-size: 0.9em;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(107, 64, 60, 0.6);
+    backdrop-filter: blur(4px);
+  }
+  .modal-content {
+    background-color: var(--white-color);
+    margin: 8% auto;
+    padding: 30px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    animation: slide-down 0.4s ease-out;
+  }
+  @keyframes slide-down {
+    from {
+      transform: translateY(-30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  .close-button {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .close-button:hover,
+  .close-button:focus {
+    color: var(--text-color);
+  }
+  .modal-content h2 {
+    color: var(--text-color);
+    margin-top: 0;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+  }
+  .details-box {
+    background-color: #f7eef6;
+    border-left: 4px solid var(--secondary-accent);
+    padding: 12px 15px;
+    border-radius: 5px;
+    min-height: 40px;
+    margin-top: 5px;
+  }
+  .special-tag {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: var(--white-color);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+  }
+</style>
+```
+
+### ส่วนที่ 4: `js.html` - ตรรกะฝั่งผู้ใช้ (Client-Side Logic)
+
+ไฟล์นี้คือตัวควบคุมการทำงานทั้งหมดในฝั่งผู้ใช้ ตั้งแต่การดักจับ event การพิมพ์, การส่งคำขอค้นหาไปยัง Backend, การนำผลลัพธ์มาสร้างตาราง, และการเปิด/ปิด Modal
+
+<CodeExplainer title="เจาะลึกการทำงานของ JavaScript">
+  <details>
+    <summary>
+      <code>google.script.run</code>
+    </summary>
+    <p>
+      นี่คือ "สะพาน" ที่เชื่อมระหว่าง Frontend และ Backend
+      เราใช้คำสั่งนี้เพื่อเรียกใช้ฟังก์ชันใน <code>Code.gs</code> (เช่น{" "}
+      <code>searchDrugs</code>) จากฝั่งเบราว์เซอร์ได้โดยตรง
+    </p>
+  </details>
+  <details>
+    <summary>
+      <code>withSuccessHandler()</code> และ <code>withFailureHandler()</code>
+    </summary>
+    <p>
+      เป็น "ตัวจัดการผลลัพธ์" เมื่อ <code>google.script.run</code> ทำงานเสร็จ
+      มันจะส่งผลลัพธ์กลับมา: ถ้าสำเร็จ โค้ดใน <code>withSuccessHandler</code>{" "}
+      จะทำงาน (เช่น นำข้อมูลไปแสดงในตาราง), แต่ถ้าล้มเหลว โค้ดใน{" "}
+      <code>withFailureHandler</code> จะทำงานแทน (เช่น แสดงข้อความ Error)
+    </p>
+  </details>
+  <details>
+    <summary>Event Listeners และ Debouncing</summary>
+    <p>
+      เราใช้ <code>addEventListener</code> เพื่อคอยดักฟังการกระทำของผู้ใช้ เช่น
+      การพิมพ์ในช่องค้นหา หรือการเปลี่ยนค่าใน Dropdown สำหรับช่องค้นหา
+      เราใช้เทคนิค <code>setTimeout</code> (Debouncing)
+      เพื่อหน่วงเวลาการส่งคำขอค้นหา 0.3 วินาที
+      เพื่อไม่ให้ระบบทำงานหนักเกินไปจากการพิมพ์ทุกตัวอักษร
+    </p>
+  </details>
+</CodeExplainer>
+
+```html
+<script>
+  // ===================================================================
+  // js.html - ระบบจัดการการแสดงผลและการทำงานฝั่งผู้ใช้
+  // ===================================================================
+
+  // --- GET HTML ELEMENTS ---
+  const searchInput = document.getElementById("searchInput");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const nedFilter = document.getElementById("nedFilter");
+  const loadingDiv = document.getElementById("loading");
+  const resultsBody = document.getElementById("resultsBody");
+  const noResultsP = document.getElementById("no-results");
+  const resultSummary = document.getElementById("result-summary");
+  const modal = document.getElementById("detailsModal");
+  const closeModalBtn = document.querySelector(".close-button");
+
+  let allDrugsData = []; // เก็บข้อมูลที่ค้นเจอทั้งหมดเพื่อใช้กับ Modal
+  let searchTimeout;
+
+  // --- INITIALIZATION ---
+  document.addEventListener("DOMContentLoaded", () => {
+    google.script.run
+      .withSuccessHandler(populateFilters)
+      .withFailureHandler(showError)
+      .getInitialData();
+
+    performSearch(); // ค้นหาครั้งแรกเพื่อแสดงข้อมูลทั้งหมด (หรือตามเงื่อนไขเริ่มต้น)
+
+    document.getElementById("last-updated-time").textContent =
+      new Date().toLocaleString("th-TH");
+  });
+
+  // --- EVENT LISTENERS ---
+  searchInput.addEventListener("keyup", () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      performSearch();
+    }, 300); // หน่วงเวลา 0.3 วินาทีเพื่อลดการส่ง request
+  });
+  categoryFilter.addEventListener("change", performSearch);
+  nedFilter.addEventListener("change", performSearch);
+
+  // --- MODAL LISTENERS ---
+  closeModalBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+  window.addEventListener("click", (event) => {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  });
+
+  // --- CORE FUNCTIONS ---
+  function performSearch() {
+    showLoading(true);
+    const criteria = {
+      searchText: searchInput.value,
+      category: categoryFilter.value,
+      ned: nedFilter.value,
+    };
+    google.script.run
+      .withSuccessHandler(displayResults)
+      .withFailureHandler(showError)
+      .searchDrugs(criteria);
+  }
+
+  function populateFilters(data) {
+    if (data.error) {
+      showError({ message: "ไม่สามารถโหลดข้อมูลตัวกรองได้: " + data.error });
+      return;
+    }
+    data.categories.forEach((cat) => {
+      const option = document.createElement("option");
+      option.value = cat;
+      option.textContent = cat;
+      categoryFilter.appendChild(option);
+    });
+    data.nedCategories.forEach((ned) => {
+      const option = document.createElement("option");
+      option.value = ned;
+      option.textContent = `บัญชี ${ned}`;
+      nedFilter.appendChild(option);
+    });
+  }
+
+  function displayResults(drugs) {
+    showLoading(false);
+    resultsBody.innerHTML = "";
+    allDrugsData = drugs; // เก็บข้อมูลไว้สำหรับ Modal
+
+    if (drugs && drugs.length > 0) {
+      noResultsP.classList.add("hidden");
+      resultSummary.textContent = `พบ ${drugs.length} รายการ (แสดงผลสูงสุด 100 รายการแรก)`;
+
+      drugs.forEach((drug, index) => {
+        const row = resultsBody.insertRow();
+        row.innerHTML = `
+          <td>${drug.genericName || "-"}</td>
+          <td>${drug.tradeName || "-"}</td>
+          <td>${drug.dosageForm || "-"}</td>
+          <td>${drug.category || "-"}</td>
+          <td>${drug.ned || "-"}</td>
+        `;
+        row.dataset.index = index; // เก็บ index เพื่อใช้ดึงข้อมูลตอนคลิก
+        row.addEventListener("click", showDetailsModal);
+      });
+    } else {
+      resultSummary.textContent = "ไม่พบข้อมูล";
+      noResultsP.classList.remove("hidden");
+    }
+  }
+
+  function showDetailsModal(event) {
+    const rowIndex = event.currentTarget.dataset.index;
+    const drug = allDrugsData[rowIndex];
+    if (!drug) return;
+
+    // Populate standard fields
+    document.getElementById("modal-generic-name").textContent =
+      drug.genericName;
+    document.getElementById("modal-trade-name").textContent =
+      drug.tradeName || "-";
+    document.getElementById("modal-dosage-form").textContent =
+      drug.dosageForm || "-";
+    document.getElementById("modal-category").textContent =
+      drug.category || "-";
+    document.getElementById("modal-ned").textContent = drug.ned || "-";
+    document.getElementById("modal-guideline").textContent =
+      drug.guideline || "-";
+    document.getElementById("modal-note").textContent = drug.note || "-";
+
+    // Handle special properties with custom rendering (e.g., High Alert Drug)
+    const specialPropertyDiv = document.getElementById(
+      "modal-special-property",
+    );
+    let specialPropertyHTML = drug.specialProperty || "-";
+    if (
+      drug.specialProperty &&
+      drug.specialProperty.toLowerCase().includes("high alert")
+    ) {
+      specialPropertyHTML = specialPropertyHTML.replace(
+        /high alert drug/gi,
+        '<span class="special-tag">High Alert Drug</span>',
+      );
+    }
+    specialPropertyDiv.innerHTML = specialPropertyHTML;
+
+    modal.style.display = "block";
+  }
+
+  // --- UTILITY FUNCTIONS ---
+  function showLoading(isLoading) {
+    loadingDiv.style.display = isLoading ? "block" : "none";
+    if (isLoading) {
+      resultsBody.innerHTML = "";
+      noResultsP.classList.add("hidden");
+      resultSummary.textContent = "";
+    }
+  }
+
+  function showError(error) {
+    showLoading(false);
+    console.error("GAS Error:", error);
+    alert("เกิดข้อผิดพลาด: " + (error.message || error));
+  }
+</script>
+```
+
+---
+
+## 4. การนำไปใช้งาน (Deployment)
+
+หลังจากที่คุณสร้างไฟล์ทั้ง 4 และใส่ Sheet ID ของคุณใน `Code.gs` เรียบร้อยแล้ว ก็ถึงเวลาเผยแพร่เว็บแอป
+
+1.  ในหน้า Apps Script Editor, คลิกที่ปุ่ม **Deploy** (สีฟ้ามุมบนขวา) > **New deployment**.
+2.  คลิกที่รูปเฟือง (⚙️) ข้างๆ "Select type" แล้วเลือก **Web app**.
+3.  ตั้งค่าดังนี้:
+    - **Description**: ใส่คำอธิบายโปรเจกต์ (ไม่บังคับ)
+    - **Execute as**: `Me` (บัญชีของคุณ)
+    - **Who has access**: `Anyone` (เพื่อให้ทุกคนที่มีลิงก์สามารถเข้าใช้งานได้)
+4.  คลิก **Deploy**.
+5.  ในครั้งแรก ระบบจะขอสิทธิ์การเข้าถึง Google Sheet ของคุณ ให้กด **Authorize access** และทำตามขั้นตอนจนเสร็จ
+6.  คัดลอก **Web app URL** ที่ได้รับไปใช้งานได้เลย!
+
+<InfoBox title="ข้อควรจำ: ทุกครั้งที่แก้โค้ด ต้อง Deploy ใหม่" type="warning">
+  URL ที่ได้จากการ Deploy จะอ้างอิงถึงโค้ดเวอร์ชันล่าสุด ณ ตอนนั้นเสมอ
+  หากคุณมีการแก้ไขโค้ดใดๆ (แม้แต่เล็กน้อย) คุณจะต้องทำการ **Deploy > New
+  deployment** ใหม่อีกครั้ง เพื่อให้การเปลี่ยนแปลงมีผลในเว็บแอป
+</InfoBox>
+
+---
+
+## สรุปและแนวทางการต่อยอด
+
+ยินดีด้วยครับ! ตอนนี้คุณได้สร้างเว็บแอปพลิเคชันสำหรับสืบค้นข้อมูลยาที่มีประสิทธิภาพด้วยเครื่องมือฟรีจาก Google สำเร็จแล้ว
+
+<ProsCons>
+  <ul slot="pros">
+    <li>
+      <strong>รวดเร็วและประหยัด:</strong>{" "}
+      ไม่ต้องตั้งค่าเซิร์ฟเวอร์หรือฐานข้อมูลที่ซับซ้อน ไม่มีค่าใช้จ่าย
+    </li>
+    <li>
+      <strong>จัดการข้อมูลง่าย:</strong> สามารถเพิ่ม, ลบ,
+      หรือแก้ไขข้อมูลยาได้โดยตรงจาก Google Sheet ที่คุ้นเคย
+    </li>
+    <li>
+      <strong>เข้าถึงได้ทุกที่:</strong>{" "}
+      ผู้ใช้สามารถเข้าถึงได้ผ่านเบราว์เซอร์บนทุกอุปกรณ์ ไม่ต้องติดตั้งโปรแกรม
+    </li>
+    <li>
+      <strong>ยืดหยุ่นสูง:</strong>{" "}
+      สามารถปรับแต่งหน้าตาและเพิ่มฟังก์ชันการทำงานได้ตามต้องการ
+    </li>
+  </ul>
+  <ul slot="cons">
+    <li>
+      <strong>ประสิทธิภาพมีขีดจำกัด:</strong>{" "}
+      ไม่เหมาะกับข้อมูลจำนวนหลายแสนรายการ เพราะ Google Sheets และ Apps Script
+      มีโควต้าการใช้งาน
+    </li>
+    <li>
+      <strong>Cold Start:</strong>{" "}
+      การเรียกใช้งานครั้งแรกอาจใช้เวลาโหลดนานกว่าปกติเล็กน้อย
+    </li>
+  </ul>
+</ProsCons>
+
+โปรเจกต์นี้เป็นเพียงจุดเริ่มต้น คุณสามารถนำไปต่อยอดได้อีกมากมาย เช่น:
+
+- **เพิ่มระบบ Authentication:** จำกัดสิทธิ์การเข้าถึงเฉพาะผู้ใช้ในองค์กร
+- **สร้างหน้าสำหรับเพิ่ม/แก้ไขข้อมูล:** ทำฟอร์มสำหรับเพิ่มยาใหม่โดยตรงจากหน้าเว็บ
+- **ปรับปรุง UI/UX:** ใช้ Framework อย่าง Vue.js หรือ React เพื่อสร้างหน้าตาที่สวยงามและโต้ตอบได้ดียิ่งขึ้น
+
+หวังว่าบทความนี้จะเป็นประโยชน์และเป็นแรงบันดาลใจให้คุณได้สร้างสรรค์เครื่องมือดีๆ ด้วย Google Apps Script นะครับ
