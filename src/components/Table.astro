@@ -1,0 +1,72 @@
+---
+// src/components/Table.astro
+---
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <slot name="head" />
+    </thead>
+    <tbody>
+      <slot name="body" />
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-wrapper {
+    margin: 2.5rem 0;
+    border: 1px solid var(--card-border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    overflow-x: auto;
+    background-color: var(--card-bg-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    white-space: normal;
+  }
+
+  :global(thead tr) {
+    border-bottom: 2px solid var(--card-border-color);
+  }
+
+  :global(th) {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: var(--font-color);
+    background-color: color-mix(in srgb, var(--card-bg-color) 80%, var(--card-border-color));
+  }
+
+  :global(tbody tr) {
+    border-bottom: 1px solid var(--card-border-color);
+    transition: background-color 0.2s ease;
+  }
+
+  :global(tbody tr:last-child) {
+    border-bottom: none;
+  }
+
+  :global(tbody tr:hover) {
+    background-color: color-mix(in srgb, var(--card-bg-color) 50%, var(--card-border-color));
+  }
+
+  :global(td) {
+    padding: 1rem 1.25rem;
+    color: var(--font-color-light);
+    vertical-align: top;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  :global(td code) {
+    background-color: var(--card-border-color);
+    color: var(--brand-color);
+    font-size: 0.85em;
+  }
+</style>
