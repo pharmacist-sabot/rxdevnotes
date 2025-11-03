@@ -1,6 +1,6 @@
 ---
 title: "สร้างระบบสืบค้นบัญชียาของโรงพยาบาล ด้วย Google Sheets และ Google Apps Script"
-description: "คู่มือฉบับสมบูรณ์ในการสร้างเว็บแอปค้นหาข้อมูลบัญชียาของโรงพยาบาลแบบเรียลไทม์"
+description: "คู่มือในการสร้างเว็บแอปค้นหาข้อมูลบัญชียาของโรงพยาบาลแบบเรียลไทม์"
 pubDate: "2025-10-28"
 heroImage: "/blog-placeholder-8.png"
 category: "Google Apps Script"
@@ -21,20 +21,20 @@ import FeatureCard from "../../components/FeatureCard.astro";
 import CodeExplainer from "../../components/CodeExplainer.astro";
 import ProsCons from "../../components/ProsCons.astro";
 
-เคยไหมที่อยากสร้างเครื่องมือค้นหาข้อมูลจากตาราง Excel หรือ Google Sheets ที่มีข้อมูลอยู่มหาศาล ให้กลายเป็นเว็บแอปที่ทุกคนในองค์กรสามารถใช้งานได้ง่ายๆ ผ่านเบราว์เซอร์ โดยไม่ต้องติดตั้งโปรแกรมอะไรเพิ่มเติม?
+เคยไหมที่อยากสร้างเครื่องมือค้นหาข้อมูลจากตาราง Excel หรือ Google Sheets ที่มีข้อมูลอยู่มหาศาล ให้กลายเป็นเว็บแอปที่ทุกคนในองค์กรสามารถใช้งานได้ง่ายๆ ผ่านเบราว์เซอร์ โดยไม่ต้องติดตั้งโปรแกรมอะไรเพิ่มเติม
 
-บทความนี้จะเปลี่ยน Google Sheets ธรรมดาให้กลายเป็น **ฐานข้อมูลบัญชียาของโรงพยาบาล** และใช้ **Google Apps Script** เป็น "สมองกลหลังบ้าน" เพื่อสร้างเว็บแอปสำหรับสืบค้นข้อมูลบัญชียาแบบเรียลไทม์ ที่มีทั้งระบบฟิลเตอร์และหน้าแสดงรายละเอียดครบถ้วน
+บทความนี้จะเปลี่ยน Google Sheets ธรรมดาให้กลายเป็น **ฐานข้อมูลบัญชียาของโรงพยาบาล** และใช้ **Google Apps Script** เป็น "สมองกลหลังบ้าน" เพื่อสร้างเว็บแอปสำหรับสืบค้นข้อมูลบัญชียาแบบเรียลไทม์
 
 ---
 
 <FeatureGrid>
   <FeatureCard title="Google Sheets คือฐานข้อมูล" icon="circle-stack">
-    ใช้ Google Sheets ที่คุ้นเคยเป็นที่เก็บข้อมูลยา
-    ไม่ต้องตั้งค่าฐานข้อมูลที่ซับซ้อน อัปเดตข้อมูลง่ายเหมือนกรอกสเปรดชีตทั่วไป
+    ใช้ Google Sheets ที่เราคุ้นเคยเป็นที่เก็บข้อมูลยา
+    ไม่ต้องตั้งค่าฐานข้อมูลที่ซับซ้อน อัปเดตข้อมูลง่ายเหมือนกรอกสเปรดชีตทั่วไป ไม่ว่าจะเป็นการเพิ่มรายการยาใหม่หรือลบรายการยาเดิม หากเราทำการเปลี่ยนแปลงที่ Google Sheets แล้ว ระบบจะอัปเดตข้อมูลในเว็บแอปโดยอัตโนมัติ
   </FeatureCard>
   <FeatureCard title="Apps Script คือ Backend" icon="cpu-chip">
-    Google Apps Script จะทำหน้าที่เป็นโค้ดฝั่ง "หลังบ้าน" (Backend) ทั้งหมด
-    คอยรับคำสั่งค้นหาจากหน้าเว็บ แล้วไปดึงข้อมูลจากชีตส่งกลับไป
+    Google Apps Script จะทำหน้าที่เป็นโค้ดฝั่ง "หลังบ้าน" หรือที่เราเรียกว่า Backend ทั้งหมด
+    คอยรับคำสั่งค้นหาจากหน้าเว็บ แล้วไปดึงข้อมูลจากชีตส่งกลับไปให้ผู้ใช้งานสามารถดูข้อมูลที่อยู่ใน google sheet ได้
   </FeatureCard>
   <FeatureCard title="HTML/CSS/JS คือ Frontend" icon="code-bracket">
     เราจะใช้เทคโนโลยีเว็บมาตรฐาน (HTML, CSS, JavaScript) ในการสร้างหน้าตาเว็บ
@@ -85,7 +85,7 @@ import ProsCons from "../../components/ProsCons.astro";
 
 1.  **`Code.gs`**: ไฟล์หลักสำหรับโค้ดฝั่ง Backend ทั้งหมด
 2.  **`index.html`**: โครงสร้างหลักของหน้าเว็บ
-3.  **`css.html`**: ไฟล์สำหรับเก็บโค้d CSS ทั้งหมด
+3.  **`css.html`**: ไฟล์สำหรับเก็บโค้ด CSS ทั้งหมด
 4.  **`js.html`**: ไฟล์สำหรับเก็บโค้ด JavaScript ฝั่งผู้ใช้
 
 <InfoBox title="ทำไมต้องแยกไฟล์ CSS/JS เป็น .html ?" type="info">
@@ -129,7 +129,7 @@ import ProsCons from "../../components/ProsCons.astro";
       <code>searchDrugs(criteria)</code>
     </summary>
     <p>
-      ฟังก์ชันที่สำคัญที่สุด! รับเงื่อนไขการค้นหา (<code>criteria</code>)
+      ฟังก์ชันที่สำคัญที่สุด รับเงื่อนไขการค้นหา (<code>criteria</code>)
       จากหน้าเว็บ แล้วนำไปกรองข้อมูลใน Google Sheet โดยใช้เงื่อนไขทั้ง{" "}
       <code>searchText</code>, <code>category</code>, และ <code>ned</code>{" "}
       จากนั้นจะจัดรูปแบบข้อมูลให้อยู่ในรูปแบบที่สะอาด (JSON object)
@@ -140,48 +140,35 @@ import ProsCons from "../../components/ProsCons.astro";
 </CodeExplainer>
 
 ```javascript
-// ===================================================================
-// Code.gs - ระบบจัดการข้อมูลหลังบ้าน
-// ===================================================================
+// ไฟล์ Code.gs - ระบบจัดการข้อมูลหลังบ้าน
 
 // ****** แก้ไขตรงนี้ ******
 // ใส่ ID ของ Google Sheet ของคุณระหว่างเครื่องหมายคำพูด
-const SHEET_ID = "1Ei2KJZ8g7bW40CF2L8WWfcOCTxlIj1vZ4FA9nCkkD-Q";
-// ***********************
+const SHEET_ID = "คัดลอก ID ของ Google Sheet ของคุณแล้ววางไ้ที่นี่";
+//
 
-const SHEET_NAME = "DrugList";
+const SHEET_NAME = "DrugList"; // ชื่อนี้สำคัญมากตรวจสอบให้ตรงกันใน google sheet
 
-/**
- * ฟังก์ชันหลักที่ถูกเรียกเมื่อเปิดเว็บแอป
- */
 function doGet(e) {
   const html = HtmlService.createTemplateFromFile("index").evaluate();
   html
-    .setTitle("ระบบสืบค้นบัญชียา รพ.สระโบสถ์")
+    .setTitle("ระบบสืบค้นบัญชียา รพ.ตัวอย่าง")
     .addMetaTag("viewport", "width=device-width, initial-scale=1.0");
   return html;
 }
 
-/**
- * ฟังก์ชันสำหรับเรียกใช้ไฟล์อื่นๆ ใน HTML (CSS และ JS)
- */
 function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 
-/**
- * ดึงข้อมูลตั้งต้นสำหรับสร้างฟิลเตอร์ในหน้าเว็บ (กลุ่มยา, บัญชียาหลัก)
- * @returns {object} ออบเจ็กต์ที่ประกอบด้วยรายการที่ไม่ซ้ำกันของ drug_category และ ned_category
- */
 function getInitialData() {
   try {
     const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
-    // ดึงข้อมูลคอลัมน์ D (drug_category) และ E (ned_category)
+
     const dataRange = sheet
       .getRange(2, 4, sheet.getLastRow() - 1, 2)
       .getValues();
 
-    // สร้าง list ที่ไม่ซ้ำกัน
     const categories = [
       ...new Set(dataRange.map((row) => row[0]).filter(Boolean)),
     ];
@@ -199,15 +186,10 @@ function getInitialData() {
   }
 }
 
-/**
- * ค้นหายาตามเงื่อนไขที่ระบุจาก Frontend
- * @param {object} criteria - ออบเจ็กต์เงื่อนไขการค้นหา { searchText, category, ned }
- * @returns {Array<object>} อาร์เรย์ของออบเจ็กต์ยาที่ตรงกับเงื่อนไข
- */
 function searchDrugs(criteria) {
   try {
     const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
-    // ดึงข้อมูลทั้งหมดตั้งแต่แถวที่ 2, คอลัมน์ A ถึง J (10 คอลัมน์)
+
     const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 10).getValues();
 
     const searchText = criteria.searchText
@@ -218,19 +200,18 @@ function searchDrugs(criteria) {
 
     const results = data
       .filter((row) => {
-        // row[9] คือคอลัมน์ search_key ที่เราซ่อนไว้
+
         const searchKey = row[9] ? row[9].toString().toLowerCase() : "";
 
         const matchSearchText = searchText
           ? searchKey.includes(searchText)
           : true;
-        const matchCategory = category ? row[3] === category : true; // คอลัมน์ D
-        const matchNed = ned ? row[4] === ned : true; // คอลัมน์ E
+        const matchCategory = category ? row[3] === category : true;
+        const matchNed = ned ? row[4] === ned : tru
 
         return matchSearchText && matchCategory && matchNed;
       })
       .map((row) => ({
-        // สร้าง Object ที่สะอาดเพื่อส่งกลับไปให้ Frontend
         genericName: row[0],
         tradeName: row[1],
         dosageForm: row[2],
@@ -241,7 +222,6 @@ function searchDrugs(criteria) {
         note: row[7],
       }));
 
-    // จำกัดผลลัพธ์ไม่เกิน 100 รายการ เพื่อประสิทธิภาพ
     return results.slice(0, 100);
   } catch (error) {
     console.error("searchDrugs Error: ", error);
@@ -252,9 +232,10 @@ function searchDrugs(criteria) {
 
 ### ส่วนที่ 2: `index.html` - โครงสร้างหน้าเว็บ (Frontend)
 
-ไฟล์นี้คือโครงกระดูกของเว็บแอป กำหนดว่าจะมีองค์ประกอบอะไรบ้าง เช่น กล่องค้นหา, Dropdown, ตารางแสดงผล และ Modal สำหรับแสดงรายละเอียด
+ไฟล์นี้คือโครงสร้างของเว็บแอป กำหนดว่าจะมีองค์ประกอบอะไรบ้าง เช่น ช่องค้นหา, Dropdown, ตารางแสดงผล และ Modal สำหรับแสดงรายละเอียด
 
 ```html
+<!-- ไฟล์ index.html -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -279,7 +260,7 @@ function searchDrugs(criteria) {
     <div class="container">
       <header>
         <i class="fa-solid fa-pills logo-icon"></i>
-        <h1>ระบบสืบค้นรายการยา โรงพยาบาลสระโบสถ์</h1>
+        <h1>ระบบสืบค้นรายการยา โรงพยาบาลตัวอย่าง</h1>
         <p>ค้นหาข้อมูลยาที่ให้บริการในโรงพยาบาลได้อย่างรวดเร็ว</p>
       </header>
 
@@ -327,7 +308,7 @@ function searchDrugs(criteria) {
 
       <footer>
         <p>
-          ฝ่ายเภสัชกรรม โรงพยาบาลสระโบสถ์ | ข้อมูลปรับปรุงล่าสุด:
+          ฝ่ายเภสัชกรรม โรงพยาบาลตัวอย่าง | ข้อมูลปรับปรุงล่าสุด:
           <span id="last-updated-time"></span>
         </p>
       </footer>
@@ -362,18 +343,19 @@ function searchDrugs(criteria) {
 </html>
 ```
 
-### ส่วนที่ 3: `css.html` - แต่งหน้าทาปาก (Styling)
+### ส่วนที่ 3: `css.html` - ไฟล์สำหรับออกแบบความสวยงามของเว็บแอป (Styling)
 
 ไฟล์นี้เก็บโค้ด CSS ทั้งหมดเพื่อให้เว็บแอปของเราดูสวยงาม มีการกำหนดสี, font, และ layout ต่างๆ
 
 ```html
+<!-- css.html -->
 <style>
   :root {
     /* Color Palette */
-    --primary-color: #adebb3; /* เขียวมินต์ */
-    --accent-color: #ff857a; /* แดงคอรัล */
-    --secondary-accent: #ebaee6; /* ชมพูอ่อน */
-    --text-color: #6b403c; /* น้ำตาลเข้ม */
+    --primary-color: #adebb3;
+    --accent-color: #ff857a;
+    --secondary-accent: #ebaee6;
+    --text-color: #6b403c;
 
     /* Supporting Colors */
     --background-color: #fcfbfb;
@@ -642,9 +624,7 @@ function searchDrugs(criteria) {
 
 ```html
 <script>
-  // ===================================================================
-  // js.html - ระบบจัดการการแสดงผลและการทำงานฝั่งผู้ใช้
-  // ===================================================================
+  // ไฟล์ js.html - ระบบจัดการการแสดงผลและการทำงานฝั่งผู้ใช้
 
   // --- GET HTML ELEMENTS ---
   const searchInput = document.getElementById("searchInput");
@@ -657,17 +637,16 @@ function searchDrugs(criteria) {
   const modal = document.getElementById("detailsModal");
   const closeModalBtn = document.querySelector(".close-button");
 
-  let allDrugsData = []; // เก็บข้อมูลที่ค้นเจอทั้งหมดเพื่อใช้กับ Modal
+  let allDrugsData = [];
   let searchTimeout;
 
-  // --- INITIALIZATION ---
   document.addEventListener("DOMContentLoaded", () => {
     google.script.run
       .withSuccessHandler(populateFilters)
       .withFailureHandler(showError)
       .getInitialData();
 
-    performSearch(); // ค้นหาครั้งแรกเพื่อแสดงข้อมูลทั้งหมด (หรือตามเงื่อนไขเริ่มต้น)
+    performSearch();
 
     document.getElementById("last-updated-time").textContent =
       new Date().toLocaleString("th-TH");
@@ -678,7 +657,7 @@ function searchDrugs(criteria) {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
       performSearch();
-    }, 300); // หน่วงเวลา 0.3 วินาทีเพื่อลดการส่ง request
+    }, 300);
   });
   categoryFilter.addEventListener("change", performSearch);
   nedFilter.addEventListener("change", performSearch);
@@ -729,7 +708,7 @@ function searchDrugs(criteria) {
   function displayResults(drugs) {
     showLoading(false);
     resultsBody.innerHTML = "";
-    allDrugsData = drugs; // เก็บข้อมูลไว้สำหรับ Modal
+    allDrugsData = drugs;
 
     if (drugs && drugs.length > 0) {
       noResultsP.classList.add("hidden");
@@ -744,7 +723,7 @@ function searchDrugs(criteria) {
           <td>${drug.category || "-"}</td>
           <td>${drug.ned || "-"}</td>
         `;
-        row.dataset.index = index; // เก็บ index เพื่อใช้ดึงข้อมูลตอนคลิก
+        row.dataset.index = index;
         row.addEventListener("click", showDetailsModal);
       });
     } else {
@@ -823,7 +802,7 @@ function searchDrugs(criteria) {
     - **Who has access**: `Anyone` (เพื่อให้ทุกคนที่มีลิงก์สามารถเข้าใช้งานได้)
 4.  คลิก **Deploy**.
 5.  ในครั้งแรก ระบบจะขอสิทธิ์การเข้าถึง Google Sheet ของคุณ ให้กด **Authorize access** และทำตามขั้นตอนจนเสร็จ
-6.  คัดลอก **Web app URL** ที่ได้รับไปใช้งานได้เลย!
+6.  คัดลอก **Web app URL** ที่ได้รับไปใช้งานได้เลย
 
 <InfoBox title="ข้อควรจำ: ทุกครั้งที่แก้โค้ด ต้อง Deploy ใหม่" type="warning">
   URL ที่ได้จากการ Deploy จะอ้างอิงถึงโค้ดเวอร์ชันล่าสุด ณ ตอนนั้นเสมอ
@@ -835,7 +814,7 @@ function searchDrugs(criteria) {
 
 ## สรุปและแนวทางการต่อยอด
 
-ยินดีด้วยครับ! ตอนนี้คุณได้สร้างเว็บแอปพลิเคชันสำหรับสืบค้นข้อมูลยาที่มีประสิทธิภาพด้วยเครื่องมือฟรีจาก Google สำเร็จแล้ว
+ยินดีด้วยครับ ตอนนี้คุณได้สร้างเว็บแอปพลิเคชันสำหรับสืบค้นข้อมูลยาที่มีประสิทธิภาพด้วยเครื่องมือฟรีจาก Google สำเร็จแล้ว
 
 <ProsCons>
   <ul slot="pros">
@@ -859,8 +838,7 @@ function searchDrugs(criteria) {
   <ul slot="cons">
     <li>
       <strong>ประสิทธิภาพมีขีดจำกัด:</strong>{" "}
-      ไม่เหมาะกับข้อมูลจำนวนหลายแสนรายการ เพราะ Google Sheets และ Apps Script
-      มีโควต้าการใช้งาน
+      ไม่เหมาะกับข้อมูลจำนวนหลายแสนรายการ
     </li>
     <li>
       <strong>Cold Start:</strong>{" "}
