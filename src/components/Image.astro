@@ -1,0 +1,58 @@
+---
+// src/components/Image.astro
+
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  width,
+  height
+} = Astro.props;
+---
+
+<figure class="image-wrapper">
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading="lazy"
+    decoding="async"
+  />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .image-wrapper {
+    margin: 3rem auto;
+    max-width: 100%;
+    width: fit-content;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--card-border-color);
+    background-color: var(--card-bg-color);
+    box-shadow: 0 8px 20px var(--shadow-hover-color);
+  }
+
+  figcaption {
+    margin-top: 0.75rem;
+    padding: 0 0.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--font-color-light);
+    font-style: italic;
+  }
+</style>
