@@ -1,0 +1,64 @@
+---
+// src/components/GitCommand.astro
+import { Icon } from "astro-icon/components";
+
+interface Props {
+    command: string;
+    icon: string;
+}
+const { command, icon } = Astro.props;
+---
+
+<div class="command-card">
+    <header class="command-header">
+        <Icon name={`heroicons:${icon}`} class="command-icon" />
+        <h2 id={command.toLowerCase().replace(" ", "-")}>{command}</h2>
+    </header>
+    <div class="command-content">
+        <slot />
+    </div>
+</div>
+
+<style>
+    .command-card {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--card-border-color);
+        border-radius: 16px;
+        margin: 3rem 0;
+        box-shadow: 0 4px 12px var(--shadow-color);
+        overflow: hidden;
+    }
+    .command-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        background-color: color-mix(
+            in srgb,
+            var(--card-bg-color) 80%,
+            var(--card-border-color)
+        );
+        border-bottom: 1px solid var(--card-border-color);
+    }
+    .command-icon {
+        font-size: 1.5rem;
+        color: var(--brand-color);
+        flex-shrink: 0;
+    }
+    .command-header h2 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-family: var(--font-mono);
+        color: var(--font-color);
+        scroll-margin-top: 100px;
+    }
+    .command-content {
+        padding: 1.5rem;
+    }
+    .command-content :global(p:first-child) {
+        margin-top: 0;
+    }
+    .command-content :global(p:last-child) {
+        margin-bottom: 0;
+    }
+</style>
