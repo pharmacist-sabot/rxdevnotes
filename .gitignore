@@ -40,5 +40,4 @@ ehthumbs.db
 Thumbs.db
 
 # Pagefind Search Index
-# (Generated in `dist`, but good to have here just in case)
 _pagefind/
