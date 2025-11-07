@@ -204,8 +204,16 @@ img {
 }
 
 .prose pre>code {
+    background: none;
     padding: 0;
     color: inherit;
     font-size: inherit;
     line-height: inherit;
+}
+
+/* ป้องกัน Shiki theme ถูก override */
+.prose pre.shiki,
+.prose pre.shiki code {
+  background: unset !important;
+  color: unset !important;
 }
