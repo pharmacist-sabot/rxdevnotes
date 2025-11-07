@@ -10,7 +10,7 @@ export default defineConfig({
   site: 'https://rxdevnotes.vercel.app/', 
   markdown: {
     shikiConfig: {
-      theme: 'github-light', 
+      theme: 'github-dark', 
       wrap: true,
     },
   },
