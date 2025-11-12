@@ -1,0 +1,118 @@
+---
+title: 'เมื่อเภสัชกรเขียนโค้ด: สำรวจโปรเจกต์โอเพนซอร์สจัดการยา Warfarin'
+description: 'เจาะลึกโลก Health Tech ผ่าน Awesome Warfarin List ที่รวบรวมโปรเจกต์โอเพนซอร์ส ตั้งแต่เว็บแอปคำนวณขนาดยา ไปจนถึงโมเดล Machine Learning เพื่อการจ่ายยาที่แม่นยำ'
+pubDate: '2025-11-12'
+heroImage: '/blog/digital-warfarin-management.png'
+category: 'Web Development'
+tags: ['Warfarin', 'Health Tech', 'Open Source', 'Pharmacist', 'Programming']
+featured: true
+---
+
+import InfoBox from '../../components/InfoBox.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import ProsCons from '../../components/ProsCons.astro';
+
+ในฐานะเภสัชกร ผมเข้าใจดีว่า Warfarin คือหนึ่งในยาที่ท้าทายที่สุดในการจัดการ มันเป็นยาที่ช่วยชีวิตคนได้มากมาย แต่ในขณะเดียวกันก็มีความเสี่ยงสูงหากใช้ในขนาดที่ไม่เหมาะสม การหาขนาดยาที่ "พอดี" สำหรับผู้ป่วยแต่ละรายจึงเปรียบเสมือนงานศิลปะที่ต้องอาศัยทั้งข้อมูล, ประสบการณ์, และการคำนวณที่แม่นยำ
+
+แต่ในฐานะนักพัฒนา ผมเห็นว่าความท้าทายนี้คือ "โอกาส" ที่สมบูรณ์แบบสำหรับเทคโนโลยี
+
+บทความนี้คือการเดินทางเพื่อสำรวจว่าชุมชนนักพัฒนาโอเพนซอร์สทั่วโลกกำลังสร้างสรรค์เครื่องมืออะไรบ้างเพื่อแก้ปัญหานี้ โดยอ้างอิงจาก Repository ที่ผมรวบรวมขึ้นมาเอง **[Awesome Warfarin Projects](https://github.com/pharmacist-sabot/awesome-warfarin)**
+
+---
+
+## ทำไมโปรเจกต์เกี่ยวกับ Warfarin ถึงน่าสนใจ?
+
+การสำรวจโปรเจกต์เหล่านี้ทำให้ผมเห็นเทรนด์ที่น่าทึ่งของการนำเทคโนโลยีมาประยุกต์ใช้ในวงการสาธารณสุข
+
+<FeatureGrid>
+  <FeatureCard title="แก้ปัญหาในโลกจริง" icon="beaker">
+    นี่ไม่ใช่แค่โปรเจกต์ทดลอง แต่เป็นเครื่องมือที่ถูกสร้างขึ้นเพื่อช่วยให้เภสัชกรและแพทย์ทำงานได้ง่ายขึ้น, เร็วขึ้น, และลดความผิดพลาดในการจ่ายยา
+  </FeatureCard>
+  <FeatureCard title="ความหลากหลายทางเทคโนโลยี" icon="code-bracket-square">
+    เราจะได้เห็นการใช้เทคโนโลยีที่หลากหลาย ตั้งแต่ Frontend (Vue, React, Next.js) ไปจนถึง Backend (Rust, Supabase) และแม้แต่แอปเดสก์ท็อป (C#)
+  </FeatureCard>
+  <FeatureCard title="การมาถึงของ AI และ ML" icon="cpu-chip">
+    มีโปรเจกต์จำนวนมากที่ใช้ Machine Learning เพื่อทำนายขนาดยา Warfarin จากข้อมูลทางคลินิกและพันธุกรรม ซึ่งเป็นอนาคตของการแพทย์ที่แม่นยำ (Precision Medicine)
+  </FeatureCard>
+  <FeatureCard title="พลังของโอเพนซอร์ส" icon="globe-alt">
+    การที่โปรเจกต์เหล่านี้เป็นโอเพนซอร์สหมายความว่าใครๆ ก็สามารถเรียนรู้, ต่อยอด, หรือแม้แต่นำไปปรับใช้ในโรงพยาบาลของตนเองได้ เป็นการแบ่งปันความรู้ที่ทรงพลัง
+  </FeatureCard>
+</FeatureGrid>
+
+---
+
+## สำรวจโปรเจกต์เด่นจาก Awesome Warfarin List
+
+ผมได้แบ่งโปรเจกต์ออกเป็น 4 หมวดหมู่หลักตามแพลตฟอร์มและวัตถุประสงค์
+
+### 1. Web Applications
+
+กลุ่มที่ใหญ่ที่สุด คือเครื่องมือที่เข้าถึงได้ง่ายผ่านเว็บเบราว์เซอร์ เหมาะสำหรับบุคลากรทางการแพทย์ที่ต้องการเครื่องมือคำนวณที่รวดเร็ว
+
+-   **[Warfarin-Dosage-Calculator](https://github.com/pzweuj/warfarin-dosage-calculator):** โดดเด่นด้วยการใช้ Next.js และการนำ Pharmacogenomic Algorithms หลายตัว (IWPC, Gage, etc.) มาให้เปรียบเทียบกัน เหมาะสำหรับใช้ในการศึกษา
+-   **[warfarin-app](https://github.com/pharmacist-sabot/warfarin-app):** โปรเจกต์ที่ใช้เทคโนโลยีล้ำสมัยอย่าง Rust และ WebAssembly ร่วมกับ Vue.js เพื่อสร้างตารางการให้ยาที่ชาญฉลาด
+-   **[warfarin-calculator](https://github.com/Paond55/warfarin-calculator):** เครื่องมือที่เน้นการใช้งานตาม Guideline ทางคลินิก สร้างเป็น PWA ทำให้สามารถใช้งานแบบออฟไลน์ได้
+-   **[warfarin6](https://github.com/penpharmacy/warfarin6):** PWA ที่ออกแบบมาเพื่อเภสัชกรโดยเฉพาะ ช่วยคำนวณจำนวนเม็ดยา 2mg และ 3mg ที่ต้องจ่ายจริงได้อย่างแม่นยำ
+
+### 2. Mobile Applications
+
+แอปพลิเคชันสำหรับผู้ป่วยโดยตรง ช่วยให้พวกเขามีส่วนร่วมในการดูแลตัวเองมากขึ้น
+
+-   **[warfarin-management-app](https://github.com/amanjito/warfarin-management-app):** แอปที่ครบวงจรสำหรับผู้ป่วย มีทั้งการติดตามผล INR, การแจ้งเตือนกินยา, และ AI Assistant ช่วยตอบคำถาม สร้างด้วย React และ Supabase
+
+### 3. Desktop Applications
+
+ซอฟต์แวร์แบบติดตั้งบนเครื่อง เหมาะสำหรับผู้ที่ต้องการเก็บข้อมูลไว้ในเครื่องของตัวเอง
+
+-   **[INRTracker](https://github.com/starcalibre/inrtracker):** แอปบน Windows (สร้างด้วย C# และ WPF) ที่ทำหน้าที่เป็นไดอารี่ดิจิทัลสำหรับบันทึกค่า INR และขนาดยา โดยเก็บข้อมูลทั้งหมดไว้ในฐานข้อมูล SQLite บนเครื่อง
+
+### 4. Machine Learning & Research
+
+กลุ่มที่น่าตื่นเต้นที่สุด คือการใช้ข้อมูลเพื่อสร้างโมเดลทำนายขนาดยาที่เหมาะสมกับผู้ป่วยแต่ละราย (Personalized Dosing)
+
+-   **[pgx-warfarin-ml-portfolio](https://github.com/Uche-Stephen/pgx-warfarin-ml-portfolio):** โปรเจกต์ที่สมบูรณ์แบบ แสดงให้เห็นกระบวนการทั้งหมดตั้งแต่การเตรียมข้อมูล, ฝึกโมเดล (Linear Regression, Random Forest), และการอธิบายผลด้วย SHAP ไปจนถึงการสร้างเว็บแอปด้วย Streamlit
+-   **[warfarin-dosing-ml-tool-](https://github.com/ifthekarhussain/warfarin-dosing-ml-tool-):** อีกหนึ่งโปรเจกต์ End-to-End ที่น่าสนใจ ซึ่งปิดท้ายด้วยการสร้างเครื่องมือทำนายแบบโต้ตอบได้ด้วย Gradio
+-   **[Warfarin_Dose_Prediction](https://github.com/farahyusri12/warfarin_dose_prediction):** โปรเจกต์ในรูปแบบ Google Colab ที่มีการบันทึกและอธิบายขั้นตอนอย่างละเอียด เหมาะสำหรับผู้ที่ต้องการเรียนรู้กระบวนการสร้างโมเดล Linear Regression
+
+---
+
+## สองแนวทางหลัก: Guideline-based vs. AI-driven
+
+จากการสำรวจโปรเจกต์ทั้งหมด เราจะเห็นแนวทางการสร้างเครื่องมือคำนวณขนาดยา Warfarin ที่แตกต่างกัน 2 แนวทางหลัก ซึ่งแต่ละแบบก็มีข้อดีข้อจำกัดที่น่าสนใจ
+
+<ProsCons>
+  <div slot="pros">
+    <h4>Guideline-based (อิงตามแนวทางปฏิบัติ)</h4>
+    <ul>
+      <li><strong>น่าเชื่อถือและยอมรับได้ง่าย:</strong> อิงตามหลักฐานเชิงประจักษ์และแนวทางปฏิบัติทางคลินิกที่ใช้กันอยู่แล้ว</li>
+      <li><strong>โปร่งใส:</strong> สามารถอธิบายเหตุผลของการตัดสินใจได้ง่าย เพราะเป็นไปตามกฎที่กำหนดไว้ชัดเจน</li>
+      <li><strong>พัฒนาง่ายกว่า:</strong> ไม่ต้องการข้อมูลจำนวนมากในการสร้าง แค่แปลง Guideline ให้เป็น Logic ของโปรแกรม</li>
+    </ul>
+  </div>
+  <div slot="cons">
+    <h4>AI-driven (ขับเคลื่อนด้วย AI/ML)</h4>
+    <ul>
+      <li><strong>แม่นยำสำหรับรายบุคคล:</strong> สามารถทำนายขนาดยาที่เหมาะสมกับผู้ป่วยแต่ละรายได้ดีกว่า โดยพิจารณาจากปัจจัยที่ซับซ้อน เช่น ข้อมูลพันธุกรรม</li>
+      <li><strong>เรียนรู้และพัฒนาได้:</strong> โมเดลสามารถเรียนรู้จากข้อมูลใหม่ๆ เพื่อเพิ่มความแม่นยำในอนาคตได้</li>
+      <li><strong>ค้นพบความสัมพันธ์ใหม่ๆ:</strong> AI อาจค้นพบปัจจัยที่ไม่เคยมีใน Guideline แต่ส่งผลต่อขนาดยาได้</li>
+    </ul>
+  </div>
+</ProsCons>
+
+<InfoBox title="อนาคตคือการทำงานร่วมกัน">
+  ผมเชื่อว่าในอนาคต เครื่องมือที่ดีที่สุดคือเครื่องมือที่ผสมผสานทั้งสองแนวทางเข้าด้วยกัน: ใช้โมเดล AI ในการ "แนะนำ" ขนาดยาเริ่มต้นที่แม่นยำที่สุด แล้วใช้ Guideline-based Logic ในการ "ปรับ" ขนาดยาตามผล INR ในแต่ละครั้ง
+</InfoBox>
+
+---
+
+## มาร่วมเป็นส่วนหนึ่งของการเปลี่ยนแปลง
+
+Awesome List นี้เป็นเพียงจุดเริ่มต้นเล็กๆ แต่ก็แสดงให้เห็นถึงศักยภาพมหาศาลของชุมชนโอเพนซอร์สในการขับเคลื่อนนวัตกรรมทางการแพทย์
+
+หากคุณมีโปรเจกต์ที่เกี่ยวข้อง หรือมีไอเดียดีๆ ที่อยากจะสร้างสรรค์ ผมขอเชิญชวนให้คุณมาร่วมเป็นส่วนหนึ่งของ Awesome List นี้
+
+<InfoBox title="How to Contribute?" type="info">
+  คุณสามารถมีส่วนร่วมได้ง่ายๆ โดยการอ่าน <a href="https://github.com/pharmacist-sabot/awesome-warfarin/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Contribution Guidelines</a> แล้วส่งโปรเจกต์ของคุณเข้ามาผ่าน <a href="https://github.com/pharmacist-sabot/awesome-warfarin/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> หรือ <a href="https://github.com/pharmacist-sabot/awesome-warfarin/pulls" target="_blank" rel="noopener noreferrer">Pull Request</a>
+  มาร่วมกันสร้างคลังความรู้และเครื่องมือที่จะช่วยให้การใช้ยา Warfarin ปลอดภัยและมีประสิทธิภาพยิ่งขึ้นกันเถอะครับ
+</InfoBox>
