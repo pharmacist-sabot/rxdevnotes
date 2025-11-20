@@ -1,41 +1,58 @@
 ---
 // src/layouts/BlogPostLayout.astro
-import BaseLayout from './BaseLayout.astro';
-import Toc from '../components/Toc.astro';
-import type { CollectionEntry } from 'astro:content';
-import type { MarkdownHeading } from 'astro';
-import { slugify } from '../utils/slugify';
+import BaseLayout from "./BaseLayout.astro";
+import Toc from "../components/Toc.astro";
+import ViewCounter from "../components/ViewCounter.astro";
+import type { CollectionEntry } from "astro:content";
+import type { MarkdownHeading } from "astro";
+import { slugify } from "../utils/slugify";
 
 interface Props {
-  frontmatter: CollectionEntry<'blog'>['data'];
+  frontmatter: CollectionEntry<"blog">["data"];
   headings: MarkdownHeading[];
+  slug?: string;
 }
 
-const { frontmatter, headings } = Astro.props;
+const { frontmatter, headings, slug } = Astro.props;
 const { title, description, pubDate, heroImage, category, tags } = frontmatter;
 
-const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
+const formattedDate = new Date(pubDate).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
 });
+
+// ใช้ slug ที่ส่งมา หรือสร้างจาก title เพื่อใช้เป็น key ในฐานข้อมูล
+const postSlug = slug || slugify(title);
 ---
+
 <BaseLayout title={title} description={description}>
   <div class="layout-grid">
-    <aside class="left-sidebar">
-    </aside>
-
+    <aside class="left-sidebar"></aside>
     <article class="prose">
       <header class="post-header">
-         <a href={`/blog/categories/${slugify(category)}`} class="category-link">{category}</a>
+        <a href={`/blog/categories/${slugify(category)}`} class="category-link"
+          >{category}</a
+        >
         <h1>{title}</h1>
         <p class="description">{description}</p>
         <div class="meta">
           <span>Published on {formattedDate}</span>
+          <span class="separator">•</span>
+          <!-- เรียกใช้ ViewCounter ตรงนี้ -->
+          <ViewCounter slug={postSlug} />
         </div>
       </header>
-      
-      {heroImage && <img src={heroImage} alt={`Hero image for ${title}`} class="hero-image"/>}
+
+      {
+        heroImage && (
+          <img
+            src={heroImage}
+            alt={`Hero image for ${title}`}
+            class="hero-image"
+          />
+        )
+      }
 
       <div class="post-content">
         <slot />
@@ -43,9 +60,13 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 
       <footer class="post-footer">
         <div class="tags-list">
-          {tags.map(tag => (
-            <a href={`/blog/tags/${slugify(tag)}`} class="tag-chip">{tag}</a>
-          ))}
+          {
+            tags.map((tag) => (
+              <a href={`/blog/tags/${slugify(tag)}`} class="tag-chip">
+                {tag}
+              </a>
+            ))
+          }
         </div>
       </footer>
     </article>
@@ -59,7 +80,10 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 <style>
   .layout-grid {
     display: grid;
-    grid-template-columns: minmax(1.5rem, 1fr) minmax(0, 800px) minmax(1.5rem, 240px);
+    grid-template-columns: minmax(1.5rem, 1fr) minmax(0, 800px) minmax(
+        1.5rem,
+        240px
+      );
     gap: clamp(1.5rem, 4vw, 3rem);
   }
   .prose {
@@ -68,12 +92,12 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   .right-sidebar {
     grid-column: 3;
     position: sticky;
-    top: 100px; 
+    top: 100px;
     align-self: start;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
   }
-  
+
   .post-header {
     text-align: center;
     margin-bottom: 3rem;
@@ -91,7 +115,7 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   }
   h1 {
     margin: 0.5rem 0 1rem;
-    font-size: clamp(1.5rem, 5vw, 2rem); 
+    font-size: clamp(1.5rem, 5vw, 2rem);
   }
   .description {
     font-size: clamp(1.1rem, 3vw, 1.25rem);
@@ -103,16 +127,23 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
     font-size: 0.9rem;
     color: var(--font-color-light);
     font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
-.hero-image {
-  width: 100%;
-  max-height: 600px;
-  object-fit: cover;
-  object-position: center;
-  border: 1px solid var(--card-border-color);
-  margin-bottom: 3rem;
-  background-color: var(--card-bg-color);
-}
+  .separator {
+    color: var(--card-border-color);
+  }
+  .hero-image {
+    width: 100%;
+    max-height: 600px;
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid var(--card-border-color);
+    margin-bottom: 3rem;
+    background-color: var(--card-bg-color);
+  }
   .post-footer {
     margin-top: 4rem;
     border-top: 1px solid var(--card-border-color);
@@ -145,7 +176,8 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
-    .left-sidebar, .right-sidebar {
+    .left-sidebar,
+    .right-sidebar {
       display: none;
     }
     .prose {
@@ -158,8 +190,8 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
       margin-bottom: 2rem;
     }
     .hero-image {
-      border-radius: 0; 
-      margin-left: -1rem; 
+      border-radius: 0;
+      margin-left: -1rem;
       margin-right: -1rem;
       width: calc(100% + 2rem);
       max-width: calc(100% + 2rem);

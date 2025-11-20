@@ -1,0 +1,41 @@
+---
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<span class="view-counter">
+  <span id="view-count-value">...</span> views
+</span>
+
+<script define:vars={{ slug }}>
+  const viewCountElement = document.getElementById("view-count-value");
+
+  const updateViewCount = async () => {
+    try {
+      const res = await fetch(`/api/views/${slug}`, {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (viewCountElement) {
+        viewCountElement.innerText = data.count;
+      }
+    } catch (e) {
+      console.error("Error fetching view count:", e);
+      if (viewCountElement) viewCountElement.innerText = "0";
+    }
+  };
+
+  updateViewCount();
+</script>
+
+<style>
+  .view-counter {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+</style>
