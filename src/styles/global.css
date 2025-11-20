@@ -186,7 +186,7 @@ img {
     padding: 1.5rem;
     border-radius: 12px;
     overflow-x: auto;
-    margin: 2rem -1.5rem;
+    margin: 2rem 0;
     font-family: var(--font-mono);
     font-size: 0.95rem;
     line-height: 1.6;
