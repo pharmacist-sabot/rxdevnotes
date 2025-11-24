@@ -1,0 +1,187 @@
+---
+// src/pages/tools/herbs-app.astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FeatureCard from "../../components/FeatureCard.astro";
+import FeatureGrid from "../../components/FeatureGrid.astro";
+
+// หมายเหตุ: เปลี่ยน URL นี้เป็น Link ของ Herbs App ที่ Deploy แล้ว
+const appUrl = "https://herbs-app.rxdevman.com/";
+const repoUrl = "https://github.com/pharmacist-sabot/herbs-app";
+---
+
+<BaseLayout title="Project: บัญชียาสมุนไพร รพ.สระโบสถ์">
+    <div class="project-showcase">
+        <header class="project-header">
+            <h1>บัญชียาสมุนไพร รพ.สระโบสถ์</h1>
+            <p class="subtitle">
+                เว็บแอปพลิเคชันสำหรับค้นหาข้อมูลยาสมุนไพรในบัญชีที่สนับสนุนโดย
+                สปสช. รวดเร็ว แม่นยำ และใช้งานง่ายบนมือถือ
+            </p>
+
+            <div class="button-group">
+                <a
+                    href={appUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="cta-button launch-button"
+                >
+                    เปิดใช้งานระบบ
+                </a>
+                <a
+                    href={repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="repo-link"
+                >
+                    ดู Source Code
+                </a>
+            </div>
+        </header>
+
+        <div class="screenshot-container">
+            <img
+                src="/images/tools/herbs-app.png"
+                alt="Screenshot of Thai Herbal NHSO Support App"
+                class="main-screenshot"
+                onerror="this.style.display='none'"
+            />
+        </div>
+
+        <div class="project-details">
+            <h1>คุณสมบัติหลัก</h1>
+            <FeatureGrid>
+                <FeatureCard title="Google Sheets Backend" icon="table-cells">
+                    ใช้ Google Sheets เป็นฐานข้อมูล
+                    ทำให้เภสัชกรหรือเจ้าหน้าที่สามารถอัปเดตข้อมูลยา ราคา
+                    หรือเงื่อนไขการเบิกจ่ายได้เองโดยไม่ต้องแก้โค้ด
+                </FeatureCard>
+                <FeatureCard title="ค้นหาแบบ Real-time" icon="magnifying-glass">
+                    ระบบค้นหาทันทีที่พิมพ์ รองรับชื่อยา และการกรองตามหมวดหมู่
+                    ช่วยให้หน้างานทำงานได้รวดเร็ว
+                </FeatureCard>
+                <FeatureCard
+                    title="ข้อมูลการเบิกจ่ายครบถ้วน"
+                    icon="currency-dollar"
+                >
+                    แสดงรายละเอียดที่สำคัญสำหรับการทำงาน เช่น ราคาจ่ายชดเชยของ
+                    สปสช., จำนวนที่เบิกได้ต่อรอบ, และรหัส ICD10
+                    สำหรับคีย์ข้อมูลให้ถูกต้อง
+                </FeatureCard>
+                <FeatureCard
+                    title="Responsive Design"
+                    icon="device-phone-mobile"
+                >
+                    ออกแบบด้วย Vue.js ให้แสดงผลสวยงามทั้งบน Desktop และ Mobile
+                    เหมาะสำหรับการเปิดดูข้อมูลหน้างาน
+                </FeatureCard>
+            </FeatureGrid>
+
+            <div class="tech-stack-section">
+                <h2>Tech Stack</h2>
+                <div class="stack-items">
+                    <span class="stack-item">Vue.js 3</span>
+                    <span class="stack-item">Vite</span>
+                    <span class="stack-item">Google Apps Script</span>
+                    <span class="stack-item">Google Sheets</span>
+                    <span class="stack-item">CSS Variables</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</BaseLayout>
+
+<style>
+    .project-header {
+        text-align: center;
+        margin: 2rem 0 4rem;
+    }
+    .subtitle {
+        font-size: 1.25rem;
+        max-width: 700px;
+        margin: 1rem auto 2rem;
+        line-height: 1.6;
+    }
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .launch-button {
+        font-size: 1.1rem;
+        padding: 1rem 2.5rem;
+    }
+    .repo-link {
+        color: var(--font-color);
+        text-decoration: underline;
+        font-weight: 500;
+    }
+    .repo-link:hover {
+        color: var(--brand-color);
+    }
+
+    .screenshot-container {
+        max-width: 1000px;
+        margin: 0 auto 4rem;
+        text-align: center;
+    }
+    .main-screenshot {
+        border-radius: 16px;
+        border: 1px solid var(--card-border-color);
+        box-shadow: 0 15px 40px var(--shadow-hover-color);
+        width: 100%;
+        height: auto;
+    }
+    .screenshot-fallback {
+        font-size: 0.9rem;
+        color: var(--font-color-light);
+        opacity: 0.7;
+        margin-top: 1rem;
+    }
+
+    .project-details {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .tech-stack-section {
+        margin-top: 4rem;
+        text-align: center;
+    }
+    .stack-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        justify-content: center;
+    }
+    .stack-item {
+        background-color: var(--card-bg-color);
+        border: 1px solid var(--card-border-color);
+        padding: 0.5rem 1.2rem;
+        border-radius: 99px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--font-color);
+    }
+
+    @media (max-width: 768px) {
+        .project-header {
+            margin: 1rem 0 3rem;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+        }
+        .launch-button {
+            font-size: 1rem;
+            padding: 0.8rem 2rem;
+        }
+        .screenshot-container {
+            margin-bottom: 3rem;
+        }
+        .tech-stack-section {
+            margin-top: 3rem;
+        }
+    }
+</style>
