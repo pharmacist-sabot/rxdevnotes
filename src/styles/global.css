@@ -1,22 +1,27 @@
 /* src/styles/global.css */
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-    --brand-color: #8A6D5D;
-    --accent-color: #D3B6A2;
-    --font-color: #4A444B;
-    --font-color-light: #49454b;
-    --bg-color: #EAE6E8;
-    --card-bg-color: #F5F1ED;
-    --card-border-color: #DCD8DD;
-    --shadow-color: rgba(74, 68, 75, 0.05);
-    --shadow-hover-color: rgba(74, 68, 75, 0.1);
-    --success-color: #6A994E;
-    --warning-color: #BC6C25;
-    --danger-color: #A4161A;
-    --font-sans: 'Prompt', system-ui, sans-serif;
-    --font-serif: 'Prompt', serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --brand-color: #4b63c5;
+    --accent-color: #7e9ddc;
+    --font-color: #232748;
+    --font-color-light: #5d5d5d;
+    --bg-color: #f2f5fc;
+    --card-bg-color: #ffffff;
+    --card-border-color: #e2e9f7;
+
+    --shadow-color: rgba(75, 99, 197, 0.08);
+    --shadow-hover-color: rgba(75, 99, 197, 0.15);
+
+    /* Semantic Colors */
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+
+    /* Typography */
+    --font-sans: "Prompt", system-ui, sans-serif;
+    --font-serif: "Prompt", serif;
+    --font-mono: "JetBrains Mono", monospace;
 }
 
 * {
@@ -92,7 +97,7 @@ a {
 }
 
 a:hover {
-    color: var(--font-color);
+    color: var(--accent-color);
 }
 
 img {
@@ -106,14 +111,21 @@ img {
     border: 1px solid var(--card-border-color);
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 4px 10px var(--shadow-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow:
+        0 4px 6px -1px var(--shadow-color),
+        0 2px 4px -1px var(--shadow-color);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px var(--shadow-hover-color);
-    border-color: var(--accent-color);
+    box-shadow:
+        0 10px 25px -5px var(--shadow-hover-color),
+        0 8px 10px -6px var(--shadow-hover-color);
+    border-color: var(--brand-color);
 }
 
 @media (max-width: 768px) {
@@ -124,19 +136,24 @@ img {
 
 .cta-button {
     display: inline-block;
-    background-color: var(--font-color);
-    color: var(--card-bg-color);
+    background-color: var(--brand-color);
+    color: #ffffff;
     padding: 0.8rem 1.8rem;
     border-radius: 99px;
     font-weight: 500;
     text-decoration: none;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(75, 99, 197, 0.2);
 }
 
 .cta-button:hover {
-    background-color: var(--brand-color);
-    color: var(--card-bg-color);
+    background-color: var(--font-color);
+    color: #ffffff;
     transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(75, 99, 197, 0.3);
 }
 
 .prose {
@@ -146,7 +163,7 @@ img {
     word-wrap: break-word;
 }
 
-.prose> :first-child {
+.prose > :first-child {
     margin-top: 0;
 }
 
@@ -180,8 +197,8 @@ img {
 }
 
 .prose pre {
-    background-color: var(--card-bg-color);
-    color: var(--font-color);
+    background-color: var(--font-color);
+    color: #f8fafc;
     border: 1px solid var(--card-border-color);
     padding: 1.5rem;
     border-radius: 12px;
@@ -203,7 +220,7 @@ img {
     }
 }
 
-.prose pre>code {
+.prose pre > code {
     background: none;
     padding: 0;
     color: inherit;
@@ -214,6 +231,6 @@ img {
 /* ป้องกัน Shiki theme ถูก override */
 .prose pre.shiki,
 .prose pre.shiki code {
-  background: unset !important;
-  color: unset !important;
+    background: unset !important;
+    color: unset !important;
 }
