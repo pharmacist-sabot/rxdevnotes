@@ -3,5 +3,5 @@
 /// <reference types="astro/client" />
 
 declare class PagefindUI {
-  constructor(opts: any);
+  constructor(opts: { element: string; showSubResults?: boolean });
 }
