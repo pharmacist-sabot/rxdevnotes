@@ -1,36 +1,55 @@
-# 🧠 RxDev Man: The Developer's Living Knowledge Base
+# 🧠 RxDev Man
 
-> **Your ultimate, ever-growing knowledge base for modern software development.** From Git workflows to system architecture, debugging tricks to UI/UX best practices — meticulously curated by a developer, for developers.
+> **The Developer's Living Knowledge Base.**
+> A high-performance, interactive knowledge graph built for modern software engineers.
 
-RxDev Man is a **living, breathing repository** of software engineering knowledge. It is designed to be more than just a collection of notes; it is a modular, interactive knowledge graph built to help developers master their craft.
+![Astro](https://img.shields.io/badge/Astro-5.0-FF5D01?style=flat&logo=astro)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat&logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=flat&logo=supabase)
+![Vercel](https://img.shields.io/badge/Deployment-Vercel-000000?style=flat&logo=vercel)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
+
+**RxDev Man** is more than just a blog—it's a modular, interactive documentation system designed to help developers master their craft. Built on **Astro's Island Architecture**, it delivers static content with lightning-fast performance while seamlessly hydrating interactive elements like search and analytics.
 
 ---
 
-## 🚀 Features
+## � Key Features
 
-Built with **Astro**, this project combines high performance with a rich content authoring experience:
+### 📚 Rich Content Experience
 
-- **📚 Modular Knowledge Graph**: Content is organized into self-contained `.mdx` guides.
-- **⚡ High Performance**: Static site generation (SSG) by default, with support for SSR/Hybrid rendering.
-- **🧩 Interactive Components**: Rich UI blocks embedded directly in markdown:
-  - `CodeExplainer`: Break down complex code snippets.
-  - `InfoBox`: Highlight key takeaways, warnings, or tips.
-  - `ProsCons`: Visual comparison tables.
-  - `GitCommand`: Specialized formatting for terminal commands.
-- **🔍 Built-in Search**: Fast, client-side search functionality.
-- **📱 Responsive Design**: Optimized for reading on any device.
-- **🌑 Dark Mode Support**: Built-in theming capabilities.
+- **MDX-Powered**: Author content in Markdown with the power of embedded components.
+- **Interactive Blocks**:
+  - `<CodeExplainer />`: Break down complex logic line-by-line.
+  - `<InfoBox />`: Highlight critical warnings, tips, and notes.
+  - `<ProsCons />`: Visual comparison tables for architectural decisions.
+  - `<GitCommand />`: Copy-paste friendly terminal snippets.
+- **Syntax Highlighting**: Beautiful code blocks powered by Shiki (GitHub Dark theme).
+
+### ⚡ Performance & Architecture
+
+- **Zero-JS by Default**: HTML-first rendering for optimal SEO and load times.
+- **Hybrid Rendering**: Static Site Generation (SSG) for content, with Server-Side Rendering (SSR) capabilities for dynamic features.
+- **Client-Side Search**: Instant, typo-tolerant search using **Pagefind**.
+
+### 📊 Analytics & Data
+
+- **Real-Time View Counts**: Integrated with **Supabase** to track article engagement.
+- **Type-Safe Content**: Validated frontmatter schemas using **Zod**.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Astro](https://astro.build/) (v5.x)
-- **Content**: MDX (Markdown + JSX)
-- **Styling**: CSS Variables & Scoped Styles
-- **Icons**: `astro-icon` with Iconify
-- **Search**: `astro-pagefind`
-- **Deployment**: Vercel Adapter configured
+| Category     | Technology                                    | Usage                       |
+| ------------ | --------------------------------------------- | --------------------------- |
+| **Core**     | [Astro 5.x](https://astro.build/)             | Framework & Build Tool      |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) | Type Safety                 |
+| **Content**  | [MDX](https://mdxjs.com/)                     | Interactive Markdown        |
+| **Styling**  | CSS Variables                                 | Scoped, theme-aware styling |
+| **Database** | [Supabase](https://supabase.com/)             | View counters & Analytics   |
+| **Search**   | [Pagefind](https://pagefind.app/)             | Static search indexing      |
+| **Icons**    | [Iconify](https://iconify.design/)            | `astro-icon` integration    |
+| **Deploy**   | [Vercel](https://vercel.com/)                 | Edge Network Deployment     |
 
 ---
 
@@ -38,28 +57,35 @@ Built with **Astro**, this project combines high performance with a rich content
 
 ```text
 /
-├── public/             # Static assets
+├── public/             # Static assets (images, fonts)
 ├── src/
-│   ├── components/     # Reusable Astro components
+│   ├── components/     # Reusable UI & MDX components
 │   │   ├── CodeExplainer.astro
 │   │   ├── InfoBox.astro
 │   │   ├── Search.astro
 │   │   └── ...
 │   ├── content/
-│   │   └── blog/       # MDX Content files (The Knowledge Base)
-│   ├── layouts/        # Page layouts
-│   └── pages/          # Application routes
-└── astro.config.mjs    # Astro configuration
+│   │   └── blog/       # The Knowledge Base (MDX files)
+│   ├── layouts/        # Page layouts (Base, Post, etc.)
+│   ├── lib/            # External services (Supabase client)
+│   ├── pages/          # File-based routing
+│   │   ├── api/        # Server-side API endpoints
+│   │   └── ...
+│   └── styles/         # Global styles & CSS variables
+├── astro.config.mjs    # Astro configuration
+└── package.json        # Dependencies & Scripts
 ```
 
 ---
 
 ## 🧞 Getting Started
 
+Follow these steps to set up the project locally.
+
 ### Prerequisites
 
-- Node.js (v18 or higher recommended)
-- npm, pnpm, or yarn
+- **Node.js**: v18.17.1 or higher
+- **Package Manager**: npm, pnpm, or yarn
 
 ### Installation
 
@@ -76,23 +102,44 @@ Built with **Astro**, this project combines high performance with a rich content
     npm install
     ```
 
-3.  **Start the development server**
+3.  **Configure Environment Variables**
+    Create a `.env` file in the root directory and add your Supabase credentials:
+
+    ```env
+    PUBLIC_SUPABASE_URL=your_supabase_project_url
+    PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```
+
+4.  **Start the development server**
     ```bash
     npm run dev
     ```
-    Visit `http://localhost:4321` to see the site in action.
+    Visit `http://localhost:4321` to see the site.
+
+### Building for Production
+
+To build the static site and index the search:
+
+```bash
+npm run build
+```
+
+This command will:
+
+1. Build the Astro site.
+2. Run `pagefind` to index the content for search.
 
 ---
 
 ## 📝 Contributing
 
-Contributions are welcome! Whether it's fixing a typo, adding a new guide, or improving a component.
+We welcome contributions from the community!
 
-1.  Fork the repository.
-2.  Create your feature branch (`git checkout -b feat/amazing-topic`).
-3.  Commit your changes using **Conventional Commits** (e.g., `feat: add guide on rust variables`).
-4.  Push to the branch.
-5.  Open a Pull Request.
+1.  **Fork** the repository.
+2.  Create a **Feature Branch** (`git checkout -b feat/new-topic`).
+3.  Commit your changes with **Conventional Commits** (`feat: add guide on system design`).
+4.  **Push** to your branch.
+5.  Open a **Pull Request**.
 
 ---
 
