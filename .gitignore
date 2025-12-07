@@ -1,6 +1,7 @@
 # IDEs and Editors
 .idea/
 .vscode/
+!.vscode/settings.json
 *.swp
 *.swo
 

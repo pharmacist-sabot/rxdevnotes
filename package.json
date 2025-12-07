@@ -14,14 +14,17 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.6",
     "@astrojs/mdx": "^4.3.11",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/vercel": "^8.0.4",
     "@iconify-json/heroicons": "^1.2.2",
     "@supabase/supabase-js": "^2.84.0",
     "astro": "^5.16.3",
+    "astro-auto-import": "^0.4.5",
     "astro-icon": "^1.1.5",
     "astro-pagefind": "^1.8.5",
+    "typescript": "^5.9.3",
     "zod": "^3.25.76"
   },
   "devDependencies": {
