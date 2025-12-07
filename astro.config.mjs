@@ -1,9 +1,9 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
+import autoImport from 'astro-auto-import';
 import icon from 'astro-icon';
 import pagefind from 'astro-pagefind';
-// astro.config.mjs
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
@@ -14,6 +14,40 @@ export default defineConfig({
       wrap: true,
     },
   },
-  integrations: [mdx(), icon(), sitemap(), pagefind()],
+  integrations: [
+    autoImport({
+      imports: [
+        // --- blog components  ---
+        './src/components/blog/BlogPostCard.astro',
+        './src/components/blog/CategoryCard.astro',
+        './src/components/blog/Toc.astro',
+        './src/components/blog/ViewCounter.astro',
+
+        // --- content components  ---
+        './src/components/content/CodeExplainer.astro',
+        './src/components/content/GitCommand.astro',
+        './src/components/content/Image.astro',
+        './src/components/content/InfoBox.astro',
+        './src/components/content/ProsCons.astro',
+        './src/components/content/Table.astro',
+
+        // --- layout components  ---
+        './src/components/layout/Navbar.astro',
+
+        // --- tools components  ---
+        './src/components/tools/ToolCard.astro',
+
+        // --- ui components  ---
+        './src/components/ui/FeatureCard.astro',
+        './src/components/ui/FeatureGrid.astro',
+        './src/components/ui/ProgressBar.astro',
+        './src/components/ui/Search.astro',
+      ],
+    }),
+    mdx(),
+    icon(),
+    sitemap(),
+    pagefind(),
+  ],
   adapter: vercel(),
 });

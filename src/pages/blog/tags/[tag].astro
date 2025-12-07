@@ -1,10 +1,9 @@
 ---
-// src/pages/blog/tags/[tag].astro
 import { getCollection } from 'astro:content';
 
-import BlogPostCard from '../../../components/BlogPostCard.astro';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { slugify } from '../../../utils/slugify'; // Re-using slugify for consistency
+import BlogPostCard from '@/components/blog/BlogPostCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { slugify } from '@/utils/slugify'; // Re-using slugify for consistency
 
 // Note: The getStaticPaths in the original file was slightly incorrect for tags with spaces.
 // This version ensures tags are URL-friendly.

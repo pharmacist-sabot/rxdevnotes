@@ -4,8 +4,8 @@ import type { CollectionEntry } from 'astro:content';
 // src/pages/blog/index.astro
 import { getCollection } from 'astro:content';
 
-import BlogPostCard from '../../components/BlogPostCard.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPostCard from '@/components/blog/BlogPostCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 
 const allPosts = await getCollection('blog');
 

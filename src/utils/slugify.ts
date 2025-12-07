@@ -1,4 +1,3 @@
-// src/utils/slugify.ts
 export function slugify(text: string): string {
   return text
     .toString()

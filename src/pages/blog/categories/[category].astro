@@ -1,10 +1,9 @@
 ---
-// src/pages/blog/categories/[category].astro
 import { getCollection } from 'astro:content';
 
-import BlogPostCard from '../../../components/BlogPostCard.astro';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { slugify } from '../../../utils/slugify';
+import BlogPostCard from '@/components/blog/BlogPostCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { slugify } from '@/utils/slugify';
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog');

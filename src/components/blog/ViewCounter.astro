@@ -1,5 +1,4 @@
 ---
-// src/components/ViewCounter.astro
 type Props = {
   slug: string;
 };
@@ -11,7 +10,7 @@ const { slug } = Astro.props;
   <span id="view-count-value">...</span> views
 </span>
 
-<script define:vars={{ slug }}>
+<script is:inline define:vars={{ slug }}>
   const viewCountElement = document.getElementById('view-count-value');
 
   async function updateViewCount() {
