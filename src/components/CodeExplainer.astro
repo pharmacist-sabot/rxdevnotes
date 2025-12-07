@@ -2,9 +2,9 @@
 // src/components/CodeExplainer.astro
 import { Icon } from 'astro-icon/components';
 
-interface Props {
+type Props = {
   title: string;
-}
+};
 const { title } = Astro.props;
 ---
 <div class="explainer-box">
@@ -35,7 +35,7 @@ const { title } = Astro.props;
     background-color: color-mix(in srgb, var(--card-bg-color) 80%, var(--card-border-color));
     border-bottom: 1px solid var(--card-border-color);
   }
-  
+
   .header-icon {
     font-size: 1.25rem;
     color: var(--font-color-light);
@@ -56,7 +56,7 @@ const { title } = Astro.props;
   }
   .content :global(details:first-child) { padding-top: 0; }
   .content :global(details:last-child) { border-bottom: none; padding-bottom: 0; }
-  
+
   .content :global(summary) {
     cursor: pointer;
     font-weight: 600;
@@ -72,7 +72,7 @@ const { title } = Astro.props;
   }
 
   .content :global(summary::-webkit-details-marker) { display: none; }
-  
+
   .content :global(summary::before) {
     content: '▶';
     font-size: 0.6em;
@@ -83,7 +83,7 @@ const { title } = Astro.props;
   .content :global(details[open] > summary::before) {
     transform: rotate(90deg);
   }
-  
+
   .content :global(details p) {
     margin-top: 0.75rem;
     margin-bottom: 0;

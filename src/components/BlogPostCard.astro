@@ -1,12 +1,13 @@
 ---
 // src/components/BlogPostCard.astro
 import type { CollectionEntry } from 'astro:content';
-interface Props {
+
+type Props = {
   post: CollectionEntry<'blog'>;
-}
+};
 
 const { post } = Astro.props;
-const { title, description, pubDate, tags, category } = post.data;
+const { title, description, pubDate, category } = post.data;
 const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'short',
@@ -79,7 +80,7 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
     margin-bottom: 1.5rem;
     display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
@@ -96,7 +97,7 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   time {
     color: var(--font-color-light);
   }
-  
+
   .read-more {
     color: var(--brand-color);
     font-weight: 500;

@@ -1,10 +1,12 @@
 ---
 // src/components/CategoryCard.astro
 import { Icon } from 'astro-icon/components';
+
 import { slugify } from '../utils/slugify';
-interface Props {
+
+type Props = {
   category: string;
-}
+};
 const { category } = Astro.props;
 
 const icons: { [key: string]: string } = {
@@ -13,10 +15,10 @@ const icons: { [key: string]: string } = {
   'Frontend Frameworks': 'heroicons:squares-2x2',
   'Backend': 'heroicons:server-stack',
   'Google Apps Script': 'heroicons:table-cells',
-  'default': 'heroicons:document-text'
+  'default': 'heroicons:document-text',
 };
 
-const iconName = icons[category] || icons['default'];
+const iconName = icons[category] || icons.default;
 ---
 <a href={`/blog/categories/${slugify(category)}`} class="card category-card">
   <div class="icon-wrapper">

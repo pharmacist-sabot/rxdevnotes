@@ -2,24 +2,27 @@
 // src/components/Search.astro
 import { Icon } from 'astro-icon/components';
 ---
+
 <div class="search-component-wrapper">
   <Icon name="heroicons:magnifying-glass" class="search-icon" />
   <div id="search-container"></div>
 </div>
 
 <script is:inline>
-
   function initPagefind() {
     if (window.PagefindUI) {
       try {
-        new window.PagefindUI({ 
-          element: "#search-container",
+        // eslint-disable-next-line no-new
+        new window.PagefindUI({
+          element: '#search-container',
           showSubResults: true,
         });
-      } catch (error) {
-        console.error("Failed to initialize Pagefind UI:", error);
       }
-    } else {
+      catch (error) {
+        console.error('Failed to initialize Pagefind UI:', error);
+      }
+    }
+    else {
       setTimeout(initPagefind, 50);
     }
   }
@@ -30,7 +33,7 @@ import { Icon } from 'astro-icon/components';
 <style>
   .search-component-wrapper {
     position: relative;
-    width: 240px; 
+    width: 240px;
   }
 
   .search-icon {
@@ -41,12 +44,12 @@ import { Icon } from 'astro-icon/components';
     color: var(--font-color-light);
     width: 20px;
     height: 20px;
-    pointer-events: none; 
+    pointer-events: none;
   }
 
   :global(.pagefind-ui__search-input) {
     width: 100%;
-    padding: 0.6rem 1rem 0.6rem 2.5rem; 
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
     font-size: 0.95rem;
     border-radius: 99px;
     border: 1px solid var(--card-border-color);

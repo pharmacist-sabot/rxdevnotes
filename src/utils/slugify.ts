@@ -3,9 +3,9 @@ export function slugify(text: string): string {
   return text
     .toString()
     .toLowerCase()
-    .replace(/\s+/g, '-')       
-    .replace(/[^\w\-]+/g, '')    
-    .replace(/\-\-+/g, '-')      
-    .replace(/^-+/, '')          
-    .replace(/-+$/, '');         
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
 }

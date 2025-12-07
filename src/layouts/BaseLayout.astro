@@ -1,14 +1,14 @@
 ---
+import Navbar from '../components/Navbar.astro';
 // src/layouts/BaseLayout.astro
 import ProgressBar from '../components/ProgressBar.astro';
-import Navbar from '../components/Navbar.astro';
 import '../styles/global.css';
 
-interface Props {
+type Props = {
   title: string;
   description?: string;
-}
-const { title, description = "A developer's living knowledge base, curated by a pharmacist turned programmer." } = Astro.props;
+};
+const { title, description = 'A developer\'s living knowledge base, curated by a pharmacist turned programmer.' } = Astro.props;
 const currentYear = new Date().getFullYear();
 ---
 <!doctype html>
@@ -47,71 +47,71 @@ const currentYear = new Date().getFullYear();
       </div>
     </footer>
     <style>
-      .main-content { 
-        min-height: calc(100vh - 250px); 
-        padding: 6rem 0 4rem; 
+      .main-content {
+        min-height: calc(100vh - 250px);
+        padding: 6rem 0 4rem;
       }
-      .site-footer { 
-        background: var(--card-bg-color); 
-        border-top: 1px solid var(--card-border-color); 
-        padding: 4rem 0 2rem; 
+      .site-footer {
+        background: var(--card-bg-color);
+        border-top: 1px solid var(--card-border-color);
+        padding: 4rem 0 2rem;
       }
-      .footer-container { 
-        display: grid; 
-        grid-template-columns: 2fr 1fr 1fr; 
+      .footer-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
         gap: 2rem;
       }
-      .footer-title { 
-        font-family: var(--font-serif); 
-        color: var(--font-color); 
-        font-size: 1.5rem; 
-        margin-bottom: 0.5rem; 
+      .footer-title {
+        font-family: var(--font-serif);
+        color: var(--font-color);
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
       }
-      .footer-about p { 
-        color: var(--font-color-light); 
+      .footer-about p {
+        color: var(--font-color-light);
         max-width: 400px;
         font-size: 1rem;
       }
-      .footer-subtitle { 
-        font-family: var(--font-sans); 
-        font-weight: 600; 
-        color: var(--font-color); 
+      .footer-subtitle {
+        font-family: var(--font-sans);
+        font-weight: 600;
+        color: var(--font-color);
         margin-bottom: 1rem;
         font-size: 1rem;
       }
-      .footer-links ul { 
+      .footer-links ul {
         list-style: none;
         padding: 0;
       }
-      .footer-links li { 
-        margin-bottom: 0.75rem; 
+      .footer-links li {
+        margin-bottom: 0.75rem;
       }
-      .footer-links a { 
-        color: var(--font-color-light); 
+      .footer-links a {
+        color: var(--font-color-light);
         text-decoration: none;
         transition: color 0.2s ease;
       }
       .footer-links a:hover {
         color: var(--brand-color);
       }
-      .footer-bottom { 
-        grid-column: 1 / -1; 
-        text-align: center; 
-        margin-top: 2rem; 
-        padding-top: 2rem; 
-        border-top: 1px solid var(--card-border-color); 
-        font-size: 0.9rem; 
-        color: var(--font-color-light); 
+      .footer-bottom {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--card-border-color);
+        font-size: 0.9rem;
+        color: var(--font-color-light);
       }
-      
+
       @media (max-width: 768px) {
-        .footer-container { 
-          grid-template-columns: 1fr; 
-          text-align: center; 
+        .footer-container {
+          grid-template-columns: 1fr;
+          text-align: center;
         }
-        .footer-about p { 
-          margin-left: auto; 
-          margin-right: auto; 
+        .footer-about p {
+          margin-left: auto;
+          margin-right: auto;
         }
       }
     </style>

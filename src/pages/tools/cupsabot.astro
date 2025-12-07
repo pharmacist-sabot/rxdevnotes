@@ -1,11 +1,11 @@
 ---
-// src/pages/tools/cupsabot.astro
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import FeatureCard from '../../components/FeatureCard.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
+// src/pages/tools/cupsabot.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // IMPORTANT: Replace this with the actual URL of your deployed application
-const appUrl = "http://cupsabot.rxdevman.com";
+const appUrl = 'http://cupsabot.rxdevman.com';
 ---
 
 <BaseLayout title="Project: ระบบเบิกจ่ายยาออนไลน์">
@@ -15,10 +15,10 @@ const appUrl = "http://cupsabot.rxdevman.com";
       <p class="subtitle">
         เว็บแอปพลิเคชันเต็มรูปแบบสำหรับเพิ่มประสิทธิภาพการจัดการและติดตามการเบิกจ่ายยาของคปสอ.สระโบสถ์
       </p>
-      <a 
-        href={appUrl} 
-        target="_blank" 
-        rel="noopener noreferrer" 
+      <a
+        href={appUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         class="cta-button launch-button"
       >
         เปิดใช้งานระบบ
@@ -27,13 +27,13 @@ const appUrl = "http://cupsabot.rxdevman.com";
 
     <div class="screenshot-container">
       <!-- IMPORTANT: Replace with the path to your actual screenshot -->
-      <img 
-        src="/images/tools/cupsabot.png" 
+      <img
+        src="/images/tools/cupsabot.png"
         alt="Screenshot of the medication dispensing app dashboard"
         class="main-screenshot"
       />
     </div>
-    
+
     <div class="project-details">
       <h1>คุณสมบัติหลัก</h1>
       <FeatureGrid>

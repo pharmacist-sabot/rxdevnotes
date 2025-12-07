@@ -1,18 +1,18 @@
 ---
 // src/components/GitCommand.astro
-import { Icon } from "astro-icon/components";
+import { Icon } from 'astro-icon/components';
 
-interface Props {
+type Props = {
     command: string;
     icon: string;
-}
+};
 const { command, icon } = Astro.props;
 ---
 
 <div class="command-card">
     <header class="command-header">
         <Icon name={`heroicons:${icon}`} class="command-icon" />
-        <h2 id={command.toLowerCase().replace(" ", "-")}>{command}</h2>
+        <h2 id={command.toLowerCase().replace(' ', '-')}>{command}</h2>
     </header>
     <div class="command-content">
         <slot />

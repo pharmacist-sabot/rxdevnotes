@@ -4,19 +4,20 @@
 <div id="progress-bar" class="progress-bar"></div>
 
 <script>
-  function updateProgressBar() {
-    const bar = document.getElementById('progress-bar');
-    if (!bar) return;
-    const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
-    
-    bar.style.width = `${progress}%`;
-  }
+function updateProgressBar() {
+  const bar = document.getElementById('progress-bar');
+  if (!bar)
+    return;
+  const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
 
-  document.addEventListener('astro:page-load', updateProgressBar);
-  window.addEventListener('scroll', updateProgressBar, { passive: true });
-  
-  updateProgressBar();
+  bar.style.width = `${progress}%`;
+}
+
+document.addEventListener('astro:page-load', updateProgressBar);
+window.addEventListener('scroll', updateProgressBar, { passive: true });
+
+updateProgressBar();
 </script>
 
 <style>
@@ -24,7 +25,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 3px; 
+    height: 3px;
     background-color: var(--brand-color);
     width: 0%;
     z-index: 9999;

@@ -8,7 +8,10 @@
     "build": "astro build && npm run pagefind",
     "pagefind": "npx pagefind --site dist",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prepare": "husky",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.11",
@@ -20,5 +23,23 @@
     "astro-icon": "^1.1.5",
     "astro-pagefind": "^1.8.5",
     "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.4.2",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-astro": "^1.5.0",
+    "eslint-plugin-format": "^1.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  },
+  "overrides": {
+    "path-to-regexp": "^6.3.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,vue,md,astro}": [
+      "eslint --fix"
+    ]
   }
 }

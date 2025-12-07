@@ -2,12 +2,12 @@
 // src/components/tools/ToolCard.astro
 import { Icon } from 'astro-icon/components';
 
-interface Props {
+type Props = {
   title: string;
   description: string;
   href: string;
   icon: string;
-}
+};
 const { title, description, href, icon } = Astro.props;
 ---
 <a href={href} class="card tool-card">

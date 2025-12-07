@@ -1,40 +1,43 @@
 ---
 // src/components/Image.astro
-import type { ImageMetadata } from "astro";
-import { Image as AstroImage } from "astro:assets";
+import type { ImageMetadata } from 'astro';
 
-interface Props {
+import { Image as AstroImage } from 'astro:assets';
+
+type Props = {
     src: string | ImageMetadata;
     alt: string;
     caption?: string;
     width?: number;
     height?: number;
     class?: string;
-}
+};
 
 const { src, alt, caption, width, height, class: className } = Astro.props;
 
-const isRemoteOrPublic = typeof src === "string";
+const isRemoteOrPublic = typeof src === 'string';
 const hasDimensions = width && height;
 ---
 
-<figure class:list={["image-wrapper", className]}>
+<figure class:list={['image-wrapper', className]}>
     {
-        isRemoteOrPublic && !hasDimensions ? (
+        isRemoteOrPublic && !hasDimensions
+? (
             <img
-                src={src as string}
-                alt={alt}
-                class="rounded-shadow"
-                loading="lazy"
-                decoding="async"
+              src={src as string}
+              alt={alt}
+              class="rounded-shadow"
+              loading="lazy"
+              decoding="async"
             />
-        ) : (
+        )
+: (
             <AstroImage
-                src={src}
-                alt={alt}
-                width={width || 800}
-                height={height || undefined}
-                class="rounded-shadow"
+              src={src}
+              alt={alt}
+              width={width || 800}
+              height={height || undefined}
+              class="rounded-shadow"
             />
         )
     }

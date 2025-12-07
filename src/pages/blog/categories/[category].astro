@@ -1,26 +1,26 @@
 ---
 // src/pages/blog/categories/[category].astro
-import { getCollection } from "astro:content";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import BlogPostCard from "../../../components/BlogPostCard.astro";
-import { slugify } from "../../../utils/slugify"; 
+import { getCollection } from 'astro:content';
+
+import BlogPostCard from '../../../components/BlogPostCard.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { slugify } from '../../../utils/slugify';
 
 export async function getStaticPaths() {
-  const allPosts = await getCollection("blog");
-  const uniqueCategories = [...new Set(allPosts.map((post) => post.data.category))];
+  const allPosts = await getCollection('blog');
+  const uniqueCategories = [...new Set(allPosts.map(post => post.data.category))];
 
   return uniqueCategories.map((category) => {
     const filteredPosts = allPosts.filter(
-      (post) => post.data.category === category
+      post => post.data.category === category,
     );
     return {
-      params: { category: slugify(category) }, 
+      params: { category: slugify(category) },
       props: { posts: filteredPosts, displayName: category },
     };
   });
 }
 
-const { category } = Astro.params;
 const { posts, displayName } = Astro.props;
 ---
 <BaseLayout title={`Posts in category: ${displayName}`}>
@@ -32,13 +32,13 @@ const { posts, displayName } = Astro.props;
     </p>
   </div>
   <div class="post-grid">
-    {posts.map((post) => <BlogPostCard post={post} />)}
+    {posts.map(post => <BlogPostCard post={post} />)}
   </div>
 </BaseLayout>
 
 <style>
-  .page-header { 
-    text-align: center; 
+  .page-header {
+    text-align: center;
     margin-bottom: 3rem;
     max-width: 700px;
     margin-left: auto;
@@ -54,19 +54,19 @@ const { posts, displayName } = Astro.props;
     font-size: 0.9rem;
   }
 
-  .page-header h1 { 
+  .page-header h1 {
     margin-bottom: 0.5rem;
   }
-  
-  .subtitle { 
-    font-size: 1.2rem; 
-    color: var(--font-color-light); 
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--font-color-light);
   }
 
   /* This grid style is identical to /blog/index.astro for consistency */
-  .post-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-    gap: 1.5rem; 
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
   }
 </style>

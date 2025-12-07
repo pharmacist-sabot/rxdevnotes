@@ -1,12 +1,12 @@
 ---
+import FeatureCard from '../../components/FeatureCard.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
 // src/pages/tools/herbs-app.astro
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import FeatureCard from "../../components/FeatureCard.astro";
-import FeatureGrid from "../../components/FeatureGrid.astro";
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // หมายเหตุ: เปลี่ยน URL นี้เป็น Link ของ Herbs App ที่ Deploy แล้ว
-const appUrl = "https://herbs-app.rxdevman.com/";
-const repoUrl = "https://github.com/pharmacist-sabot/herbs-app";
+const appUrl = 'https://herbs-app.rxdevman.com/';
+const repoUrl = 'https://github.com/pharmacist-sabot/herbs-app';
 ---
 
 <BaseLayout title="Project: บัญชียาสมุนไพร รพ.สระโบสถ์">
@@ -20,18 +20,18 @@ const repoUrl = "https://github.com/pharmacist-sabot/herbs-app";
 
             <div class="button-group">
                 <a
-                    href={appUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="cta-button launch-button"
+                  href={appUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="cta-button launch-button"
                 >
                     เปิดใช้งานระบบ
                 </a>
                 <a
-                    href={repoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="repo-link"
+                  href={repoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="repo-link"
                 >
                     ดู Source Code
                 </a>
@@ -40,10 +40,10 @@ const repoUrl = "https://github.com/pharmacist-sabot/herbs-app";
 
         <div class="screenshot-container">
             <img
-                src="/images/tools/herbs-app.png"
-                alt="Screenshot of Thai Herbal NHSO Support App"
-                class="main-screenshot"
-                onerror="this.style.display='none'"
+              src="/images/tools/herbs-app.png"
+              alt="Screenshot of Thai Herbal NHSO Support App"
+              class="main-screenshot"
+              onerror="this.style.display='none'"
             />
         </div>
 
@@ -60,16 +60,16 @@ const repoUrl = "https://github.com/pharmacist-sabot/herbs-app";
                     ช่วยให้หน้างานทำงานได้รวดเร็ว
                 </FeatureCard>
                 <FeatureCard
-                    title="ข้อมูลการเบิกจ่ายครบถ้วน"
-                    icon="currency-dollar"
+                  title="ข้อมูลการเบิกจ่ายครบถ้วน"
+                  icon="currency-dollar"
                 >
                     แสดงรายละเอียดที่สำคัญสำหรับการทำงาน เช่น ราคาจ่ายชดเชยของ
                     สปสช., จำนวนที่เบิกได้ต่อรอบ, และรหัส ICD10
                     สำหรับคีย์ข้อมูลให้ถูกต้อง
                 </FeatureCard>
                 <FeatureCard
-                    title="Responsive Design"
-                    icon="device-phone-mobile"
+                  title="Responsive Design"
+                  icon="device-phone-mobile"
                 >
                     ออกแบบด้วย Vue.js ให้แสดงผลสวยงามทั้งบน Desktop และ Mobile
                     เหมาะสำหรับการเปิดดูข้อมูลหน้างาน

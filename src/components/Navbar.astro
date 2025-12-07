@@ -5,8 +5,8 @@
   <div class="navbar-container container">
     <a href="/" class="logo" aria-label="RxDev Man Homepage">
       <svg width="48" height="48" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 24h40c26 0 40 16 40 40s-14 40-40 40H24V24Z" stroke="currentColor" stroke-width="6" fill="none"/>
-        <path d="M64 44v40l16-20-16-20Z" fill="currentColor"/>
+        <path d="M24 24h40c26 0 40 16 40 40s-14 40-40 40H24V24Z" stroke="currentColor" stroke-width="6" fill="none" />
+        <path d="M64 44v40l16-20-16-20Z" fill="currentColor" />
       </svg>
       <span class="logo-text">RxDev Man</span>
     </a>
@@ -15,7 +15,7 @@
       <a href="/" data-nav-link>Home</a>
       <a href="/blog" data-nav-link>Blog</a>
       <a href="/tools" data-nav-link>Tools</a>
-      <a href="/hosxp" data-nav-link>HOSxP</a> 
+      <a href="/hosxp" data-nav-link>HOSxP</a>
       <a href="/about" data-nav-link>About</a>
     </nav>
 
@@ -27,27 +27,29 @@
 </header>
 
 <script>
-  const hamburger = document.getElementById('hamburger');
-  const navLinks = document.getElementById('nav-links');
-  const navbar = document.getElementById('navbar');
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+const navbar = document.getElementById('navbar');
 
-  if (hamburger && navLinks) {
-    hamburger.addEventListener('click', () => {
-      const isExpanded = navLinks.classList.toggle('active');
-      hamburger.classList.toggle('active');
-      hamburger.setAttribute('aria-expanded', isExpanded.toString());
-      document.body.classList.toggle('no-scroll');
-    });
-  }
-
-  window.addEventListener('scroll', () => {
-    if (!navbar) return;
-    if (window.scrollY > 20) { 
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', () => {
+    const isExpanded = navLinks.classList.toggle('active');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', isExpanded.toString());
+    document.body.classList.toggle('no-scroll');
   });
+}
+
+window.addEventListener('scroll', () => {
+  if (!navbar)
+    return;
+  if (window.scrollY > 20) {
+    navbar.classList.add('scrolled');
+  }
+  else {
+    navbar.classList.remove('scrolled');
+  }
+});
 </script>
 
 <style>
@@ -59,7 +61,7 @@
     z-index: 1000;
     padding: 1.5rem 0;
     background-color: transparent;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease; 
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
   }
 
   .navbar.scrolled {
@@ -92,7 +94,7 @@
     transform: rotate(-15deg) scale(1.1);
   }
   .logo-text {
-    font-family: var(--font-sans); 
+    font-family: var(--font-sans);
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--font-color);
@@ -100,7 +102,7 @@
   }
   .logo:hover .logo-text {
     color: var(--brand-color);
-  } 
+  }
 
   .nav-links {
     display: flex;
@@ -142,7 +144,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4px; 
+    gap: 4px;
 
     background: transparent;
     cursor: pointer;
@@ -156,7 +158,7 @@
   }
 
   .bar {
-    width: 16px; 
+    width: 16px;
     height: 2px;
     background-color: var(--font-color);
     border-radius: 10px;

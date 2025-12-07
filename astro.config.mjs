@@ -1,16 +1,16 @@
-// astro.config.mjs
-import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import icon from 'astro-icon';
-import sitemap from '@astrojs/sitemap'; 
-import pagefind from 'astro-pagefind'; 
+import pagefind from 'astro-pagefind';
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://rxdevnotes.vercel.app/', 
+  site: 'https://rxdevnotes.vercel.app/',
   markdown: {
     shikiConfig: {
-      theme: 'github-dark', 
+      theme: 'github-dark',
       wrap: true,
     },
   },

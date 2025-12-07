@@ -1,25 +1,26 @@
 ---
-// src/layouts/BlogPostLayout.astro
-import BaseLayout from "./BaseLayout.astro";
-import Toc from "../components/Toc.astro";
-import ViewCounter from "../components/ViewCounter.astro";
-import type { CollectionEntry } from "astro:content";
-import type { MarkdownHeading } from "astro";
-import { slugify } from "../utils/slugify";
+import type { MarkdownHeading } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 
-interface Props {
-  frontmatter: CollectionEntry<"blog">["data"];
+import Toc from '../components/Toc.astro';
+import ViewCounter from '../components/ViewCounter.astro';
+import { slugify } from '../utils/slugify';
+// src/layouts/BlogPostLayout.astro
+import BaseLayout from './BaseLayout.astro';
+
+type Props = {
+  frontmatter: CollectionEntry<'blog'>['data'];
   headings: MarkdownHeading[];
   slug?: string;
-}
+};
 
 const { frontmatter, headings, slug } = Astro.props;
 const { title, description, pubDate, heroImage, category, tags } = frontmatter;
 
-const formattedDate = new Date(pubDate).toLocaleDateString("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
+const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
 });
 
 // ใช้ slug ที่ส่งมา หรือสร้างจาก title เพื่อใช้เป็น key ในฐานข้อมูล
@@ -31,8 +32,10 @@ const postSlug = slug || slugify(title);
     <aside class="left-sidebar"></aside>
     <article class="prose">
       <header class="post-header">
-        <a href={`/blog/categories/${slugify(category)}`} class="category-link"
-          >{category}</a
+        <a
+          href={`/blog/categories/${slugify(category)}`}
+          class="category-link"
+        >{category}</a
         >
         <h1>{title}</h1>
         <p class="description">{description}</p>
@@ -61,7 +64,7 @@ const postSlug = slug || slugify(title);
       <footer class="post-footer">
         <div class="tags-list">
           {
-            tags.map((tag) => (
+            tags.map(tag => (
               <a href={`/blog/tags/${slugify(tag)}`} class="tag-chip">
                 {tag}
               </a>

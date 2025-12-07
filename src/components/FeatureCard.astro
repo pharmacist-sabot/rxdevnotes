@@ -2,10 +2,10 @@
 // src/components/FeatureCard.astro
 import { Icon } from 'astro-icon/components';
 
-interface Props {
+type Props = {
   title: string;
   icon: string;
-}
+};
 
 const { title, icon } = Astro.props;
 ---
@@ -25,7 +25,7 @@ const { title, icon } = Astro.props;
   .feature-card {
     background-color: transparent;
     padding: 1rem;
-    color: var(--font-color); 
+    color: var(--font-color);
     border-radius: 12px;
     transition: background-color 0.2s ease-in-out;
   }
@@ -40,7 +40,7 @@ const { title, icon } = Astro.props;
     gap: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .icon-wrapper {
     flex-shrink: 0;
     display: flex;
@@ -62,7 +62,7 @@ const { title, icon } = Astro.props;
     margin: 0;
     font-size: 1.2rem;
     font-weight: 600;
-    font-family: var(--font-sans); 
+    font-family: var(--font-sans);
     color: var(--font-color);
   }
 

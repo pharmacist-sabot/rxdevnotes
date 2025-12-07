@@ -1,7 +1,7 @@
 ---
+import ToolCard from '../../components/tools/ToolCard.astro';
 // src/pages/tools/index.astro
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ToolCard from "../../components/tools/ToolCard.astro";
+import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Developer Tools">
@@ -14,17 +14,17 @@ import ToolCard from "../../components/tools/ToolCard.astro";
 
     <div class="tools-grid">
         <ToolCard
-            title="ระบบเบิกจ่ายยาออนไลน์"
-            description="เว็บแอปพลิเคชันสำหรับจัดการการเบิกจ่ายยาภายในคปสอ.สระโบสถ์"
-            href="/tools/cupsabot"
-            icon="heroicons:beaker"
+          title="ระบบเบิกจ่ายยาออนไลน์"
+          description="เว็บแอปพลิเคชันสำหรับจัดการการเบิกจ่ายยาภายในคปสอ.สระโบสถ์"
+          href="/tools/cupsabot"
+          icon="heroicons:beaker"
         />
 
         <ToolCard
-            title="บัญชียาสมุนไพร รพ.สระโบสถ์"
-            description="ระบบสืบค้นข้อมูลยาสมุนไพรและเงื่อนไขการเบิกจ่ายของ สปสช."
-            href="/tools/herbs-app"
-            icon="heroicons:sparkles"
+          title="บัญชียาสมุนไพร รพ.สระโบสถ์"
+          description="ระบบสืบค้นข้อมูลยาสมุนไพรและเงื่อนไขการเบิกจ่ายของ สปสช."
+          href="/tools/herbs-app"
+          icon="heroicons:sparkles"
         />
         <!-- You can add more <ToolCard /> here for future tools -->
     </div>

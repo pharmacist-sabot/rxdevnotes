@@ -1,19 +1,20 @@
 ---
 // src/pages/blog/tags/[tag].astro
-import { getCollection } from "astro:content";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import BlogPostCard from "../../../components/BlogPostCard.astro";
-import { slugify } from "../../../utils/slugify"; // Re-using slugify for consistency
+import { getCollection } from 'astro:content';
+
+import BlogPostCard from '../../../components/BlogPostCard.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { slugify } from '../../../utils/slugify'; // Re-using slugify for consistency
 
 // Note: The getStaticPaths in the original file was slightly incorrect for tags with spaces.
 // This version ensures tags are URL-friendly.
 export async function getStaticPaths() {
-  const allPosts = await getCollection("blog");
-  const uniqueTags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
+  const allPosts = await getCollection('blog');
+  const uniqueTags = [...new Set(allPosts.map(post => post.data.tags).flat())];
 
   return uniqueTags.map((tag) => {
-    const filteredPosts = allPosts.filter((post) =>
-      post.data.tags.includes(tag)
+    const filteredPosts = allPosts.filter(post =>
+      post.data.tags.includes(tag),
     );
     return {
       params: { tag: slugify(tag) }, // Use slugify for URL
@@ -22,7 +23,6 @@ export async function getStaticPaths() {
   });
 }
 
-const { tag } = Astro.params;
 const { posts, displayName } = Astro.props;
 ---
 <BaseLayout title={`Posts tagged with: ${displayName}`}>
@@ -34,13 +34,13 @@ const { posts, displayName } = Astro.props;
     </p>
   </div>
   <div class="post-grid">
-    {posts.map((post) => <BlogPostCard post={post} />)}
+    {posts.map(post => <BlogPostCard post={post} />)}
   </div>
 </BaseLayout>
 
 <style>
-  .page-header { 
-    text-align: center; 
+  .page-header {
+    text-align: center;
     margin-bottom: 3rem;
     max-width: 700px;
     margin-left: auto;
@@ -56,19 +56,19 @@ const { posts, displayName } = Astro.props;
     font-size: 0.9rem;
   }
 
-  .page-header h1 { 
+  .page-header h1 {
     margin-bottom: 0.5rem;
   }
-  
-  .subtitle { 
-    font-size: 1.2rem; 
-    color: var(--font-color-light); 
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--font-color-light);
   }
 
   /* This grid style is identical to /blog/index.astro for consistency */
-  .post-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-    gap: 1.5rem; 
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
   }
 </style>

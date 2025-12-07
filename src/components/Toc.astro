@@ -2,9 +2,9 @@
 // src/components/Toc.astro
 import type { MarkdownHeading } from 'astro';
 
-interface Props {
+type Props = {
   headings: MarkdownHeading[];
-}
+};
 
 const { headings } = Astro.props;
 
@@ -24,34 +24,35 @@ const filteredHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 )}
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const tocLinks = document.querySelectorAll('.toc-item a');
-    if (tocLinks.length === 0) return;
+document.addEventListener('astro:page-load', () => {
+  const tocLinks = document.querySelectorAll('.toc-item a');
+  if (tocLinks.length === 0)
+    return;
 
-    const observer = new IntersectionObserver(entries => {
-      const intersectingEntries = entries.filter(entry => entry.isIntersecting);
+  const observer = new IntersectionObserver((entries) => {
+    const intersectingEntries = entries.filter(entry => entry.isIntersecting);
 
-      if (intersectingEntries.length > 0) {
-        intersectingEntries.sort(
-          (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
-        );
+    if (intersectingEntries.length > 0) {
+      intersectingEntries.sort(
+        (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
+      );
 
-        const activeEntry = intersectingEntries[0];
-        const id = activeEntry.target.getAttribute('id');
+      const activeEntry = intersectingEntries[0];
+      const id = activeEntry.target.getAttribute('id');
 
-        tocLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
-        });
-      }
-    }, { 
-      rootMargin: '0px 0px -80% 0px',
-      threshold: 1.0
-    });
-
-    document.querySelectorAll('.prose h2, .prose h3').forEach(heading => {
-      observer.observe(heading);
-    });
+      tocLinks.forEach((link) => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+      });
+    }
+  }, {
+    rootMargin: '0px 0px -80% 0px',
+    threshold: 1.0,
   });
+
+  document.querySelectorAll('.prose h2, .prose h3').forEach((heading) => {
+    observer.observe(heading);
+  });
+});
 </script>
 
 <style>
