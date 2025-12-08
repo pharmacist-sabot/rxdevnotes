@@ -30,6 +30,7 @@ export default defineConfig({
         './src/components/content/InfoBox.astro',
         './src/components/content/ProsCons.astro',
         './src/components/content/Table.astro',
+        './src/components/content/YouTube.astro',
 
         // --- layout components  ---
         './src/components/layout/Navbar.astro',

@@ -1,0 +1,264 @@
+---
+title: 'Lint Like a Senior Developer: การตั้งค่า eslint + husky + lint staged + github actions'
+description: 'การ Setup โปรเจกต์ Vue ระดับ Production-Ready ครบจบทั้ง Linting, Formatting, Git Hooks และ CI/CD'
+pubDate: '2025-12-08'
+heroImage: '/blog/eslint-antfu-setup.png'
+category: 'Development Tools'
+tags: ['Vue.js', 'ESLint', 'Antfu', 'Productivity', 'DX']
+featured: true
+---
+
+เคยไหมครับ? ที่ต้องเสียเวลาครึ่งค่อนวันไปกับการตั้งค่า ESLint ให้ทำงานร่วมกับ Prettier โดยไม่ทะเลาะกัน หรือต้องมานั่งเถียงกับทีมเรื่อง Single quote หรือ Double quote หรือต้องมาติดตั้ง devDependencies อะไรมากมายหลายตัวในการจัดการ Config เหล่านี้
+
+ในฐานะนักพัฒนา เวลาของเราควรถูกใช้ไปกับการสร้างฟีเจอร์ ไม่ใช่การซ่อม Config ครับ ว่าไปนั่น
+
+วันนี้ผมขอนำเสนอ **"Standard Protocol"** สำหรับการขึ้นโปรเจกต์ Vue.js ใหม่ ที่รับรองว่า Setup ทีเดียวจบ ครบตั้งแต่นิ้วกด Save ยันโค้ดขึ้น Cloud โดยใช้โค้ดของ <a href="https://github.com/antfu/eslint-config" target="_blank" rel="noopener noreferrer"><code>**@antfu/eslint-config**</code></a> ของ Anthony Fu (Core Team Vue/Vite) ที่รวบรวม Best Practices มาไว้ให้เราแล้ว สะดวกสุดๆ
+
+ซึ่งผมได้รับแรงบันดาลใจและเทคนิควิธีในการ setting มาจากวิดีโอของ CJ ในช่อง Syntax ผมได้แนบวิดีโอไว้ข้างล่างเผื่อใครอยากตามไปดูต้นฉบับนะครับ ในต้นฉบับเขาใช้ react แต่ผมจะใช้ vue ในบทความนี้นะครับ 555 
+
+<YouTube id="Kr4VxMbF3LY" title="Lint Like a Senior Developer w/ eslint + husky + lint staged + github actions" />
+
+---
+
+## Prerequisites (สิ่งที่ต้องมีก่อน)
+
+ก่อนอื่น ตรวจสอบให้แน่ใจว่ามีความพร้อมดังนี้แล้ว:
+1. <a href="https://nodejs.org/en" target="_blank" rel="noopener noreferrer"><code>**Node.js**</code></a> และ <a href="https://bun.sh/" target="_blank" rel="noopener noreferrer"><code>**Bun**</code></a> ใครที่ไม่มีทั้ง 2 อย่างนี้ให้ไปดาวน์โหลดมาติดตั้งบนเครื่องให้เรียบร้อยก่อนนะครับ (ในบทความนี้ผมจะเน้นใช้ Bun ซึ่งหากใช้ใครจะใช้ npm, pnpm, yarn ก็ได้ ซึ่งจะแตกต่างกันก็ตรงการรันคำสั่งครับ)
+2. <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer"><code>**Vue 3 Project**</code></a> ที่สร้างด้วย <a href="https://vite.dev/" target="_blank" rel="noopener noreferrer"><code>**Vite**</code></a>
+3. <a href="https://github.com/" target="_blank" rel="noopener noreferrer"><code>**Git Repository**</code></a> ที่ Init เรียบร้อยแล้ว `สำคัญมากไม่อย่างนั้นเราจะใช้ husky ไม่ได้`
+
+---
+
+## Phase 1: Core Setup (หัวใจสำคัญ)
+
+เราจะเปลี่ยนจากการใช้ ESLint แบบเดิมๆ ที่ต้องลง Plugin มหาศาล มาเป็น Config เดียวที่ดูแลทุกอย่าง
+
+### 1.1 Install Dependencies
+
+เราจะติดตั้ง `eslint`, `eslint-plugin-format`, `@antfu/eslint-config` พร้อมกับเครื่องมือสำหรับ Git Hooks อย่าง `husky` และ `lint-staged` รวมทั้งหมด 5 อย่างครับ 
+
+<GitCommand command="bun add -d eslint eslint-plugin-format @antfu/eslint-config husky lint-staged" icon="command-line">
+  <p>คำสั่งนี้จะติดตั้งเครื่องมือที่จำเป็นทั้งหมดใน <code>devDependencies</code></p>
+</GitCommand>
+
+หลังจากติดตั้งแล้ว ตรงส่วน devDependencies เราต้องมีแบบนี้นะครับ
+```json
+{
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.4.2",
+    "eslint": "^9.39.1",
+    "eslint-plugin-format": "^1.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  }
+}
+```
+
+### 1.2 Create `eslint.config.mjs`
+
+สร้างไฟล์นี้ที่ Root ของโปรเจกต์ เราจะกำหนดกฎเพื่อกำหนดสไตล์ Prettier ด้วย ESLint เพียงตัวเดียว รวมถึงกฏอื่นๆ ซึ่งเราสามารถปรับเพิ่มแก้ไขเองได้ โดยผมได้ใช้การ setting ของ <a href="https://gist.github.com/w3cj/21b1f1b4857ecd13d076075a5c5aaf13/" target="_blank" rel="noopener noreferrer"><code>**CJ's antfu eslint-config settings**</code></a> เลยออกมาเป็นการ setting ประมาณนี้ครับ
+
+<CodeExplainer title="eslint.config.mjs">
+  <details open>
+    <summary><strong>Configuration Breakdown</strong></summary>
+    <p>
+      เราใช้ <code>antfu()</code> เป็นฟังก์ชันหลัก โดยเปิดใช้งาน <code>vue</code>, <code>typescript</code> และ <code>stylistic</code> (Formatting)
+    </p>
+    <ul>
+      <li><strong>Stylistic:</strong> บังคับใช้ Indent 2 ช่อง, Semicolon, และ Single Quotes</li>
+      <li><strong>Perfectionist:</strong> กฎการเรียง Imports อัตโนมัติ ช่วยให้หัวไฟล์สะอาดตา</li>
+      <li><strong>Unicorn:</strong> บังคับชื่อไฟล์ให้เป็นมาตรฐาน (Kebab-case หรือ PascalCase)</li>
+    </ul>
+  </details>
+
+```javascript
+// eslint.config.mjs
+import antfu from '@antfu/eslint-config';
+
+export default antfu({
+  type: 'app',
+  vue: true,
+  typescript: true,
+  formatters: true,
+  stylistic: {
+    indent: 2,
+    semi: true,
+    quotes: 'single',
+  },
+}, {
+  rules: {
+    'ts/no-redeclare': 'off',
+    'ts/consistent-type-definitions': ['error', 'type'],
+    'no-console': ['warn'],
+    'antfu/no-top-level-await': ['off'],
+    'node/prefer-global/process': ['off'],
+    'node/no-process-env': ['error'],
+    
+    // Auto-sort imports: ช่วยลด Cognitive Load เวลาอ่านโค้ด
+    'perfectionist/sort-imports': ['error', {
+      tsconfigRootDir: '.',
+    }],
+    
+    // File Naming Convention
+    'unicorn/filename-case': ['error', {
+      cases: {
+        kebabCase: true,
+        pascalCase: true,
+      },
+      ignore: ['README.md'],
+    }],
+  },
+});
+```
+</CodeExplainer>
+
+### 1.3 Update `package.json`
+
+เพิ่ม Scripts เพื่อให้เรียกใช้งานได้ง่าย และตั้งค่า `lint-staged` เพื่อให้ตรวจสอบเฉพาะไฟล์ที่เราแก้ไข (ประหยัดเวลา Commit)
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,vue,md,json,mjs,cjs}": [
+      "eslint --fix"
+    ]
+  }
+}
+```
+
+---
+
+## Phase 2: Editor Integration (การตั้งค่าใน VS Code)
+
+เพื่อให้ Developer Experience (DX) สูงสุด เราต้องทำให้ Editor รู้จักกฎของเราและแก้ไขให้อัตโนมัติ ใน <a href="https://github.com/antfu/eslint-config" target="_blank" rel="noopener noreferrer"><code>**@antfu/eslint-config**</code></a> ก็มีตัวอย่างการตั้งค่าเอาไว้ มีทั้ง VS Code และ Neovim
+
+สร้างไฟล์ `.vscode/settings.json`:
+
+```json
+{
+  // ปิด Default Formatter (Prettier) และใช้ ESLint แทน
+  "prettier.enable": false,
+  "editor.formatOnSave": false,
+  
+  // Auto fix: กด Save ปุ๊บ แก้โค้ดปั๊บ
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  
+  // ปิดเส้นแดงรกตาสำหรับกฎเรื่องความสวยงาม (ปล่อยให้ Auto-fix จัดการเอง)
+  "eslint.rules.customizations": [
+    { "rule": "style/*", "severity": "off", "fixable": true },
+    { "rule": "format/*", "severity": "off", "fixable": true },
+    { "rule": "*-indent", "severity": "off", "fixable": true },
+    { "rule": "*-spacing", "severity": "off", "fixable": true },
+    { "rule": "*-spaces", "severity": "off", "fixable": true },
+    { "rule": "*-order", "severity": "off", "fixable": true },
+    { "rule": "*-dangle", "severity": "off", "fixable": true },
+    { "rule": "*-newline", "severity": "off", "fixable": true },
+    { "rule": "*quotes", "severity": "off", "fixable": true },
+    { "rule": "*semi", "severity": "off", "fixable": true }
+  ],
+  
+  // รองรับทุกภาษาในโปรเจกต์ สามารถเพิ่มเติมได้
+  "eslint.validate": [
+    "javascript", "javascriptreact", "typescript", "typescriptreact",
+    "vue", "html", "markdown", "json", "jsonc", "yaml", "css", "scss"
+  ]
+}
+```
+
+<InfoBox title="ทำไมต้องปิด Prettier?" type="warning">
+  Config ชุดนี้ใช้ความสามารถของ ESLint ในการทำ Formatting (Stylistic) แทน Prettier อย่างสมบูรณ์ การเปิด Prettier ซ้อนอาจทำให้เกิด conflict และการแย่งกัน Format ได้
+</InfoBox>
+
+---
+
+## Phase 3: Git Setting (husky)
+
+อย่าปล่อยให้โค้ดแย่ๆ หลุดเข้าไปใน Repository ครับ เราจะใช้ husky เพื่อดักจับก่อนที่จะ commit ถ้าไม่ผ่าน commit ก็จะพัง ต้องแก้ไขให้ผ่านก่อนครับจึงจะ commit ได้ ซึ่ง `lint-staged` จะมาช่วยเราตรงนี้ครับ
+
+### 3.1 Init & Clean
+
+```bash
+# สร้างโฟลเดอร์ .husky
+bun husky init
+```
+
+**Manual Step:** เข้าไปที่โฟลเดอร์ `.husky` ลบไฟล์ขยะทิ้งให้หมด เหลือไว้แค่โฟลเดอร์ `_` และไฟล์ `pre-commit`
+
+### 3.2 Configure `pre-commit` Hook
+
+แก้ไขไฟล์ `.husky/pre-commit` ให้รันคำสั่ง `lint-staged`
+
+```bash
+bun lint-staged
+```
+
+<FeatureGrid>
+  <FeatureCard title="Speed" icon="bolt">
+    ตรวจสอบเฉพาะไฟล์ที่ถูกแก้ (Staged files) ไม่ต้องรอ Lint ทั้งโปรเจกต์
+  </FeatureCard>
+  <FeatureCard title="Consistency" icon="check-badge">
+    การันตีว่าทุก Commit ที่ผ่านเข้าไป สะอาดและถูกต้องตามมาตรฐานที่เราตั้งค่าไว้ครับ
+  </FeatureCard>
+</FeatureGrid>
+
+---
+
+## Phase 4: CI/CD
+
+สำหรับทีม การมี CI เป็นเรื่องบังคับ (Mandatory) เพราะบางคนอาจจะ Bypass Husky ในเครื่องตัวเองได้ เราจึงต้องตั้งค่าอีกชั้นบน Github ครับ
+
+สร้างไฟล์ `.github/workflows/lint.yml`:
+
+```yaml
+name: Lint Code
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Linter
+        run: bun run lint
+```
+
+---
+
+## สรุป: ทำไมต้องทำขนาดนี้?
+
+การ Setup ทั้งหมดนี้อาจใช้เวลาประมาณ 10-15 นาทีในครั้งแรก แต่ผลตอบแทนที่ได้คือมหาศาลมากครับ 
+
+1.  **Zero Cognitive Load:** ไม่ต้องเถียงกันเรื่อง Code Style  อีกต่อไป
+2.  **Automated Refactoring:** การเรียง Import และจัดระเบียบโค้ดเกิดขึ้นอัตโนมัติ
+3.  **High Quality Codebase:** ป้องกัน Bad Practices (เช่นการใช้ `console.log` หรือ `process.env` มั่วซั่ว) ตั้งแต่ต้นทาง
+
+นี่คือ **Standard Protocol** ที่คุณสามารถ Copy ไปใช้กับทุกโปรเจกต์ของ Vue ได้เลยครับ
+
+แต่ถ้าใครไม่อยากตั้งค่าเอง 555 ผมได้ทำ <a href="https://github.com/pharmacist-sabot/vue-starter" target="_blank" rel="noopener noreferrer"><code>**vue-starter**</code></a> ซึ่งเป็น template ที่มีการตั้งค่า Standard Protocol แล้ว โดยใช้ Vue3 + TypeScript + TailwindCSS ถ้าใครอยากนำไปใช้ก็กดที่ Use this template ได้เลยครับ
