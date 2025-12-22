@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.1.0...v1.1.1) (2025-12-22)
+
+### 📝 Documentation
+
+* enhance README with demo link, troubleshooting, and roadmap ([e1f7167](https://github.com/pharmacist-sabot/rxdevnotes/commit/e1f7167da3ef51bd6c2f596edd7b3d5b93fa16eb))
+
 ## [1.1.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.0.0...v1.1.0) (2025-12-22)
 
 ### 🚀 New Features
