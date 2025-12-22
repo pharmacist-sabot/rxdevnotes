@@ -12,12 +12,15 @@ const { title, pubDate, category, heroImage, description } = post.data;
 
 // Safe date formatting with error handling
 let formattedDate = 'Date unavailable';
+let isoDate = '';
 try {
-  formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
+  const dateObj = new Date(pubDate);
+  formattedDate = dateObj.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   });
+  isoDate = dateObj.toISOString();
 }
  catch (e) {
   console.error('Error formatting date:', e);
@@ -26,14 +29,19 @@ try {
 // Calculate reading time (rough estimate: 200 words per minute)
 function calculateReadingTime(content: string) {
   const wordsPerMinute = 200;
-  const wordCount = content?.split(/\s+/).length || 0;
+  const normalized = content.trim();
+  if (!normalized)
+    return null;
+
+  const wordCount = normalized.split(/\s+/).length;
   const minutes = Math.ceil(wordCount / wordsPerMinute);
-  return minutes > 0 ? `${minutes} min read` : null;
+  return `${minutes} min read`;
 }
 
 const readingTime = post.body ? calculateReadingTime(post.body) : null;
 const displayImage = heroImage || '/blog-placeholder-1.png';
-const excerpt = description || `${post.body?.slice(0, 150)}...` || '';
+const bodyExcerpt = post.body ? `${post.body.slice(0, 150)}...` : '';
+const excerpt = description || bodyExcerpt;
 ---
 
 <article class="card blog-card">
@@ -82,7 +90,7 @@ const excerpt = description || `${post.body?.slice(0, 150)}...` || '';
     </div>
 
     <div class="card-footer">
-      <time datetime={pubDate?.toISOString?.()} aria-label={`Published on ${formattedDate}`}>
+      <time datetime={isoDate} aria-label={`Published on ${formattedDate}`}>
         {formattedDate}
       </time>
       <span class="read-more" aria-hidden="true">Read More &rarr;</span>
