@@ -1,3 +1,13 @@
+## [1.1.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.0.0...v1.1.0) (2025-12-22)
+
+### 🚀 New Features
+
+* **blog:** update blog post card design with hero image ([#3](https://github.com/pharmacist-sabot/rxdevnotes/issues/3)) ([e25e1fe](https://github.com/pharmacist-sabot/rxdevnotes/commit/e25e1fedb9031649cc629763be57468cc6e249f1))
+
+### 📦 Dependency Updates
+
+* add MIT license ([3fc2a31](https://github.com/pharmacist-sabot/rxdevnotes/commit/3fc2a31ce1b67674c30f1153d522b658207e00c3))
+
 ## 1.0.0 (2025-12-22)
 
 ### 🚀 New Features
