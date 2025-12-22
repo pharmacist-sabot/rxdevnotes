@@ -3,6 +3,8 @@
 > **The Developer's Living Knowledge Base.**
 > A high-performance, interactive knowledge graph built for modern software engineers.
 
+🌐 **[Live Demo: rxdevman.com](https://www.rxdevman.com/)**
+
 ![Astro](https://img.shields.io/badge/Astro-5.0-FF5D01?style=flat&logo=astro)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=flat&logo=supabase)
@@ -13,7 +15,7 @@
 
 ---
 
-## � Key Features
+## 🔑 Key Features
 
 ### 📚 Rich Content Experience
 
@@ -128,6 +130,34 @@ This command will:
 
 1. Build the Astro site.
 2. Run `pagefind` to index the content for search.
+
+### Troubleshooting
+
+**Build fails with Supabase errors:**
+
+- Ensure your `.env` file contains valid Supabase credentials.
+- For local development without Supabase, the site will work but view counters will not function.
+
+**Search not working:**
+
+- Run `npm run build` to generate the search index.
+- The search feature requires the production build to function properly.
+
+**Port already in use:**
+
+- Change the dev server port: `npm run dev -- --port 3000`
+
+---
+
+## 🎯 Roadmap
+
+- [ ] **Dark Mode Toggle**: User-selectable theme preferences
+- [ ] **Tag System**: Filter articles by technology/topic
+- [ ] **RSS Feed**: Subscribe to new content
+- [ ] **Comment System**: Community engagement
+- [ ] **Series/Collections**: Group related articles
+- [ ] **Reading Progress**: Track reader engagement
+- [ ] **Multi-language Support**: i18n implementation
 
 ---
 
