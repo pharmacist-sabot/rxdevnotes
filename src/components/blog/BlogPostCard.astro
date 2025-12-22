@@ -1,28 +1,99 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
+import { Image } from 'astro:assets';
+
 type Props = {
   post: CollectionEntry<'blog'>;
 };
 
 const { post } = Astro.props;
-const { title, description, pubDate, category } = post.data;
-const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-});
+const { title, pubDate, category, heroImage, description } = post.data;
+
+// Safe date formatting with error handling
+let formattedDate = 'Date unavailable';
+let isoDate = '';
+try {
+  const dateObj = new Date(pubDate);
+  formattedDate = dateObj.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+  isoDate = dateObj.toISOString();
+}
+ catch (e) {
+  console.error('Error formatting date:', e);
+}
+
+// Calculate reading time (rough estimate: 200 words per minute)
+function calculateReadingTime(content: string) {
+  const wordsPerMinute = 200;
+  const normalized = content.trim();
+  if (!normalized)
+    return null;
+
+  const wordCount = normalized.split(/\s+/).length;
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
+  return `${minutes} min read`;
+}
+
+const readingTime = post.body ? calculateReadingTime(post.body) : null;
+const displayImage = heroImage || '/blog-placeholder-1.png';
+const bodyExcerpt = post.body ? `${post.body.slice(0, 150)}...` : '';
+const excerpt = description || bodyExcerpt;
 ---
+
 <article class="card blog-card">
-  <a href={`/blog/${post.slug}`} class="card-link" aria-label={`Read more about ${title}`}>
-    <div class="card-content">
-      <p class="category">{category}</p>
-      <h3 class="title">{title}</h3>
-      <p class="description">{description}</p>
+  <a href={`/blog/${post.slug}`} class="card-link" aria-label={`Read article: ${title}`}>
+
+    <div class="card-image-wrapper">
+      {heroImage
+? (
+        <Image
+          src={heroImage}
+          alt={`Cover image for ${title}`}
+          class="card-image"
+          loading="lazy"
+          decoding="async"
+          width={800}
+          height={450}
+          format="webp"
+        />
+      )
+: (
+        <img
+          src={displayImage}
+          alt={`Placeholder image for ${title}`}
+          class="card-image"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
     </div>
+
+    <div class="card-content">
+      <div class="card-meta">
+        <span class="category" aria-label={`Category: ${category}`}>{category}</span>
+        {readingTime && (
+          <span class="reading-time" aria-label={`Reading time: ${readingTime}`}>
+            {readingTime}
+          </span>
+        )}
+      </div>
+
+      <h3 class="title">{title}</h3>
+
+      {excerpt && (
+        <p class="description">{excerpt}</p>
+      )}
+    </div>
+
     <div class="card-footer">
-      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
-      <span class="read-more">Read More &rarr;</span>
+      <time datetime={isoDate} aria-label={`Published on ${formattedDate}`}>
+        {formattedDate}
+      </time>
+      <span class="read-more" aria-hidden="true">Read More &rarr;</span>
     </div>
   </a>
 </article>
@@ -34,6 +105,17 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
     height: 100%;
     padding: 0;
     overflow: hidden;
+    border-radius: 16px;
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
+    box-shadow: 0 4px 6px -1px var(--shadow-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px var(--shadow-hover-color);
+    border-color: var(--brand-color);
   }
 
   .card-link {
@@ -42,68 +124,173 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: 1.75rem;
+    padding: 0;
+    outline: none;
   }
 
-  @media (max-width: 768px) {
-    .card-link {
-      padding: 1.25rem;
-    }
+  /* Focus styles for accessibility */
+  .card-link:focus-visible {
+    outline: 3px solid var(--brand-color);
+    outline-offset: 2px;
+    border-radius: 16px;
   }
 
+  /* --- Image Styles --- */
+  .card-image-wrapper {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--card-border-color);
+    background-color: var(--card-bg-color, #f5f5f5);
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    will-change: transform;
+  }
+
+  .blog-card:hover .card-image {
+    transform: scale(1.05);
+  }
+
+  /* --- Content Styles --- */
   .card-content {
     flex-grow: 1;
+    padding: 1.5rem 1.5rem 0 1.5rem;
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
   }
 
   .category {
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    color: var(--font-color-light);
-    margin-bottom: 0.75rem;
+    color: var(--brand-color);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  .reading-time {
+    font-size: 0.75rem;
+    color: var(--font-color-light);
+    opacity: 0.8;
+    font-weight: 500;
   }
 
   .title {
     font-family: var(--font-serif);
-    font-size: clamp(1.2rem, 4vw, 1.4rem);
-    line-height: 1.3;
+    font-size: clamp(1.1rem, 4vw, 1.3rem);
+    line-height: 1.4;
     margin: 0 0 0.75rem;
     color: var(--font-color);
+    transition: color 0.2s ease;
+  }
+
+  .card-link:hover .title {
+    color: var(--brand-color);
   }
 
   .description {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--font-color-light);
     line-height: 1.6;
-    margin-bottom: 1.5rem;
+    margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .card-footer {
-    border-top: 1px solid var(--card-border-color);
-    padding-top: 1rem;
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
     margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   time {
     color: var(--font-color-light);
+    opacity: 0.8;
+    font-weight: 500;
   }
 
   .read-more {
     color: var(--brand-color);
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.85rem;
     transition: transform 0.2s ease;
+    display: inline-block;
+    will-change: transform;
   }
 
   .card-link:hover .read-more {
     transform: translateX(4px);
+  }
+
+  /* Improved contrast for better readability */
+  @media (prefers-contrast: high) {
+    .blog-card {
+      border-width: 2px;
+    }
+
+    .category,
+    .read-more {
+      font-weight: 700;
+    }
+  }
+
+  /* Reduced motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .blog-card,
+    .card-image,
+    .read-more,
+    .title {
+      transition: none;
+    }
+
+    .blog-card:hover {
+      transform: none;
+    }
+
+    .blog-card:hover .card-image {
+      transform: none;
+    }
+
+    .card-link:hover .read-more {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .card-content {
+      padding: 1.25rem 1.25rem 0 1.25rem;
+    }
+
+    .card-footer {
+      padding: 1rem 1.25rem 1.25rem 1.25rem;
+    }
+
+    .card-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
   }
 </style>
