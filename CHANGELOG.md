@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.1.1...v1.2.0) (2025-12-24)
+
+### 🚀 New Features
+
+* **blog:** add article on automating releases with semantic-release ([edc80dc](https://github.com/pharmacist-sabot/rxdevnotes/commit/edc80dc2aa3f8a8e4494d576858b70f514f9f186))
+
 ## [1.1.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.1.0...v1.1.1) (2025-12-22)
 
 ### 📝 Documentation
