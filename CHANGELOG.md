@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.2.0...v1.2.1) (2025-12-30)
+
+### ♻️ Refactoring
+
+* **content:** reorganize blog mdx to page bundles and structure … ([#5](https://github.com/pharmacist-sabot/rxdevnotes/issues/5)) ([377e19d](https://github.com/pharmacist-sabot/rxdevnotes/commit/377e19deb1a4c8f9e225955c91ecf9e19de39292))
+
 ## [1.2.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.1.1...v1.2.0) (2025-12-24)
 
 ### 🚀 New Features
