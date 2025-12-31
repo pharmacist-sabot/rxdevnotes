@@ -20,7 +20,7 @@ export function getRelatedPosts(
   currentSlug: string,
   currentTags: string[] = [],
   currentCategory: string = '',
-  limit: number = 3,
+  limit = 3,
 ): CollectionEntry<'blog'>[] {
   // Normalize inputs with defaults
   const safeTags = currentTags ?? [];
