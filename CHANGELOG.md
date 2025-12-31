@@ -1,3 +1,9 @@
+## [1.2.2](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.2.1...v1.2.2) (2025-12-31)
+
+### ♻️ Refactoring
+
+* remove and rename images to blog content ([#6](https://github.com/pharmacist-sabot/rxdevnotes/issues/6)) ([119cbd5](https://github.com/pharmacist-sabot/rxdevnotes/commit/119cbd5144fa54f23ac3f75b0b633321d31a7f9a))
+
 ## [1.2.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.2.0...v1.2.1) (2025-12-30)
 
 ### ♻️ Refactoring
