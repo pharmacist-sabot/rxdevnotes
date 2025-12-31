@@ -2,8 +2,11 @@
 import type { MarkdownHeading } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
+import RelatedPosts from '@/components/blog/RelatedPosts.astro';
 import Toc from '@/components/blog/Toc.astro';
 import ViewCounter from '@/components/blog/ViewCounter.astro';
+import { getAllBlogPosts } from '@/lib/blog';
+import { getRelatedPosts } from '@/utils/post-utils';
 import { slugify } from '@/utils/slugify';
 
 import BaseLayout from './BaseLayout.astro';
@@ -23,8 +26,12 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
-// ใช้ slug ที่ส่งมา หรือสร้างจาก title เพื่อใช้เป็น key ในฐานข้อมูล
+// Use the provided slug or generate from title as a database key
 const postSlug = slug || slugify(title);
+
+// Fetch all blog posts (cached) and compute related posts
+const allPosts = await getAllBlogPosts();
+const relatedPosts = getRelatedPosts(allPosts, postSlug, tags, category, 3);
 ---
 
 <BaseLayout title={title} description={description}>
@@ -72,6 +79,8 @@ const postSlug = slug || slugify(title);
           }
         </div>
       </footer>
+
+      <RelatedPosts relatedPosts={relatedPosts} />
     </article>
 
     <aside class="right-sidebar">
