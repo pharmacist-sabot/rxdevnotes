@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.2.2...v1.3.0) (2025-12-31)
+
+### 🚀 New Features
+
+* add feature related post ([#7](https://github.com/pharmacist-sabot/rxdevnotes/issues/7)) ([ab0c07c](https://github.com/pharmacist-sabot/rxdevnotes/commit/ab0c07c4c4abc16b1f248aabb136ded4531fd924))
+
 ## [1.2.2](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.2.1...v1.2.2) (2025-12-31)
 
 ### ♻️ Refactoring
