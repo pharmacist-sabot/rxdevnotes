@@ -19,7 +19,7 @@ export function getRelatedPosts(
   allPosts: CollectionEntry<'blog'>[],
   currentSlug: string,
   currentTags: string[] = [],
-  currentCategory: string = '',
+  currentCategory = '',
   limit = 3,
 ): CollectionEntry<'blog'>[] {
   // Normalize inputs with defaults
