@@ -2,11 +2,10 @@
 import type { MarkdownHeading } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
-import { getCollection } from 'astro:content';
-
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
 import Toc from '@/components/blog/Toc.astro';
 import ViewCounter from '@/components/blog/ViewCounter.astro';
+import { getAllBlogPosts } from '@/lib/blog';
 import { getRelatedPosts } from '@/utils/post-utils';
 import { slugify } from '@/utils/slugify';
 
@@ -30,8 +29,8 @@ const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
 // Use the provided slug or generate from title as a database key
 const postSlug = slug || slugify(title);
 
-// Fetch all blog posts and compute related posts
-const allPosts = await getCollection('blog');
+// Fetch all blog posts (cached) and compute related posts
+const allPosts = await getAllBlogPosts();
 const relatedPosts = getRelatedPosts(allPosts, postSlug, tags, category, 3);
 ---
 

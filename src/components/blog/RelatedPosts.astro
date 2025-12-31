@@ -16,7 +16,9 @@ const { relatedPosts } = Astro.props;
       <h2 class="related-posts-heading">You might also like</h2>
       <div class="related-posts-grid">
         {relatedPosts.map(post => (
-          <BlogPostCard post={post} />
+          <div class="grid-item" data-post-id={post.slug}>
+            <BlogPostCard post={post} />
+          </div>
         ))}
       </div>
     </section>
@@ -42,6 +44,10 @@ const { relatedPosts } = Astro.props;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
+  }
+
+  .grid-item {
+    height: 100%;
   }
 
   @media (max-width: 1024px) {

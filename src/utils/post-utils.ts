@@ -1,6 +1,16 @@
 import type { CollectionEntry } from 'astro:content';
 
 /**
+ * Safely parse a date, returning 0 for invalid dates
+ */
+function safeGetTime(date: Date | string | undefined): number {
+  if (!date)
+    return 0;
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+}
+
+/**
  * Calculate related posts based on tags and category matching.
  * Uses a scoring system: +2 points per matching tag, +1 point for matching category.
  * Falls back to most recent posts if no related posts are found.
@@ -8,27 +18,33 @@ import type { CollectionEntry } from 'astro:content';
 export function getRelatedPosts(
   allPosts: CollectionEntry<'blog'>[],
   currentSlug: string,
-  currentTags: string[],
-  currentCategory: string,
+  currentTags: string[] = [],
+  currentCategory: string = '',
   limit: number = 3,
 ): CollectionEntry<'blog'>[] {
-  // Filter out the current post
-  const otherPosts = allPosts.filter(post => post.slug !== currentSlug);
+  // Normalize inputs with defaults
+  const safeTags = currentTags ?? [];
+  const safeCategory = currentCategory ?? '';
+
+  // Filter out the current post and posts without valid pubDate
+  const otherPosts = allPosts.filter(
+    post => post.slug !== currentSlug && post.data.pubDate,
+  );
 
   // Calculate scores for each post
   const scoredPosts = otherPosts.map((post) => {
     let score = 0;
 
     // +2 points for each matching tag
-    const postTags = post.data.tags || [];
+    const postTags = post.data.tags ?? [];
     for (const tag of postTags) {
-      if (currentTags.includes(tag)) {
+      if (safeTags.includes(tag)) {
         score += 2;
       }
     }
 
     // +1 point for matching category
-    if (post.data.category === currentCategory) {
+    if (safeCategory && post.data.category === safeCategory) {
       score += 1;
     }
 
@@ -41,10 +57,7 @@ export function getRelatedPosts(
       return b.score - a.score;
     }
     // Tie-breaker: newer posts first
-    return (
-      new Date(b.post.data.pubDate).getTime()
-        - new Date(a.post.data.pubDate).getTime()
-    );
+    return safeGetTime(b.post.data.pubDate) - safeGetTime(a.post.data.pubDate);
   });
 
   // Check if we have any posts with score > 0
@@ -57,8 +70,7 @@ export function getRelatedPosts(
 
   // Fallback: return most recent posts if no related posts found
   const recentPosts = [...otherPosts].sort(
-    (a, b) =>
-      new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime(),
+    (a, b) => safeGetTime(b.data.pubDate) - safeGetTime(a.data.pubDate),
   );
 
   return recentPosts.slice(0, limit);
