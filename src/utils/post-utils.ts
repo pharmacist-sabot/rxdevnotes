@@ -22,10 +22,6 @@ export function getRelatedPosts(
   currentCategory = '',
   limit = 3,
 ): CollectionEntry<'blog'>[] {
-  // Normalize inputs with defaults
-  const safeTags = currentTags ?? [];
-  const safeCategory = currentCategory ?? '';
-
   // Filter out the current post and posts without valid pubDate
   const otherPosts = allPosts.filter(
     post => post.slug !== currentSlug && post.data.pubDate,
@@ -38,13 +34,13 @@ export function getRelatedPosts(
     // +2 points for each matching tag
     const postTags = post.data.tags ?? [];
     for (const tag of postTags) {
-      if (safeTags.includes(tag)) {
+      if (currentTags.includes(tag)) {
         score += 2;
       }
     }
 
     // +1 point for matching category
-    if (safeCategory && post.data.category === safeCategory) {
+    if (currentCategory && post.data.category === currentCategory) {
       score += 1;
     }
 
