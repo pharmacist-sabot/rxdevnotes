@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.3.0...v1.3.1) (2026-01-06)
+
+### 📝 Documentation
+
+* rewrite rust variable and mutability content ([c8a6e5e](https://github.com/pharmacist-sabot/rxdevnotes/commit/c8a6e5ee97fa2bfa4a32243f059dc00d4ea9354c))
+
 ## [1.3.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.2.2...v1.3.0) (2025-12-31)
 
 ### 🚀 New Features
