@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.3.1...v1.4.0) (2026-01-22)
+
+### 🚀 New Features
+
+* add new blog lambda from scratch in rust ([3c2e4e1](https://github.com/pharmacist-sabot/rxdevnotes/commit/3c2e4e15f549269a8a3bfda974e8d232d50e0292))
+
 ## [1.3.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.3.0...v1.3.1) (2026-01-06)
 
 ### 📝 Documentation
