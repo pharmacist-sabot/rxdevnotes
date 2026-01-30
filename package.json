@@ -20,7 +20,7 @@
     "@astrojs/vercel": "^8.0.4",
     "@iconify-json/heroicons": "^1.2.2",
     "@supabase/supabase-js": "^2.84.0",
-    "astro": "^5.16.13",
+    "astro": "^5.17.1",
     "astro-auto-import": "^0.4.5",
     "astro-icon": "^1.1.5",
     "astro-pagefind": "^1.8.5",
@@ -31,17 +31,17 @@
     "@antfu/eslint-config": "^6.4.2",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.2",
-    "@semantic-release/npm": "^13.1.2",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^7.0.18",
+    "@semantic-release/github": "^5.5.8",
+    "@semantic-release/npm": "^4.0.2",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-astro": "^1.5.0",
     "eslint-plugin-format": "^1.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "semantic-release": "^25.0.2"
+    "semantic-release": "^15.9.3"
   },
   "overrides": {
     "path-to-regexp": "^6.3.0"
