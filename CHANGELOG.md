@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.4.0...v1.5.0) (2026-01-30)
+
+### 🚀 New Features
+
+* **blog:** add article on rust-ownership ([0b3dd5a](https://github.com/pharmacist-sabot/rxdevnotes/commit/0b3dd5a42782c6e622b3de774777856b06fd7dcf))
+
 ## [1.4.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.3.1...v1.4.0) (2026-01-22)
 
 ### 🚀 New Features
