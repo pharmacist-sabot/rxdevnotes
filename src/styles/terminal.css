@@ -24,7 +24,7 @@
 
 /* Terminal Header Bar */
 .prose pre::before {
-  content: "RxDev Man";
+  content: 'RxDev Man';
   position: absolute;
   top: 0;
   left: 0;
@@ -45,7 +45,7 @@
 
 /* Traffic Lights */
 .prose pre::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 14px;
   left: 14px;
