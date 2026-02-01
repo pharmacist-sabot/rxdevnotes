@@ -1,0 +1,117 @@
+---
+/**
+ * SideNote - Insight Block (Redesigned Iteration 2)
+ * Style: "Insight Block" - Minimalist, Inline, Premium
+ * No floats, no heavy boxes. Focus on typography and clean separation.
+ */
+import { Icon } from 'astro-icon/components';
+
+type Props = {
+  type?: 'note' | 'tip' | 'warning';
+};
+
+const { type = 'note' } = Astro.props;
+
+const icons = {
+  note: 'heroicons:information-circle',
+  tip: 'heroicons:light-bulb',
+  warning: 'heroicons:exclamation-triangle',
+};
+---
+
+<aside class={`side-note ${type}`}>
+  <div class="note-marker">
+    <Icon name={icons[type]} class="note-icon" />
+  </div>
+  <div class="note-content">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .side-note {
+    /* Layout: Inline Block (Stable) */
+    position: relative;
+    display: flex;
+    gap: 1.25rem;
+    margin: 2.5rem 0;
+
+    /* Decoration: Minimalist left border */
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--card-border-color);
+
+    /* Typography */
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--font-color-light);
+    font-family: var(--font-sans);
+  }
+
+  .note-marker {
+    flex-shrink: 0;
+    padding-top: 0.2rem;
+  }
+
+  .note-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    opacity: 0.8;
+  }
+
+  .note-content {
+    flex: 1;
+    /* Clean up internal spacing */
+  }
+
+  .note-content :global(p) {
+    margin: 0;
+  }
+
+  .note-content :global(p + p) {
+    margin-top: 0.75rem;
+  }
+
+  .note-content :global(strong) {
+    font-weight: 600;
+  }
+
+  /* Type Variants - Color Accents on Border & Icon Only */
+
+  /* Note: Standard */
+  .side-note.note {
+    border-left-color: var(--accent-color);
+  }
+  .side-note.note .note-icon,
+  .side-note.note :global(strong) {
+    color: var(--accent-color);
+  }
+
+  /* Tip: Success color */
+  .side-note.tip {
+    border-left-color: var(--success-color);
+  }
+  .side-note.tip .note-icon,
+  .side-note.tip :global(strong) {
+    color: var(--success-color);
+  }
+
+  /* Warning: Warning color */
+  .side-note.warning {
+    border-left-color: var(--warning-color);
+  }
+  .side-note.warning .note-icon,
+  .side-note.warning :global(strong) {
+    color: var(--warning-color);
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    .side-note {
+      width: 100%; /* Full width for mobile */
+      margin: 1.5rem 0;
+      gap: 1rem;
+      padding-left: 1rem;
+      font-size: 0.9rem;
+    }
+  }
+</style>

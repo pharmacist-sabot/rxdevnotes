@@ -8,40 +8,43 @@ tags: ['Rust', 'Memory Management', 'Ownership', 'Systems Programming', 'Backend
 featured: true
 ---
 
-ในโลกของการจัดการหน่วยความจำ เรามักถูกบีบให้เลือกสองทางสายหลัก: ทางแรกคือความรวดเร็วแต่เสี่ยงภัยแบบ Manual Allocation ใน C/C++ และทางที่สองคือความปลอดภัยแต่แลกด้วย Runtime Overhead ของ Garbage Collector (GC) ทว่า Rust เลือกที่จะบุกเบิก **"ทางที่สาม"** นั่นคือ **Ownership System** ซึ่งเป็นชุดกฎที่คอมไพเลอร์ใช้ตรวจสอบความปลอดภัยของหน่วยความจำโดยไม่มีค่าใช้จ่ายในขณะโปรแกรมทำงาน (Zero-cost abstraction)
+<NarrativeSection>
 
----
+ในโลกของการเขียนโปรแกรมระดับ Systems Programming เรามักจะถูกบีบให้เลือกเพียงหนึ่งในสองทางที่ดูเหมือนตรงข้ามกันโดยสิ้นเชิง ทางแรกคือโลกของ C และ C++ ที่มอบความเร็วและอำนาจควบคุมเบ็ดเสร็จ แต่แลกมาด้วยความเสี่ยงของ memory leaks, dangling pointers และ buffer overflows ที่อาจกลายเป็นฝันร้ายในวันที่โปรแกรมของคุณไป production ส่วนทางที่สองคือโลกของ Garbage Collector ใน Java หรือ Go ที่ช่วยจัดการหน่วยความจำให้โดยอัตโนมัติ แต่ต้องแลกกับ runtime overhead และ latency ที่คาดเดาไม่ได้
 
-## จุดเริ่มต้นของตรรกะ: เมื่อ Stack และ Heap กำหนดพฤติกรรมของภาษา
+<SideNote type="tip">
+Zero-cost abstraction หมายความว่าคุณไม่ต้องจ่ายค่าใช้จ่ายใดๆ ในขณะ runtime สำหรับ safety features ที่คอมไพเลอร์มอบให้
+</SideNote>
 
-ความเข้าใจใน Ownership ต้องเริ่มจากความต่างของ **Stack** และ **Heap** ในเชิงลึก
+Rust ปฏิเสธที่จะเลือก มันบุกเบิก **"ทางที่สาม"** ขึ้นมาเอง นั่นคือสิ่งที่เรียกว่า **Ownership System** ซึ่งเป็นชุดกฎที่คอมไพเลอร์ใช้ตรวจสอบความปลอดภัยของหน่วยความจำตั้งแต่ขั้นตอน compile time โดยไม่มีค่าใช้จ่ายใดๆ ในขณะที่โปรแกรมทำงาน
 
-<FeatureGrid>
-  <FeatureCard title="Stack" icon="squares-2x2">
-    ข้อมูลบน Stack มีข้อกำหนดตายตัวคือต้องทราบขนาดที่แน่นอน ณ Compile-time การทำงานแบบ LIFO (Last In, First Out) ทำให้การจองพื้นที่นั้น<strong>รวดเร็วและมีประสิทธิภาพสูง</strong>ในระดับ Processor Cache
-  </FeatureCard>
-  <FeatureCard title="Heap" icon="server-stack">
-    ถูกออกแบบมาเพื่อ<strong>ความยืดหยุ่น</strong>สำหรับข้อมูลที่ขนาดเปลี่ยนแปลงได้ เช่น <code>String</code> แต่ความยืดหยุ่นนี้มาพร้อมกับ Cost ของการทำ Allocation และ Pointer Chasing ที่ส่งผลต่อ Latency ของระบบ
-  </FeatureCard>
-</FeatureGrid>
+## Stack และ Heap: รากฐานของทุกสิ่ง
 
-**Ownership จึงถูกสร้างมาเพื่อทำหน้าที่สำคัญที่สุด:** การจัดการข้อมูลบน Heap อย่างเป็นระบบโดยที่โปรแกรมเมอร์ไม่ต้องสั่ง `free` เองแม้แต่บรรทัดเดียว
+การจะเข้าใจ Ownership อย่างแท้จริง เราต้องย้อนกลับไปดูพื้นฐานที่สำคัญที่สุดเสียก่อน นั่นคือความแตกต่างระหว่าง **Stack** และ **Heap**
 
----
+ลองนึกภาพว่า Stack เป็นเหมือนกองจานในร้านอาหาร คุณวางจานใหม่ลงด้านบน และหยิบจานออกก็จากด้านบนเช่นกัน เป็นระบบ LIFO (Last In, First Out) ที่เรียบง่ายและรวดเร็ว ข้อมูลบน Stack ต้องมีขนาดที่แน่นอน ณ เวลาที่คอมไพล์ ไม่ว่าจะเป็น `i32`, `bool`, หรือ `char` ทุกอย่างรู้ขนาดล่วงหน้าทั้งหมด ความเรียบง่ายนี้ทำให้ Stack ทำงานได้เร็วมาก เพราะ CPU สามารถเข้าถึงได้โดยตรงผ่าน stack pointer
 
-## Move Semantics: ทางออกของ Double Free ในระดับโครงสร้างหน่วยความจำ
+<SideNote>
+Heap ต้องทำ allocation ซึ่งหมายถึงการขอพื้นที่จาก OS และการทำ pointer chasing ที่ส่งผลต่อ cache performance
+</SideNote>
 
-หัวใจสำคัญของ Ownership สรุปได้ด้วย **กฎเหล็ก** เพียงไม่กี่ข้อ:
+ในทางตรงกันข้าม Heap ถูกออกแบบมาเพื่อรองรับความยืดหยุ่น เมื่อคุณสร้าง `String` ที่ความยาวอาจเปลี่ยนแปลงได้ตลอดเวลา หรือ `Vec` ที่ไม่รู้ว่าจะมีกี่ element Heap คือคำตอบ แต่ความยืดหยุ่นนี้มาพร้อมกับราคา การจองพื้นที่บน Heap ช้ากว่า Stack และการเข้าถึงข้อมูลต้องผ่าน pointer ทุกครั้ง
 
-<InfoBox title="กฎของ Ownership" type="warning">
-  1. ทุก Value ต้องมี **Owner เพียงหนึ่งเดียว**
-  2. เมื่อ Owner หลุดออกจาก Scope ข้อมูลนั้นจะ **ถูกทำลายทันที** (RAII - Resource Acquisition Is Initialization)
-  3. ณ เวลาใดๆ จะมีได้เพียง **หนึ่ง mutable reference** หรือ **หลาย immutable references** เท่านั้น
-</InfoBox>
+นี่คือเหตุผลว่าทำไม Ownership จึงถูกสร้างมา — เพื่อจัดการข้อมูลบน Heap อย่างเป็นระบบโดยที่คุณไม่ต้องเรียก `malloc` และ `free` เองแม้แต่บรรทัดเดียว
 
-### โครงสร้างของ `String` ใน Memory
+## กฎเหล็กสามข้อ
 
-เพื่อให้เห็นภาพชัดเจน เราต้องพิจารณาโครงสร้างของ `String` ซึ่งประกอบด้วย **3 ส่วนบน Stack**:
+หัวใจของ Ownership สรุปได้ด้วยกฎเพียงสามข้อ ข้อแรก ทุก value ใน Rust ต้องมี **owner เพียงหนึ่งเดียวเท่านั้น** ไม่มีข้อยกเว้น ไม่มีการแชร์ ownership ข้อที่สอง เมื่อ owner หลุดออกจาก scope ข้อมูลนั้นจะ **ถูกทำลายทันที** โดยอัตโนมัติ ไม่ต้องรอ garbage collector มาเก็บ และข้อสุดท้าย ณ เวลาใดๆ จะมีได้เพียง **หนึ่ง mutable reference** หรือ **หลาย immutable references** เท่านั้น ไม่มีทางมีทั้งสองอย่างพร้อมกัน
+
+<PullQuote>
+ทุก value ต้องมี owner เพียงหนึ่งเดียว และเมื่อ owner หลุดจาก scope ข้อมูลจะถูกทำลายทันที
+</PullQuote>
+
+กฎเหล่านี้อาจฟังดูเข้มงวด แต่มันคือรากฐานที่ทำให้ Rust สามารถรับประกัน memory safety ได้โดยไม่ต้องพึ่ง garbage collector
+
+## โครงสร้างของ String และปัญหา Double Free
+
+เพื่อให้เห็นภาพชัดเจนยิ่งขึ้น มาดูกันว่า `String` ใน Rust มีโครงสร้างอย่างไร เมื่อคุณสร้าง `String::from("hello")` สิ่งที่เกิดขึ้นจริงๆ คือมีข้อมูลสามส่วนถูกเก็บบน Stack ได้แก่ **pointer** ที่ชี้ไปยังข้อมูลจริงบน Heap, **length** ที่บอกความยาวปัจจุบัน และ **capacity** ที่บอกพื้นที่ที่จองไว้
 
 ```
 Stack                          Heap
@@ -54,29 +57,26 @@ Stack                          Heap
 └─────────────────┘
 ```
 
-- **Pointer**: ชี้ไปยังข้อมูลจริงบน Heap
-- **Length**: ความยาวของข้อมูลปัจจุบัน
-- **Capacity**: พื้นที่ที่จองไว้บน Heap
+ทีนี้ลองนึกดูว่าถ้าเราทำแบบนี้ในภาษาที่ไม่มี Ownership:
 
-### ปัญหา Double Free และวิธีแก้ด้วย Move
-
-<CodeExplainer title="ปัญหา Shallow Copy ในภาษาอื่น">
 ```rust
-fn main() {
-    let s1 = String::from("hello");
-    let s2 = s1; // ในภาษาอื่นอาจเป็น Shallow Copy
-    
-    // ถ้า s1 และ s2 ชี้ไปที่ Heap เดียวกัน
-    // เมื่อทั้งคู่หลุดจาก scope จะเกิด Double Free!
-}
+let s1 = String::from("hello");
+let s2 = s1; // ในภาษาอื่นอาจเป็น Shallow Copy
+
+// ถ้า s1 และ s2 ชี้ไปที่ Heap เดียวกัน
+// เมื่อทั้งคู่หลุดจาก scope จะเกิด Double Free!
 ```
-</CodeExplainer>
 
-เมื่อเราทำ Assignment เช่น `let s2 = s1;` ในภาษาทั่วไปอาจเป็นการทำ **Shallow Copy** (คัดลอกเฉพาะ Pointer) ซึ่งจะนำไปสู่หายนะที่เรียกว่า **Double Free Error** เมื่อทั้ง `s1` และ `s2` พยายามคืนหน่วยความจำที่จุดเดียวกันเมื่อจบ Scope
+<SideNote type="warning">
+Double Free คือหายนะ เพราะการคืนหน่วยความจำที่ถูกคืนไปแล้ว อาจทำให้เกิด memory corruption หรือ security vulnerabilities
+</SideNote>
 
-แต่ Rust แก้ปัญหานี้ด้วยการ **"Move"**:
+ในภาษาทั่วไปที่ทำ shallow copy ทั้ง `s1` และ `s2` จะชี้ไปที่ข้อมูลเดียวกันบน Heap และเมื่อทั้งสองตัวหลุดจาก scope พร้อมกัน ทั้งคู่จะพยายามคืนหน่วยความจำที่จุดเดียวกัน นี่คือ **Double Free Error** ที่อาจนำไปสู่ crash หรือแย่กว่านั้นคือ security vulnerabilities
 
-<CodeExplainer title="Move Semantics ใน Rust">
+## Move Semantics: วิธีแก้ปัญหาอย่างสง่างาม
+
+Rust แก้ปัญหานี้ด้วยวิธีที่เรียบง่ายแต่ทรงพลัง — มันใช้ **Move Semantics** แทนที่จะ copy pointer ทั้งสองตัว Rust จะ "ย้าย" ownership จาก `s1` ไป `s2` และทำให้ `s1` ใช้งานไม่ได้อีกต่อไป
+
 ```rust
 fn main() {
     let s1 = String::from("hello");
@@ -86,13 +86,13 @@ fn main() {
     println!("{}", s2);    // ✅ OK: s2 เป็น owner ตัวเดียวแล้ว
 }
 ```
-</CodeExplainer>
 
-การที่คอมไพเลอร์ **ปฏิเสธไม่ให้เราเข้าถึง `s1` ได้อีก** เป็นการการันตี Memory Safety ในระดับทฤษฎีโดยไม่ต้องเสีย Runtime ในการทำ Deep Copy
+การที่คอมไพเลอร์ **ปฏิเสธไม่ให้เราเข้าถึง `s1` ได้อีก** อาจรู้สึกเหมือนข้อจำกัด แต่มันคือการป้องกัน Double Free ในระดับทฤษฎี โดยไม่ต้องเสีย runtime ในการตรวจสอบหรือทำ deep copy
 
-### เลือก Clone เมื่อต้องการสำเนาจริงๆ
+## เมื่อคุณต้องการสำเนาจริงๆ
 
-<CodeExplainer title="การใช้ .clone() สำหรับ Deep Copy">
+แน่นอนว่ามีบางครั้งที่คุณต้องการสำเนาข้อมูลจริงๆ ไม่ใช่แค่ย้าย ownership ในกรณีนี้ Rust มี method `.clone()` ให้ใช้
+
 ```rust
 fn main() {
     let s1 = String::from("hello");
@@ -102,32 +102,26 @@ fn main() {
     println!("s2 = {}", s2); // ✅ OK: s2 เป็น owner ของ copy ใหม่
 }
 ```
-</CodeExplainer>
 
-<InfoBox title="Performance Trade-off" type="warning">
-  การเรียก <code>.clone()</code> หมายความว่าเรายอมแลก Performance เพื่อแลกกับข้อมูลชุดใหม่บน Heap ใช้เมื่อจำเป็นจริงๆ เท่านั้น
-</InfoBox>
+<SideNote type="warning">
+การเรียก `.clone()` หมายความว่าคุณยอมแลก performance เพื่อข้อมูลชุดใหม่บน Heap ใช้เมื่อจำเป็นจริงๆ เท่านั้น
+</SideNote>
 
----
+สิ่งสำคัญคือ `.clone()` เป็น **explicit** คุณต้องเขียนมันออกมาอย่างชัดเจน ทำให้โค้ดบอกได้ทันทีว่า "ตรงนี้มี performance cost" ไม่ใช่ซ่อนไว้เหมือนภาษาอื่นที่ทำ deep copy โดยอัตโนมัติ
 
-## Deep Dive: Drop และ Copy Trait
+## Drop และ Copy: สองด้านของเหรียญเดียวกัน
 
-Rust ใช้รูปแบบที่คล้ายกับ **RAII** ใน C++ ผ่านฟังก์ชันพิเศษที่ชื่อว่า `drop` ซึ่งจะถูกเรียกโดยอัตโนมัติที่ closing curly bracket (`}`) ของ Scope นั้นๆ
+Rust ใช้รูปแบบที่คล้ายกับ RAII ใน C++ ผ่านฟังก์ชันพิเศษที่ชื่อว่า `drop` ซึ่งจะถูกเรียกโดยอัตโนมัติที่ closing curly bracket ของ scope นั้นๆ นี่คือวิธีที่ Rust ทำให้การจัดการหน่วยความจำเป็นเรื่องที่คาดเดาได้ (deterministic)
 
-<CodeExplainer title="การทำงานของ Drop">
 ```rust
 fn main() {
     let s = String::from("hello");
     // ใช้งาน s ที่นี่...
 } // <- ณ จุดนี้ drop() ถูกเรียกโดยอัตโนมัติ หน่วยความจำถูกคืน
 ```
-</CodeExplainer>
 
-### Copy Trait: ข้อยกเว้นสำหรับ Stack-only Data
+แต่ไม่ใช่ทุก type ที่จะใช้พฤติกรรม Move เหมือน String สำหรับข้อมูลที่เป็น scalar values ที่อยู่บน Stack อย่าง integers, floats, booleans และ chars Rust ใช้ **Copy Trait** แทน
 
-ไม่ใช่ทุก Type ที่จะใช้พฤติกรรม Move เสมอไป ข้อมูลที่เป็น **Scalar Values** ที่ทราบขนาดแน่นอนบน Stack จะถูกจัดการผ่าน **Copy Trait**:
-
-<CodeExplainer title="Copy Trait ใน Action">
 ```rust
 fn main() {
     let x: i32 = 5;
@@ -137,43 +131,17 @@ fn main() {
     println!("y = {}", y); // ✅ OK
 }
 ```
-</CodeExplainer>
 
-Types ที่ implement `Copy` Trait:
+<PullQuote>
+Stack-only types ใช้ Copy, Heap types ใช้ Move + Drop — ทั้งสองไม่มีทาง overlap กันได้
+</PullQuote>
 
-<FeatureGrid>
-  <FeatureCard title="Integer Types" icon="calculator">
-    <code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>, <code>i128</code>, <code>isize</code><br/>
-    <code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code>, <code>u128</code>, <code>usize</code>
-  </FeatureCard>
-  <FeatureCard title="Floating Point" icon="variable">
-    <code>f32</code>, <code>f64</code>
-  </FeatureCard>
-  <FeatureCard title="Boolean & Char" icon="check-circle">
-    <code>bool</code> (<code>true</code> / <code>false</code>)<br/>
-    <code>char</code> (Unicode scalar value)
-  </FeatureCard>
-  <FeatureCard title="Tuples" icon="squares-plus">
-    Tuples ที่ทุก element เป็น Copy <br/>
-    เช่น <code>(i32, bool)</code> แต่ไม่ใช่ <code>(i32, String)</code>
-  </FeatureCard>
-</FeatureGrid>
+ที่น่าสนใจคือ Rust **ไม่อนุญาตให้ type ใดๆ ที่มี Drop** มา implement Copy Trait ได้ เพราะนั่นจะสร้างความขัดแย้งในตรรกะการจัดการ Heap นี่คือการใช้ Type System เข้ามาบังคับใช้กฎของ Ownership อย่างเข้มงวด
 
-### กฎที่สำคัญ: Drop และ Copy ไม่สามารถอยู่ร่วมกันได้
+## Ownership ข้าม Function Boundaries
 
-<InfoBox title="Rust's Type System Guarantee" type="danger">
-  Rust จะ<strong>ไม่อนุญาตให้ Type ใดๆ ที่มีส่วนประกอบของ <code>Drop</code></strong> (เช่น String) มา Implement <code>Copy</code> Trait ได้ เพราะนั่นจะทำให้เกิดความขัดแย้งในตรรกะการจัดการ Heap ทันที
-</InfoBox>
+การส่งค่าผ่าน function call ก็เปรียบเสมือนการทำ assignment เช่นกัน เมื่อคุณส่ง `String` เข้าไปใน function ownership จะถูก move เข้าไปด้วย
 
-นี่คือการใช้ **Type System** เข้ามาบังคับใช้กฎของ Ownership ให้มีความเข้มงวดและคาดเดาผลลัพธ์ได้ (Deterministic)
-
----
-
-## Ownership ใน Function Boundaries
-
-การส่งค่าผ่าน Function call ก็เปรียบเสมือนการทำ Assignment:
-
-<CodeExplainer title="Ownership และ Function">
 ```rust
 fn main() {
     let s = String::from("hello");
@@ -194,37 +162,13 @@ fn makes_copy(some_integer: i32) {
     println!("{}", some_integer);
 }
 ```
-</CodeExplainer>
 
-### Pattern ที่ไม่สะดวก: Return Ownership กลับ
+ถ้า function ไม่ส่งคืน ownership กลับมา ข้อมูลนั้นจะถูก `drop` ทันทีที่ function ทำงานเสร็จ แม้ว่ากลไกนี้จะช่วยป้องกัน memory leak ได้อย่างเด็ดขาด แต่การต้องมานั่ง return ค่ากลับคืนในรูปแบบ tuple ตลอดเวลานั้นก็เทอะทะเกินไป
 
-หากฟังก์ชันนั้นไม่ส่งคืน Ownership กลับมา (Return) ข้อมูลนั้นจะถูก `drop` ทันทีที่ฟังก์ชันทำงานเสร็จ
+## References และ Borrowing: ทางออกที่สง่างาม
 
-<CodeExplainer title="Returning Ownership ผ่าน Tuple">
-```rust
-fn main() {
-    let s1 = String::from("hello");
-    let (s2, len) = calculate_length(s1);
-    
-    println!("'{}' มีความยาว {} ตัวอักษร", s2, len);
-}
+ความท้าทายข้างต้นนำไปสู่ feature ที่เรียกว่า **References & Borrowing** เพื่อให้เราสามารถเข้าถึงข้อมูลได้โดยไม่ต้องถือครอง ownership
 
-fn calculate_length(s: String) -> (String, usize) {
-    let length = s.len();
-    (s, length) // คืน ownership กลับพร้อม result
-}
-```
-</CodeExplainer>
-
-แม้ว่ากลไกนี้จะช่วยป้องกัน Memory Leak ได้อย่างเด็ดขาด แต่ในเชิงปฏิบัติการต้องมานั่ง Return ค่ากลับคืนในรูปแบบ Tuple ตลอดเวลานั้นเป็นเรื่องที่ **เทอะทะและมีพิธีรีตองเกินไป**
-
----
-
-## จุดกำเนิดของ References & Borrowing
-
-ความท้าทายข้างต้นนำไปสู่ฟีเจอร์ที่เรียกว่า **References & Borrowing** เพื่อให้เราสามารถเข้าถึงข้อมูลได้โดยไม่ต้องถือครอง Ownership
-
-<CodeExplainer title="References แทนการ Move">
 ```rust
 fn main() {
     let s1 = String::from("hello");
@@ -238,32 +182,9 @@ fn calculate_length(s: &String) -> usize { // รับ reference
     s.len()
 } // s หลุดจาก scope แต่เพราะไม่ได้เป็น owner จึงไม่มีอะไรถูก drop
 ```
-</CodeExplainer>
 
-### กฎของ References
+การ "ยืม" (borrowing) มาในสองรูปแบบ **Immutable reference** (`&T`) ยืมมาอ่านได้อย่างเดียว แต่ยืมได้หลายคนพร้อมกัน ส่วน **Mutable reference** (`&mut T`) ยืมมาแก้ไขได้ แต่ต้องยืมคนเดียวเท่านั้น
 
-<Table>
-  <tr slot="head">
-    <th>ชนิด</th>
-    <th>Syntax</th>
-    <th>สามารถแก้ไขได้?</th>
-    <th>จำนวนที่มีได้พร้อมกัน</th>
-  </tr>
-  <tr slot="body">
-    <td><strong>Immutable Reference</strong></td>
-    <td><code>&T</code></td>
-    <td>❌ ไม่ได้</td>
-    <td>ไม่จำกัด</td>
-  </tr>
-  <tr slot="body">
-    <td><strong>Mutable Reference</strong></td>
-    <td><code>&mut T</code></td>
-    <td>✅ ได้</td>
-    <td>1 อันเท่านั้น</td>
-  </tr>
-</Table>
-
-<CodeExplainer title="Mutable Reference">
 ```rust
 fn main() {
     let mut s = String::from("hello");
@@ -275,35 +196,23 @@ fn change(some_string: &mut String) {
     some_string.push_str(", world");
 }
 ```
-</CodeExplainer>
 
----
+<SideNote type="tip">
+กฎของ References ถูกออกแบบมาเพื่อป้องกัน Data Race ตั้งแต่ compile time
+</SideNote>
 
-## บทสรุปสำหรับ Senior Dev
+## บทสรุป
 
-<InfoBox title="Ownership คือ Contract ระหว่าง Code" type="success">
-  Ownership ไม่ใช่แค่เรื่องของการจัดการหน่วยความจำ แต่มันคือการสร้าง <strong>"สัญญา"</strong> ระหว่าง Code แต่ละส่วน ว่าใครมีสิทธิ์ทำลายหรือใครมีสิทธิ์ใช้ข้อมูล
-</InfoBox>
+Ownership ไม่ใช่แค่เรื่องของการจัดการหน่วยความจำ แต่มันคือการสร้าง **"สัญญา"** ระหว่าง code แต่ละส่วน ว่าใครมีสิทธิ์ทำลายหรือใครมีสิทธิ์ใช้ข้อมูล
 
-### Key Takeaways
+<PullQuote>
+Ownership คือ contract ระหว่าง Code — ใครมีสิทธิ์ทำลาย ใครมีสิทธิ์ใช้ ทุกอย่างถูกกำหนดไว้ชัดเจน ณ compile time
+</PullQuote>
 
-<FeatureGrid>
-  <FeatureCard title="Zero-cost Abstraction" icon="bolt">
-    Memory safety ถูกตรวจสอบ ณ compile-time ไม่มี runtime overhead เหมือน GC
-  </FeatureCard>
-  <FeatureCard title="Move Semantics" icon="arrow-right-circle">
-    การ assign หรือส่งค่าใน function = การโอนย้าย ownership ป้องกัน double free
-  </FeatureCard>
-  <FeatureCard title="Copy vs Drop" icon="document-duplicate">
-    Stack-only types ใช้ Copy, Heap types ใช้ Move + Drop ไม่มีทาง overlap กัน
-  </FeatureCard>
-  <FeatureCard title="Borrowing" icon="arrow-path">
-    References ช่วยให้เข้าถึงข้อมูลโดยไม่ต้องโอน ownership ลด overhead ของการ clone
-  </FeatureCard>
-</FeatureGrid>
+สิ่งที่ควรจดจำคือ memory safety ถูกตรวจสอบ ณ compile-time ไม่มี runtime overhead เหมือน GC การ assign หรือส่งค่าใน function คือการโอนย้าย ownership ซึ่งป้องกัน double free ได้โดยธรรมชาติ Stack-only types ใช้ Copy ส่วน Heap types ใช้ Move + Drop โดยไม่มีทาง overlap กัน และ References ช่วยให้เข้าถึงข้อมูลโดยไม่ต้องโอน ownership ลด overhead ของการ clone
 
-การทำความเข้าใจ **Move Semantics** และ **Scope** อย่างถ่องแท้ จะทำให้เราเขียนโปรแกรมที่ปราศจาก **Data Race** และ **Memory Corruption** ได้อย่างมั่นใจ ซึ่งเป็นสิ่งที่ภาษาอื่นทำได้ยากหากไม่มีระบบ Ownership เข้ามาควบคุมตั้งแต่ระดับรากฐาน
-
----
+การทำความเข้าใจ Move Semantics และ Scope อย่างถ่องแท้ จะทำให้เราเขียนโปรแกรมที่ปราศจาก Data Race และ Memory Corruption ได้อย่างมั่นใจ ซึ่งเป็นสิ่งที่ภาษาอื่นทำได้ยากหากไม่มีระบบ Ownership เข้ามาควบคุมตั้งแต่ระดับรากฐาน
 
 ในบทความถัดไป เราจะเจาะลึกเรื่อง **Lifetimes** ซึ่งเป็นอีกหนึ่งกลไกสำคัญที่ทำให้ Rust สามารถรับประกันความปลอดภัยของ References ได้อย่างสมบูรณ์แบบ
+
+</NarrativeSection>

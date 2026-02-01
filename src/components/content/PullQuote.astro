@@ -1,0 +1,96 @@
+---
+/**
+ * PullQuote - Highlights key statements or memorable quotes
+ * Centered, prominent typography for emphasis
+ */
+---
+
+<blockquote class="pull-quote">
+  <slot />
+</blockquote>
+
+<style>
+  .pull-quote {
+    /* Layout */
+    margin: 3rem auto;
+    padding: 2rem 2.5rem;
+    max-width: 600px;
+    text-align: center;
+
+    /* Typography */
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.7;
+    font-style: italic;
+    color: var(--font-color);
+
+    /* Visual accent */
+    position: relative;
+    border: none;
+  }
+
+  /* Quote marks - opening */
+  .pull-quote::before {
+    content: "“";
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 3rem;
+    font-family: Georgia, serif;
+    font-style: normal;
+    color: var(--brand-color);
+    opacity: 0.25;
+    line-height: 1;
+  }
+
+  /* Quote marks - closing */
+  .pull-quote::after {
+    content: "”";
+    position: absolute;
+    bottom: -1rem;
+    right: 1.5rem;
+    font-size: 3rem;
+    font-family: Georgia, serif;
+    font-style: normal;
+    color: var(--brand-color);
+    opacity: 0.25;
+    line-height: 1;
+  }
+
+  /* Clean up nested elements */
+  .pull-quote :global(p) {
+    margin: 0;
+    display: inline;
+  }
+
+  .pull-quote :global(strong) {
+    color: var(--brand-color);
+    font-weight: 600;
+  }
+
+  .pull-quote :global(code) {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.9em;
+    background-color: var(--card-border-color);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .pull-quote {
+      font-size: 1.15rem;
+      padding: 1.5rem 1.5rem 1.5rem 2rem;
+      margin: 2rem 0;
+      border-left: 4px solid var(--brand-color);
+      text-align: left;
+      font-style: italic;
+    }
+
+    .pull-quote::before,
+    .pull-quote::after {
+      display: none;
+    }
+  }
+</style>
