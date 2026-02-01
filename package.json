@@ -19,7 +19,6 @@
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/vercel": "^8.0.4",
     "@iconify-json/heroicons": "^1.2.2",
-    "@shikijs/transformers": "^3.21.0",
     "@supabase/supabase-js": "^2.84.0",
     "astro": "^5.17.1",
     "astro-auto-import": "^0.4.5",
