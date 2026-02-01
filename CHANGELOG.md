@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.5.0...v1.6.0) (2026-02-01)
+
+### 🚀 New Features
+
+* add narrative, pull quote, and side note components with terminal styling ([#8](https://github.com/pharmacist-sabot/rxdevnotes/issues/8)) ([4cbe3df](https://github.com/pharmacist-sabot/rxdevnotes/commit/4cbe3df225f14bb4dd3b4ad89f47131bc324db5c))
+
 ## [1.5.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.4.0...v1.5.0) (2026-01-30)
 
 ### 🚀 New Features
