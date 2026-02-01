@@ -1,0 +1,125 @@
+/* ==============================================
+   Terminal-style Code Blocks
+   - Mac terminal look with header bar & traffic lights
+   - Override default .prose pre styles
+   ============================================== */
+
+/* Code block container - Terminal Look */
+.prose pre {
+  position: relative;
+  background: #1e1e1e;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 3.5rem 1.5rem 1.5rem 1.5rem;
+  margin: 2rem 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1;
+  font-weight: 400;
+  white-space: pre;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* Terminal Header Bar */
+.prose pre::before {
+  content: "RxDev Man";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #404040;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 0.8rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Traffic Lights */
+.prose pre::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow:
+    20px 0 0 #ffbd2e,
+    40px 0 0 #27c93f;
+}
+
+/* Code inside pre - with line numbers */
+.prose pre > code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  display: block;
+  counter-reset: line;
+}
+
+/* Each line gets a line number */
+.prose pre > code > .line {
+  display: block;
+  padding-left: 3.2rem;
+  position: relative;
+  counter-increment: line;
+  min-height: 1.2em;
+}
+
+.prose pre > code > .line::before {
+  content: counter(line);
+  position: absolute;
+  left: 0;
+  width: 1.8rem;
+  padding-right: 0.5rem;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.8em;
+  user-select: none;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .prose pre {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+    padding: 3rem 1rem 1rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .prose pre::before {
+    border-radius: 0;
+    height: 36px;
+    font-size: 0.75rem;
+  }
+
+  .prose pre::after {
+    top: 12px;
+    left: 12px;
+    width: 10px;
+    height: 10px;
+    box-shadow:
+      16px 0 0 #ffbd2e,
+      32px 0 0 #27c93f;
+  }
+}
+
+/* Shiki theme compatibility */
+.prose pre.shiki,
+.prose pre.shiki code {
+  background: unset !important;
+  color: unset !important;
+}

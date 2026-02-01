@@ -28,7 +28,10 @@ export default defineConfig({
         './src/components/content/GitCommand.astro',
         './src/components/content/Image.astro',
         './src/components/content/InfoBox.astro',
+        './src/components/content/NarrativeSection.astro',
         './src/components/content/ProsCons.astro',
+        './src/components/content/PullQuote.astro',
+        './src/components/content/SideNote.astro',
         './src/components/content/Table.astro',
         './src/components/content/YouTube.astro',
 

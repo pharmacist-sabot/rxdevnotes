@@ -2,14 +2,19 @@
 import Navbar from '@/components/layout/Navbar.astro';
 import ProgressBar from '@/components/ui/ProgressBar.astro';
 import '@/styles/global.css';
+import '@/styles/terminal.css';
 
 type Props = {
   title: string;
   description?: string;
 };
-const { title, description = 'A developer\'s living knowledge base, curated by a pharmacist turned programmer.' } = Astro.props;
+const {
+  title,
+  description = 'A developer\'s living knowledge base, curated by a pharmacist turned programmer.',
+} = Astro.props;
 const currentYear = new Date().getFullYear();
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -31,12 +36,21 @@ const currentYear = new Date().getFullYear();
       <div class="container footer-container">
         <div class="footer-about">
           <h3 class="footer-title">RxDev Man</h3>
-          <p>เริ่มต้นจากเภสัชกรรม สู่ความหลงใหลในการพัฒนา บันทึกการเดินทางจากวงการสุขภาพสู่โลกเทคโนโลยี</p>
+          <p>
+            เริ่มต้นจากเภสัชกรรม สู่ความหลงใหลในการพัฒนา
+            บันทึกการเดินทางจากวงการสุขภาพสู่โลกเทคโนโลยี
+          </p>
         </div>
         <div class="footer-links">
           <h4 class="footer-subtitle">Connect</h4>
           <ul>
-            <li><a href="https://github.com/pharmacist-sabot/" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+            <li>
+              <a
+                href="https://github.com/pharmacist-sabot/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >GitHub</a>
+            </li>
             <li><a href="mailto:pharmacistsabot@gmail.com">Email</a></li>
           </ul>
         </div>

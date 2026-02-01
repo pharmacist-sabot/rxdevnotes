@@ -185,7 +185,7 @@ const relatedPosts = getRelatedPosts(allPosts, postSlug, tags, category, 3);
 
   @media (max-width: 1024px) {
     .layout-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 1.5rem;
     }
     .left-sidebar,
