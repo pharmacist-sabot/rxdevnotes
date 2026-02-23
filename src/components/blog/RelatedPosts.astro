@@ -1,74 +1,400 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-import BlogPostCard from './BlogPostCard.astro';
+import { Icon } from 'astro-icon/components';
 
 type Props = {
   relatedPosts: CollectionEntry<'blog'>[];
 };
 
 const { relatedPosts } = Astro.props;
----
 
-{
-  relatedPosts.length > 0 && (
-    <section class="related-posts">
-      <h2 class="related-posts-heading">You might also like</h2>
-      <div class="related-posts-grid">
-        {relatedPosts.map(post => (
-          <div class="grid-item" data-post-id={post.slug}>
-            <BlogPostCard post={post} />
-          </div>
-        ))}
-      </div>
-    </section>
-  )
+function calculateReadingTime(content: string) {
+  const words = content.trim().split(/\s+/).length;
+  return `${Math.ceil(words / 200)} min read`;
 }
 
+const processed = relatedPosts.map((post) => {
+  const { title, pubDate, category, heroImage, description } = post.data;
+  const dateObj = new Date(pubDate);
+  const rawExcerpt = post.body
+    ? `${post.body.replace(/[#*`>[\]]/g, '').slice(0, 120).trim()}\u2026`
+    : '';
+
+  return {
+    slug: post.slug,
+    title,
+    href: `/blog/${post.slug}`,
+    category,
+    heroImage: heroImage ?? undefined,
+    excerpt: description || rawExcerpt,
+    readingTime: post.body ? calculateReadingTime(post.body) : null,
+    formattedDate: dateObj.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }),
+    isoDate: dateObj.toISOString(),
+  };
+});
+---
+{processed.length > 0 && (
+  <section class="related-posts" aria-labelledby="related-heading">
+
+    <div class="related-header">
+      <span class="related-eyebrow">Continue Reading</span>
+      <h2 class="related-heading" id="related-heading">You might also like</h2>
+    </div>
+
+    <ul class="related-list" role="list">
+      {processed.map((post, index) => (
+        <li class="related-item">
+          <a href={post.href} class="related-link" aria-label={`Read: ${post.title}`}>
+
+            <span class="item-index" aria-hidden="true">0{index + 1}</span>
+
+            <span class="item-thumbnail">
+              {post.heroImage
+                ? (
+                  <img
+                    src={post.heroImage}
+                    alt=""
+                    class="thumbnail-img"
+                    loading="lazy"
+                    decoding="async"
+                    aria-hidden="true"
+                  />
+                )
+                : (
+                  <span class="thumbnail-placeholder" aria-hidden="true">
+                    <Icon name="mdi:image-outline" class="placeholder-icon" />
+                  </span>
+                )}
+            </span>
+
+            <span class="item-body">
+              <span class="item-meta">
+                <span class="item-category">{post.category}</span>
+                {post.readingTime && (
+                  <Fragment>
+                    <span class="item-dot" aria-hidden="true">&middot;</span>
+                    <span class="item-reading-time">{post.readingTime}</span>
+                  </Fragment>
+                )}
+                <span class="item-dot" aria-hidden="true">&middot;</span>
+                <time datetime={post.isoDate} class="item-date">{post.formattedDate}</time>
+              </span>
+
+              <span class="item-title">{post.title}</span>
+
+              {post.excerpt && (
+                <span class="item-excerpt">{post.excerpt}</span>
+              )}
+            </span>
+
+            <span class="item-arrow" aria-hidden="true">
+              <Icon name="heroicons:arrow-right" class="arrow-icon" />
+            </span>
+
+          </a>
+        </li>
+      ))}
+    </ul>
+
+  </section>
+)}
+
 <style>
+  /* ============================================================
+     Section wrapper
+  ============================================================ */
   .related-posts {
     margin-top: 4rem;
     padding-top: 3rem;
     border-top: 1px solid var(--card-border-color);
   }
 
-  .related-posts-heading {
+  /* ============================================================
+     Header
+  ============================================================ */
+  .related-header {
+    margin-bottom: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .related-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brand-color);
+  }
+
+  .related-heading {
     font-family: var(--font-serif);
-    font-size: clamp(1.3rem, 4vw, 1.6rem);
-    text-align: center;
-    margin-bottom: 2rem;
+    font-size: clamp(1.15rem, 3vw, 1.4rem);
+    font-weight: 700;
     color: var(--font-color);
+    margin: 0;
   }
 
-  .related-posts-grid {
+  /* ============================================================
+     List reset
+  ============================================================ */
+  .related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ============================================================
+     Individual item
+  ============================================================ */
+  .related-item {
+    border-bottom: 1px solid var(--card-border-color);
+  }
+
+  .related-item:last-child {
+    border-bottom: none;
+  }
+
+  .related-link {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: 2rem 4.5rem 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 12px;
+    transition:
+      background-color 0.2s ease,
+      padding-left 0.2s ease;
   }
 
-  .grid-item {
+  .related-link:hover {
+    background-color: color-mix(in srgb, var(--brand-color) 5%, transparent);
+    padding-left: 0.85rem;
+  }
+
+  .related-link:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 3px;
+    background-color: color-mix(in srgb, var(--brand-color) 5%, transparent);
+  }
+
+  /* ============================================================
+     Index number
+  ============================================================ */
+  .item-index {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--card-border-color);
+    user-select: none;
+    line-height: 1;
+    transition: color 0.2s ease;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .related-link:hover .item-index {
+    color: var(--brand-color);
+  }
+
+  /* ============================================================
+     Thumbnail
+  ============================================================ */
+  .item-thumbnail {
+    display: block;
+    width: 4.5rem;
+    height: 3rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--card-border-color);
+    flex-shrink: 0;
+    background-color: var(--bg-color);
+    transition: border-color 0.2s ease;
+  }
+
+  .related-link:hover .item-thumbnail {
+    border-color: var(--brand-color);
+  }
+
+  .thumbnail-img {
+    width: 100%;
     height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: block;
   }
 
-  @media (max-width: 1024px) {
-    .related-posts-grid {
-      grid-template-columns: repeat(2, 1fr);
+  .related-link:hover .thumbnail-img {
+    transform: scale(1.08);
+  }
+
+  .thumbnail-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--card-border-color);
+  }
+
+  .placeholder-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  /* ============================================================
+     Body — meta + title + excerpt
+  ============================================================ */
+  .item-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .item-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    line-height: 1;
+  }
+
+  .item-category {
+    color: var(--brand-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: color 0.2s ease;
+  }
+
+  .item-dot {
+    color: var(--card-border-color);
+    font-weight: 700;
+  }
+
+  .item-reading-time,
+  .item-date {
+    color: var(--font-color-light);
+    opacity: 0.7;
+  }
+
+  .item-title {
+    font-family: var(--font-sans);
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+    font-weight: 600;
+    color: var(--font-color);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s ease;
+  }
+
+  .related-link:hover .item-title {
+    color: var(--brand-color);
+  }
+
+  .item-excerpt {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    color: var(--font-color-light);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    opacity: 0.8;
+  }
+
+  /* ============================================================
+     Arrow
+  ============================================================ */
+  .item-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--card-border-color);
+    flex-shrink: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .related-link:hover .item-arrow {
+    color: var(--brand-color);
+    transform: translateX(3px);
+  }
+
+  .arrow-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  /* ============================================================
+     Responsive
+  ============================================================ */
+  @media (max-width: 640px) {
+    .related-link {
+      grid-template-columns: 1.6rem 3.5rem 1fr auto;
+      gap: 0.75rem;
+      padding: 1rem 0.25rem;
+    }
+
+    .item-thumbnail {
+      width: 3.5rem;
+      height: 2.5rem;
+    }
+
+    .item-excerpt {
+      display: none;
+    }
+
+    .item-index {
+      font-size: 0.7rem;
     }
   }
 
-  @media (max-width: 768px) {
-    .related-posts {
-      margin-top: 3rem;
-      padding-top: 2rem;
+  @media (max-width: 420px) {
+    .related-link {
+      grid-template-columns: 3.5rem 1fr auto;
     }
 
-    .related-posts-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
+    .item-index {
+      display: none;
+    }
+  }
+
+  /* ============================================================
+     Reduced motion
+  ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    .related-link,
+    .thumbnail-img,
+    .item-title,
+    .item-arrow {
+      transition: none;
     }
 
-    .related-posts-heading {
-      margin-bottom: 1.5rem;
+    .related-link:hover {
+      padding-left: 0.5rem;
+    }
+
+    .related-link:hover .thumbnail-img {
+      transform: none;
     }
   }
 </style>
