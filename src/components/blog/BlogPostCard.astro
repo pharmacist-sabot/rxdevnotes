@@ -3,6 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 
 import { Image } from 'astro:assets';
 
+import { calculateReadingTime } from '@/utils/reading-time';
+
 type Props = {
   post: CollectionEntry<'blog'>;
 };
@@ -26,17 +28,7 @@ try {
   console.error('Error formatting date:', e);
 }
 
-// Calculate reading time (rough estimate: 200 words per minute)
-function calculateReadingTime(content: string) {
-  const wordsPerMinute = 200;
-  const normalized = content.trim();
-  if (!normalized)
-    return null;
 
-  const wordCount = normalized.split(/\s+/).length;
-  const minutes = Math.ceil(wordCount / wordsPerMinute);
-  return `${minutes} min read`;
-}
 
 const readingTime = post.body ? calculateReadingTime(post.body) : null;
 const bodyExcerpt = post.body ? `${post.body.slice(0, 150)}...` : '';
@@ -60,15 +52,13 @@ const excerpt = description || bodyExcerpt;
           />
         )
         : (
-          <img
-            src="/blog-placeholder-1.png"
-            alt={`Placeholder image for ${title}`}
-            class="card-image"
-            loading="lazy"
-            decoding="async"
-            width={800}
-            height={450}
-          />
+          <span class="card-image card-image--placeholder" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="placeholder-icon" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </span>
         )}
     </div>
 
@@ -154,6 +144,20 @@ const excerpt = description || bodyExcerpt;
     border: none;
     box-shadow: none;
     will-change: transform;
+  }
+
+  .card-image--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--card-border-color);
+    background-color: color-mix(in srgb, var(--card-bg-color) 80%, var(--bg-color) 20%);
+  }
+
+  .placeholder-icon {
+    width: 3rem;
+    height: 3rem;
+    opacity: 0.4;
   }
 
   .blog-card:hover .card-image {

@@ -49,6 +49,7 @@ const preloadHero = heroImage
       rel="preload"
       as="image"
       href={preloadHero.src}
+      type="image/webp"
       fetchpriority="high"
     />
   )}
@@ -81,6 +82,7 @@ const preloadHero = heroImage
             fetchpriority="high"
             decoding="async"
             quality={85}
+            format="webp"
             widths={[768, 1024, 1200, 1536]}
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 800px"
           />

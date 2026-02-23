@@ -61,13 +61,14 @@ const platforms = [
         rel="noopener noreferrer"
         class="share-btn"
         aria-label={platform.label}
+        aria-describedby={`tooltip-${platform.id}`}
         data-platform={platform.id}
         style={`--platform-color: ${platform.color}; --platform-bg: ${platform.bg};`}
       >
         <span class="share-btn-inner">
           <Icon name={platform.icon} class="share-icon" aria-hidden="true" />
         </span>
-        <span class="share-tooltip" role="tooltip">{platform.label}</span>
+        <span class="share-tooltip" role="tooltip" id={`tooltip-${platform.id}`}>{platform.label}</span>
       </a>
     ))}
 
@@ -75,6 +76,7 @@ const platforms = [
       id="copy-link-btn"
       class="share-btn copy-btn"
       aria-label="Copy link to clipboard"
+      aria-describedby="copy-tooltip"
       type="button"
       data-url={shareUrl}
       style="--platform-color: var(--brand-color); --platform-bg: rgba(75, 99, 197, 0.1);"
@@ -90,6 +92,7 @@ const platforms = [
       id="native-share-btn"
       class="share-btn native-share-btn"
       aria-label="More sharing options"
+      aria-describedby="native-tooltip"
       type="button"
       data-url={shareUrl}
       data-title={title}
@@ -98,7 +101,7 @@ const platforms = [
       <span class="share-btn-inner">
         <Icon name="mdi:dots-horizontal" class="share-icon" aria-hidden="true" />
       </span>
-      <span class="share-tooltip" role="tooltip">More options</span>
+      <span class="share-tooltip" role="tooltip" id="native-tooltip">More options</span>
     </button>
   </div>
 </div>
@@ -106,12 +109,12 @@ const platforms = [
 <script>
   function initShareButtons() {
     // --- Copy Link ---
-    const copyBtn = document.getElementById('copy-link-btn') as HTMLButtonElement | null;
+    const copyBtn = document.getElementById('copy-link-btn');
     const copyTooltip = document.getElementById('copy-tooltip');
 
     if (copyBtn && copyTooltip) {
       copyBtn.addEventListener('click', async () => {
-        const url = copyBtn.dataset.url ?? window.location.href;
+        const url = (copyBtn instanceof HTMLButtonElement ? copyBtn.dataset.url : null) ?? window.location.href;
         try {
           await navigator.clipboard.writeText(url);
 
@@ -136,13 +139,25 @@ const platforms = [
           textArea.focus();
           textArea.select();
           try {
-            document.execCommand('copy');
-            copyBtn.classList.add('copied');
-            copyTooltip.textContent = 'Copied!';
-            setTimeout(() => {
-              copyBtn.classList.remove('copied');
-              copyTooltip.textContent = 'Copy link';
-            }, 2000);
+            const success = document.execCommand('copy');
+            if (success) {
+              copyBtn.classList.add('copied');
+              copyTooltip.textContent = 'Copied!';
+              copyBtn.setAttribute('aria-label', 'Link copied!');
+              setTimeout(() => {
+                copyBtn.classList.remove('copied');
+                copyTooltip.textContent = 'Copy link';
+                copyBtn.setAttribute('aria-label', 'Copy link to clipboard');
+              }, 2000);
+            }
+            else {
+              copyTooltip.textContent = 'Copy failed';
+              copyBtn.setAttribute('aria-label', 'Copy failed');
+              setTimeout(() => {
+                copyTooltip.textContent = 'Copy link';
+                copyBtn.setAttribute('aria-label', 'Copy link to clipboard');
+              }, 2000);
+            }
           }
           finally {
             document.body.removeChild(textArea);
@@ -152,16 +167,19 @@ const platforms = [
     }
 
     // --- Native Web Share API (mobile / OS-level share sheet) ---
-    const nativeShareBtn = document.getElementById('native-share-btn') as HTMLButtonElement | null;
+    // The button is hidden by default via CSS (.native-share-btn { display: none })
+    // and is only revealed here when the API is available.
+    const nativeShareBtn = document.getElementById('native-share-btn');
 
     if (nativeShareBtn) {
       if (navigator.share) {
         nativeShareBtn.style.display = 'flex';
         nativeShareBtn.addEventListener('click', async () => {
+          const dataset = nativeShareBtn instanceof HTMLButtonElement ? nativeShareBtn.dataset : {};
           try {
             await navigator.share({
-              title: nativeShareBtn.dataset.title,
-              url: nativeShareBtn.dataset.url ?? window.location.href,
+              title: dataset.title,
+              url: dataset.url ?? window.location.href,
             });
           }
           catch (err) {
@@ -172,9 +190,7 @@ const platforms = [
           }
         });
       }
-      else {
-        nativeShareBtn.style.display = 'none';
-      }
+      // If navigator.share is unsupported the button stays hidden (display: none from CSS).
     }
   }
 
@@ -339,6 +355,14 @@ const platforms = [
   }
 
   /* ============================================================
+     Native share button — hidden by default, shown by JS only
+     when navigator.share is supported
+  ============================================================ */
+  .native-share-btn {
+    display: none;
+  }
+
+  /* ============================================================
      Tooltip
   ============================================================ */
   .share-tooltip {
@@ -389,10 +413,6 @@ const platforms = [
   ============================================================ */
   .copy-btn {
     margin-left: 0.25rem;
-  }
-
-  .native-share-btn {
-    margin-left: 0;
   }
 
   /* Visual separator before copy + share-more */

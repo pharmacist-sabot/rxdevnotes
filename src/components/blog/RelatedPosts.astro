@@ -4,23 +4,40 @@ import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 
+import { calculateReadingTime } from '@/utils/reading-time';
+
 type Props = {
   relatedPosts: CollectionEntry<'blog'>[];
 };
 
 const { relatedPosts } = Astro.props;
 
-function calculateReadingTime(content: string) {
-  const words = content.trim().split(/\s+/).length;
-  return `${Math.ceil(words / 200)} min read`;
-}
-
 const processed = relatedPosts.map((post) => {
   const { title, pubDate, category, heroImage, description } = post.data;
-  const dateObj = new Date(pubDate);
-  const rawExcerpt = post.body
-    ? `${post.body.replace(/[#*`>[\]]/g, '').slice(0, 120).trim()}\u2026`
+
+  // Guard date parsing — fall back gracefully on invalid dates
+  let formattedDate = 'Date unavailable';
+  let isoDate = '';
+  try {
+    const dateObj = new Date(pubDate);
+    if (Number.isNaN(dateObj.getTime()))
+throw new Error('Invalid date');
+    formattedDate = dateObj.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    isoDate = dateObj.toISOString();
+  }
+ catch {
+    // keep fallback values set above
+  }
+
+  // Prefer frontmatter description; otherwise slice raw body (mirrors BlogPostCard)
+  const bodyExcerpt = post.body
+    ? `${post.body.slice(0, 120).trim()}\u2026`
     : '';
+  const excerpt = description || bodyExcerpt;
 
   return {
     slug: post.slug,
@@ -28,14 +45,10 @@ const processed = relatedPosts.map((post) => {
     href: `/blog/${post.slug}`,
     category,
     heroImage: heroImage ?? undefined,
-    excerpt: description || rawExcerpt,
+    excerpt,
     readingTime: post.body ? calculateReadingTime(post.body) : null,
-    formattedDate: dateObj.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }),
-    isoDate: dateObj.toISOString(),
+    formattedDate,
+    isoDate,
   };
 });
 ---
@@ -52,7 +65,7 @@ const processed = relatedPosts.map((post) => {
         <li class="related-item">
           <a href={post.href} class="related-link" aria-label={`Read: ${post.title}`}>
 
-            <span class="item-index" aria-hidden="true">0{index + 1}</span>
+            <span class="item-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
 
             <span class="item-thumbnail">
               {post.heroImage
@@ -84,8 +97,12 @@ const processed = relatedPosts.map((post) => {
                     <span class="item-reading-time">{post.readingTime}</span>
                   </Fragment>
                 )}
-                <span class="item-dot" aria-hidden="true">&middot;</span>
-                <time datetime={post.isoDate} class="item-date">{post.formattedDate}</time>
+                {post.isoDate !== '' && (
+                  <Fragment>
+                    <span class="item-dot" aria-hidden="true">&middot;</span>
+                    <time datetime={post.isoDate} class="item-date">{post.formattedDate}</time>
+                  </Fragment>
+                )}
               </span>
 
               <span class="item-title">{post.title}</span>

@@ -2,7 +2,7 @@
 title: "สร้างระบบสืบค้นบัญชียาของโรงพยาบาล ด้วย Google Sheets และ Google Apps Script"
 description: "คู่มือในการสร้างเว็บแอปค้นหาข้อมูลบัญชียาของโรงพยาบาลแบบเรียลไทม์"
 pubDate: "2025-10-28"
-heroImage: './google-app-script-drug-search-cover.png'
+heroImage: "./google-app-script-drug-search-cover.png"
 category: "Google Apps Script"
 tags:
   [
@@ -24,11 +24,15 @@ featured: true
 <FeatureGrid>
   <FeatureCard title="Google Sheets คือฐานข้อมูล" icon="circle-stack">
     ใช้ Google Sheets ที่เราคุ้นเคยเป็นที่เก็บข้อมูลยา
-    ไม่ต้องตั้งค่าฐานข้อมูลที่ซับซ้อน อัปเดตข้อมูลง่ายเหมือนกรอกสเปรดชีตทั่วไป ไม่ว่าจะเป็นการเพิ่มรายการยาใหม่หรือลบรายการยาเดิม หากเราทำการเปลี่ยนแปลงที่ Google Sheets แล้ว ระบบจะอัปเดตข้อมูลในเว็บแอปโดยอัตโนมัติ
+    ไม่ต้องตั้งค่าฐานข้อมูลที่ซับซ้อน อัปเดตข้อมูลง่ายเหมือนกรอกสเปรดชีตทั่วไป
+    ไม่ว่าจะเป็นการเพิ่มรายการยาใหม่หรือลบรายการยาเดิม หากเราทำการเปลี่ยนแปลงที่
+    Google Sheets แล้ว ระบบจะอัปเดตข้อมูลในเว็บแอปโดยอัตโนมัติ
   </FeatureCard>
   <FeatureCard title="Apps Script คือ Backend" icon="cpu-chip">
-    Google Apps Script จะทำหน้าที่เป็นโค้ดฝั่ง "หลังบ้าน" หรือที่เราเรียกว่า Backend ทั้งหมด
-    คอยรับคำสั่งค้นหาจากหน้าเว็บ แล้วไปดึงข้อมูลจากชีตส่งกลับไปให้ผู้ใช้งานสามารถดูข้อมูลที่อยู่ใน google sheet ได้
+    Google Apps Script จะทำหน้าที่เป็นโค้ดฝั่ง "หลังบ้าน" หรือที่เราเรียกว่า
+    Backend ทั้งหมด คอยรับคำสั่งค้นหาจากหน้าเว็บ
+    แล้วไปดึงข้อมูลจากชีตส่งกลับไปให้ผู้ใช้งานสามารถดูข้อมูลที่อยู่ใน google
+    sheet ได้
   </FeatureCard>
   <FeatureCard title="HTML/CSS/JS คือ Frontend" icon="code-bracket">
     เราจะใช้เทคโนโลยีเว็บมาตรฐาน (HTML, CSS, JavaScript) ในการสร้างหน้าตาเว็บ
@@ -194,14 +198,13 @@ function searchDrugs(criteria) {
 
     const results = data
       .filter((row) => {
-
         const searchKey = row[9] ? row[9].toString().toLowerCase() : "";
 
         const matchSearchText = searchText
           ? searchKey.includes(searchText)
           : true;
         const matchCategory = category ? row[3] === category : true;
-        const matchNed = ned ? row[4] === ned : tru
+        const matchNed = ned ? row[4] === ned : true;
 
         return matchSearchText && matchCategory && matchNed;
       })
