@@ -1,0 +1,445 @@
+---
+import { Icon } from 'astro-icon/components';
+
+type Props = {
+  title: string;
+  url: URL | string;
+};
+
+const { title, url } = Astro.props;
+const shareUrl = url.toString();
+const encodedUrl = encodeURIComponent(shareUrl);
+const encodedTitle = encodeURIComponent(title);
+
+const platforms = [
+  {
+    id: 'facebook',
+    label: 'Share on Facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    icon: 'mdi:facebook',
+    color: '#1877F2',
+    bg: 'rgba(24, 119, 242, 0.1)',
+  },
+  {
+    id: 'twitter',
+    label: 'Share on X (Twitter)',
+    href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+    icon: 'ri:twitter-x-fill',
+    color: '#0f0f0f',
+    bg: 'rgba(15, 15, 15, 0.08)',
+  },
+  {
+    id: 'line',
+    label: 'Share on LINE',
+    href: `https://social-plugins.line.me/lineit/share?url=${encodedUrl}`,
+    icon: 'fa6-brands:line',
+    color: '#06C755',
+    bg: 'rgba(6, 199, 85, 0.1)',
+  },
+  {
+    id: 'linkedin',
+    label: 'Share on LinkedIn',
+    href: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`,
+    icon: 'mdi:linkedin',
+    color: '#0A66C2',
+    bg: 'rgba(10, 102, 194, 0.1)',
+  },
+];
+---
+
+<div class="share-wrapper" role="region" aria-label="Share this article">
+  <p class="share-label">
+    <Icon name="mdi:share-variant-outline" class="share-label-icon" aria-hidden="true" />
+    Share this article
+  </p>
+
+  <div class="share-buttons">
+    {platforms.map(platform => (
+      <a
+        href={platform.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="share-btn"
+        aria-label={platform.label}
+        data-platform={platform.id}
+        style={`--platform-color: ${platform.color}; --platform-bg: ${platform.bg};`}
+      >
+        <span class="share-btn-inner">
+          <Icon name={platform.icon} class="share-icon" aria-hidden="true" />
+        </span>
+        <span class="share-tooltip" role="tooltip">{platform.label}</span>
+      </a>
+    ))}
+
+    <button
+      id="copy-link-btn"
+      class="share-btn copy-btn"
+      aria-label="Copy link to clipboard"
+      type="button"
+      data-url={shareUrl}
+      style="--platform-color: var(--brand-color); --platform-bg: rgba(75, 99, 197, 0.1);"
+    >
+      <span class="share-btn-inner">
+        <Icon name="mdi:link-variant" class="share-icon icon-link" aria-hidden="true" />
+        <Icon name="mdi:check-bold" class="share-icon icon-check" aria-hidden="true" />
+      </span>
+      <span class="share-tooltip" role="tooltip" id="copy-tooltip">Copy link</span>
+    </button>
+
+    <button
+      id="native-share-btn"
+      class="share-btn native-share-btn"
+      aria-label="More sharing options"
+      type="button"
+      data-url={shareUrl}
+      data-title={title}
+      style="--platform-color: var(--font-color-light); --platform-bg: rgba(93, 93, 93, 0.08);"
+    >
+      <span class="share-btn-inner">
+        <Icon name="mdi:dots-horizontal" class="share-icon" aria-hidden="true" />
+      </span>
+      <span class="share-tooltip" role="tooltip">More options</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  function initShareButtons() {
+    // --- Copy Link ---
+    const copyBtn = document.getElementById('copy-link-btn') as HTMLButtonElement | null;
+    const copyTooltip = document.getElementById('copy-tooltip');
+
+    if (copyBtn && copyTooltip) {
+      copyBtn.addEventListener('click', async () => {
+        const url = copyBtn.dataset.url ?? window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+
+          // Success state
+          copyBtn.classList.add('copied');
+          copyTooltip.textContent = 'Copied!';
+          copyBtn.setAttribute('aria-label', 'Link copied!');
+
+          setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyTooltip.textContent = 'Copy link';
+            copyBtn.setAttribute('aria-label', 'Copy link to clipboard');
+          }, 2000);
+        }
+        catch {
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea');
+          textArea.value = url;
+          textArea.style.position = 'fixed';
+          textArea.style.opacity = '0';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            copyBtn.classList.add('copied');
+            copyTooltip.textContent = 'Copied!';
+            setTimeout(() => {
+              copyBtn.classList.remove('copied');
+              copyTooltip.textContent = 'Copy link';
+            }, 2000);
+          }
+          finally {
+            document.body.removeChild(textArea);
+          }
+        }
+      });
+    }
+
+    // --- Native Web Share API (mobile / OS-level share sheet) ---
+    const nativeShareBtn = document.getElementById('native-share-btn') as HTMLButtonElement | null;
+
+    if (nativeShareBtn) {
+      if (navigator.share) {
+        nativeShareBtn.style.display = 'flex';
+        nativeShareBtn.addEventListener('click', async () => {
+          try {
+            await navigator.share({
+              title: nativeShareBtn.dataset.title,
+              url: nativeShareBtn.dataset.url ?? window.location.href,
+            });
+          }
+          catch (err) {
+            // User cancelled or share failed — silent
+            if (err instanceof Error && err.name !== 'AbortError') {
+              console.error('Share failed:', err);
+            }
+          }
+        });
+      }
+      else {
+        nativeShareBtn.style.display = 'none';
+      }
+    }
+  }
+
+  // Run on initial load and on Astro view-transition navigations
+  initShareButtons();
+  document.addEventListener('astro:after-swap', initShareButtons);
+</script>
+
+<style>
+  /* ============================================================
+     Share Wrapper
+  ============================================================ */
+  .share-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.75rem 1.5rem;
+    background: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
+    border-radius: 20px;
+    box-shadow:
+      0 4px 6px -1px var(--shadow-color),
+      0 2px 4px -1px var(--shadow-color);
+  }
+
+  /* ============================================================
+     Label
+  ============================================================ */
+  .share-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: var(--font-color-light);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .share-label-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  /* ============================================================
+     Buttons Row
+  ============================================================ */
+  .share-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  /* ============================================================
+     Individual Button
+  ============================================================ */
+  .share-btn {
+    /* Reset */
+    all: unset;
+    cursor: pointer;
+
+    /* Layout */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 14px;
+
+    /* Colours — defaults, overridden by inline style */
+    color: var(--font-color-light);
+    background-color: color-mix(in srgb, var(--bg-color) 60%, var(--card-bg-color) 40%);
+    border: 1px solid var(--card-border-color);
+
+    /* Motion */
+    transition:
+      color 0.22s ease,
+      background-color 0.22s ease,
+      border-color 0.22s ease,
+      transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.22s ease;
+  }
+
+  .share-btn:hover,
+  .share-btn:focus-visible {
+    color: var(--platform-color);
+    background-color: var(--platform-bg);
+    border-color: var(--platform-color);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 8px 20px -4px color-mix(in srgb, var(--platform-color) 30%, transparent);
+    outline: none;
+  }
+
+  .share-btn:active {
+    transform: translateY(-1px) scale(1.02);
+  }
+
+  /* Focus ring for keyboard nav */
+  .share-btn:focus-visible {
+    outline: 2px solid var(--platform-color);
+    outline-offset: 3px;
+  }
+
+  /* ============================================================
+     Icon inside button
+  ============================================================ */
+  .share-btn-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .share-icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  /* ============================================================
+     Copy button — icon swap animation
+  ============================================================ */
+  .copy-btn .icon-check {
+    position: absolute;
+    opacity: 0;
+    transform: scale(0.6) rotate(-15deg);
+    color: var(--success-color);
+  }
+
+  .copy-btn .icon-link {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  .copy-btn.copied {
+    color: var(--success-color) !important;
+    background-color: rgba(16, 185, 129, 0.12) !important;
+    border-color: var(--success-color) !important;
+    transform: translateY(-3px) scale(1.08) !important;
+    box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.3) !important;
+  }
+
+  .copy-btn.copied .icon-check {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    transition: opacity 0.2s ease 0.05s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s;
+  }
+
+  .copy-btn.copied .icon-link {
+    opacity: 0;
+    transform: scale(0.6) rotate(15deg);
+    transition: opacity 0.15s ease, transform 0.2s ease;
+  }
+
+  /* ============================================================
+     Tooltip
+  ============================================================ */
+  .share-tooltip {
+    /* Hidden by default */
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px) translateX(-50%);
+
+    /* Positioning */
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    white-space: nowrap;
+
+    /* Appearance */
+    background: var(--font-color);
+    color: var(--card-bg-color);
+    font-size: 0.72rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    padding: 0.35rem 0.7rem;
+    border-radius: 8px;
+    letter-spacing: 0.02em;
+    z-index: 10;
+
+    /* Arrow */
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .share-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--font-color);
+  }
+
+  .share-btn:hover .share-tooltip,
+  .share-btn:focus-visible .share-tooltip {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+
+  /* ============================================================
+     Divider between social links and utility buttons
+  ============================================================ */
+  .copy-btn {
+    margin-left: 0.25rem;
+  }
+
+  .native-share-btn {
+    margin-left: 0;
+  }
+
+  /* Visual separator before copy + share-more */
+  .copy-btn::before {
+    content: '';
+    position: absolute;
+    left: -0.625rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1.5rem;
+    width: 1px;
+    background: var(--card-border-color);
+  }
+
+  /* ============================================================
+     Responsive
+  ============================================================ */
+  @media (max-width: 480px) {
+    .share-wrapper {
+      padding: 1.5rem 1rem;
+      border-radius: 16px;
+    }
+
+    .share-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .share-icon {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    .share-tooltip {
+      /* Keep tooltips readable on small screens */
+      font-size: 0.68rem;
+    }
+  }
+
+  /* ============================================================
+     Dark mode (prefers-color-scheme aware via CSS vars,
+     the vars are already set globally so this is mostly
+     extra contrast insurance)
+  ============================================================ */
+  @media (prefers-color-scheme: dark) {
+    .share-tooltip {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+</style>

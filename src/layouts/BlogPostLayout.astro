@@ -3,6 +3,7 @@ import type { MarkdownHeading } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
+import ShareButtons from '@/components/blog/ShareButtons.astro';
 import Toc from '@/components/blog/Toc.astro';
 import ViewCounter from '@/components/blog/ViewCounter.astro';
 import { getAllBlogPosts } from '@/lib/blog';
@@ -69,6 +70,8 @@ const relatedPosts = getRelatedPosts(allPosts, postSlug, tags, category, 3);
       </div>
 
       <footer class="post-footer">
+        <ShareButtons title={title} url={Astro.url} />
+
         <div class="tags-list">
           {
             tags.map(tag => (
@@ -160,6 +163,9 @@ const relatedPosts = getRelatedPosts(allPosts, postSlug, tags, category, 3);
     margin-top: 4rem;
     border-top: 1px solid var(--card-border-color);
     padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .tags-list {
