@@ -39,7 +39,6 @@ function calculateReadingTime(content: string) {
 }
 
 const readingTime = post.body ? calculateReadingTime(post.body) : null;
-const displayImage = heroImage || '/blog-placeholder-1.png';
 const bodyExcerpt = post.body ? `${post.body.slice(0, 150)}...` : '';
 const excerpt = description || bodyExcerpt;
 ---
@@ -49,27 +48,28 @@ const excerpt = description || bodyExcerpt;
 
     <div class="card-image-wrapper">
       {heroImage
-? (
-        <Image
-          src={heroImage}
-          alt={`Cover image for ${title}`}
-          class="card-image"
-          loading="lazy"
-          decoding="async"
-          width={800}
-          height={450}
-          format="webp"
-        />
-      )
-: (
-        <img
-          src={displayImage}
-          alt={`Placeholder image for ${title}`}
-          class="card-image"
-          loading="lazy"
-          decoding="async"
-        />
-      )}
+        ? (
+          <Image
+            src={heroImage}
+            alt={`Cover image for ${title}`}
+            class="card-image"
+            loading="lazy"
+            decoding="async"
+            width={800}
+            quality={80}
+          />
+        )
+        : (
+          <img
+            src="/blog-placeholder-1.png"
+            alt={`Placeholder image for ${title}`}
+            class="card-image"
+            loading="lazy"
+            decoding="async"
+            width={800}
+            height={450}
+          />
+        )}
     </div>
 
     <div class="card-content">

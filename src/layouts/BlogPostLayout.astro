@@ -2,6 +2,8 @@
 import type { MarkdownHeading } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
+import { getImage, Image } from 'astro:assets';
+
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
 import ShareButtons from '@/components/blog/ShareButtons.astro';
 import Toc from '@/components/blog/Toc.astro';
@@ -33,9 +35,23 @@ const postSlug = slug || slugify(title);
 // Fetch all blog posts (cached) and compute related posts
 const allPosts = await getAllBlogPosts();
 const relatedPosts = getRelatedPosts(allPosts, postSlug, tags, category, 3);
+
+// Pre-generate the hero image URL for <link rel="preload"> to improve LCP
+const preloadHero = heroImage
+  ? await getImage({ src: heroImage, width: 1200, quality: 85, format: 'webp' })
+  : null;
 ---
 
 <BaseLayout title={title} description={description}>
+  {preloadHero && (
+    <link
+      slot="head"
+      rel="preload"
+      as="image"
+      href={preloadHero.src}
+      fetchpriority="high"
+    />
+  )}
   <div class="layout-grid">
     <aside class="left-sidebar"></aside>
     <article class="prose">
@@ -57,10 +73,16 @@ const relatedPosts = getRelatedPosts(allPosts, postSlug, tags, category, 3);
 
       {
         heroImage && (
-          <img
+          <Image
             src={heroImage}
             alt={`Hero image for ${title}`}
             class="hero-image"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            quality={85}
+            widths={[768, 1024, 1200, 1536]}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 800px"
           />
         )
       }

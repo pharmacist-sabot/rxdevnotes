@@ -54,5 +54,5 @@ export default defineConfig({
     sitemap(),
     pagefind(),
   ],
-  adapter: vercel(),
+  adapter: vercel({ imageService: true }),
 });
