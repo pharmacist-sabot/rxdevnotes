@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.6.0...v1.7.0) (2026-02-23)
+
+### 🚀 New Features
+
+* add social shared and refactor related post ([#9](https://github.com/pharmacist-sabot/rxdevnotes/issues/9)) ([b18a83b](https://github.com/pharmacist-sabot/rxdevnotes/commit/b18a83b6bd8890527704d67dbd42e1cd7add88d2))
+
 ## [1.6.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.5.0...v1.6.0) (2026-02-01)
 
 ### 🚀 New Features
