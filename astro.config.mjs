@@ -22,6 +22,7 @@ export default defineConfig({
         './src/components/blog/CategoryCard.astro',
         './src/components/blog/Toc.astro',
         './src/components/blog/ViewCounter.astro',
+        './src/components/blog/ShareButtons.astro',
 
         // --- content components  ---
         './src/components/content/CodeExplainer.astro',
@@ -53,5 +54,5 @@ export default defineConfig({
     sitemap(),
     pagefind(),
   ],
-  adapter: vercel(),
+  adapter: vercel({ imageService: true }),
 });
