@@ -7,7 +7,7 @@ import pagefind from 'astro-pagefind';
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://rxdevnotes.vercel.app/',
+  site: 'https://rxdevman.com',
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
