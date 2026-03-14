@@ -61,6 +61,13 @@ const invsPosts = allPosts
     text-align: left;
   }
 
+  @media (max-width: 400px) {
+    .post-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
   .status-box {
     border: 2px dashed var(--card-border-color);
     border-radius: 16px;
