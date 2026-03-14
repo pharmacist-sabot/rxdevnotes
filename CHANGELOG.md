@@ -1,3 +1,13 @@
+## [1.8.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.7.0...v1.8.0) (2026-03-14)
+
+### 🚀 New Features
+
+* introduce a dedicated INVS resources page, add new INVS blog content. ([#10](https://github.com/pharmacist-sabot/rxdevnotes/issues/10)) ([ebbf7d2](https://github.com/pharmacist-sabot/rxdevnotes/commit/ebbf7d27ac48a8e3ccccc0eb70934dbcbb4544d7))
+
+### 📦 Dependency Updates
+
+* update site URL in astro.config.mjs ([92e4de2](https://github.com/pharmacist-sabot/rxdevnotes/commit/92e4de2301415f659441898f7a48f0d7575612b8))
+
 ## [1.7.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.6.0...v1.7.0) (2026-02-23)
 
 ### 🚀 New Features
