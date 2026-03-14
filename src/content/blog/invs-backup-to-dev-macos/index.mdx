@@ -1,0 +1,1053 @@
+---
+title: "จากไฟล์ Backup เดียวสู่ระบบพัฒนา INVS บน macOS อย่างสมบูรณ์"
+description: "กรณีศึกษาฉบับสมบูรณ์: การนำฐานข้อมูล SQL Server จากไฟล์ .bak มาทำงานร่วมกับ Docker, FastAPI และ Frontend บน macOS ครอบคลุมตั้งแต่ติดตั้ง Docker จนถึง Restore Database และรันระบบทั้ง Backend + Frontend"
+pubDate: "2026-03-14"
+heroImage: "./hero.png"
+category: "INVS"
+tags: ["SQL Server", "Docker", "FastAPI", "Python", "macOS", "Database", "INVS"]
+---
+
+<NarrativeSection>
+
+บทความนี้จะพาคุณเดินผ่านทุกขั้นตอน ตั้งแต่การเตรียมเครื่อง macOS ให้พร้อม ไปจนถึงการ restore ฐานข้อมูล INVS จากไฟล์ `.bak` และรันทั้ง FastAPI backend กับ frontend ได้อย่างสมบูรณ์ เหมาะสำหรับทั้งผู้ที่เพิ่งเริ่มต้นและนักพัฒนาที่ต้องการ reference ที่ครบถ้วน
+
+</NarrativeSection>
+
+<PullQuote>
+จากไฟล์ Backup เพียงไฟล์เดียว สู่ระบบพัฒนาที่ครบวงจรบน macOS
+</PullQuote>
+
+## สิ่งที่ต้องมีก่อนเริ่ม
+
+<Table>
+  <tr slot="head">
+    <th>เครื่องมือ</th>
+    <th>เวอร์ชันที่แนะนำ</th>
+    <th>ใช้ทำอะไร</th>
+  </tr>
+  <Fragment slot="body">
+    <tr>
+      <td>macOS</td>
+      <td>12 (Monterey) ขึ้นไป</td>
+      <td>ระบบปฏิบัติการหลัก</td>
+    </tr>
+    <tr>
+      <td>Docker Desktop</td>
+      <td>4.x ขึ้นไป</td>
+      <td>รัน SQL Server</td>
+    </tr>
+    <tr>
+      <td>Homebrew</td>
+      <td>ล่าสุด</td>
+      <td>ติดตั้ง ODBC driver</td>
+    </tr>
+    <tr>
+      <td>Python</td>
+      <td>3.10 ขึ้นไป</td>
+      <td>รัน FastAPI backend</td>
+    </tr>
+    <tr>
+      <td>Node.js</td>
+      <td>18 ขึ้นไป</td>
+      <td>รัน frontend</td>
+    </tr>
+    <tr>
+      <td>ไฟล์ <code>.bak</code></td>
+      <td>—</td>
+      <td>ฐานข้อมูล INVS ที่ export มาจากโรงพยาบาล</td>
+    </tr>
+  </Fragment>
+</Table>
+
+---
+
+## ส่วนที่ 1 — เตรียมเครื่อง macOS ให้พร้อม
+
+### 1.1 ตรวจสอบ Docker
+
+<NarrativeSection>
+
+SQL Server ไม่มี native binary สำหรับ macOS (ทั้ง Intel และ Apple Silicon) วิธีมาตรฐานที่ Microsoft รองรับอย่างเป็นทางการคือใช้ Docker
+
+</NarrativeSection>
+
+ตรวจสอบว่า Docker ติดตั้งแล้วหรือยัง:
+
+```bash
+docker --version
+```
+
+ผลลัพธ์ที่ถูกต้องควรหน้าตาประมาณนี้:
+
+```
+Docker version 29.2.1, build abcdef1
+```
+
+ถ้าขึ้น `command not found` แสดงว่ายังไม่ได้ติดตั้ง Docker ให้ดาวน์โหลด Docker Desktop จาก [docker.com](https://www.docker.com/products/docker-desktop)
+
+ติดตั้งเสร็จแล้วให้เปิด Docker Desktop รอจนไอคอนใน menu bar กลายเป็น "Running" แล้วค่อยทำขั้นตอนถัดไป
+
+<SideNote type="note">
+  <p><strong>หมายเหตุสำหรับ Apple Silicon (M1/M2/M3):</strong> Docker Desktop รุ่นใหม่รองรับ Rosetta 2 และสามารถรัน image ที่ build สำหรับ <code>linux/amd64</code> ได้ ซึ่งครอบคลุม SQL Server image อย่างเป็นทางการของ Microsoft</p>
+</SideNote>
+
+### 1.2 ตรวจสอบ Homebrew
+
+Homebrew จำเป็นสำหรับติดตั้ง ODBC driver ในภายหลัง:
+
+```bash
+brew --version
+```
+
+ถ้ายังไม่มี:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+---
+
+## ส่วนที่ 2 — รัน SQL Server บน macOS ด้วย Docker
+
+### 2.1 ทำความเข้าใจ Docker Image ของ SQL Server
+
+<NarrativeSection>
+
+Microsoft เผยแพร่ image อย่างเป็นทางการผ่าน Microsoft Container Registry (MCR) ไม่ใช่ Docker Hub ทั่วไป Image นี้รัน SQL Server บน Linux ซึ่งเป็นเหตุผลที่ทำงานได้บน Docker ทุกระบบปฏิบัติการ
+
+</NarrativeSection>
+
+```
+mcr.microsoft.com/mssql/server:2022-latest
+```
+
+### 2.2 รัน Container
+
+```bash
+docker run -d \
+  --name sqlserver \
+  -e "ACCEPT_EULA=Y" \
+  -e "SA_PASSWORD=StrongPassword123!" \
+  -p 1433:1433 \
+  mcr.microsoft.com/mssql/server:2022-latest
+```
+
+<CodeExplainer title="อธิบาย Docker run options">
+  <details>
+    <summary><code>-d</code></summary>
+    <p>รันใน background (detached mode) ไม่ block terminal</p>
+  </details>
+  <details>
+    <summary><code>--name sqlserver</code></summary>
+    <p>ชื่อ container ที่เราจะอ้างถึงในคำสั่งอื่น</p>
+  </details>
+  <details>
+    <summary><code>ACCEPT_EULA=Y</code></summary>
+    <p>ยืนยันว่ายอมรับ End-User License Agreement ของ Microsoft SQL Server ถ้าไม่ใส่ container จะไม่ start</p>
+  </details>
+  <details>
+    <summary><code>SA_PASSWORD=StrongPassword123!</code></summary>
+    <p>รหัสผ่านของ user <code>sa</code> (System Administrator) ต้องมีความยาว 8+ ตัว มีตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก ตัวเลข และสัญลักษณ์ ถ้าไม่ครบ container จะ exit</p>
+  </details>
+  <details>
+    <summary><code>-p 1433:1433</code></summary>
+    <p>map port 1433 ของ container ออกมาที่ port 1433 ของเครื่อง host รูปแบบคือ host:container</p>
+  </details>
+</CodeExplainer>
+
+### 2.3 ตรวจสอบว่า Container ทำงานอยู่
+
+```bash
+docker ps
+```
+
+ผลลัพธ์ที่ถูกต้อง:
+
+```
+CONTAINER ID   IMAGE                                        STATUS         PORTS                    NAMES
+307fb4a0ebca   mcr.microsoft.com/mssql/server:2022-latest   Up 2 minutes   0.0.0.0:1433->1433/tcp   sqlserver
+```
+
+สิ่งสำคัญที่ต้องดู:
+- **STATUS** ต้องเป็น `Up` ไม่ใช่ `Exited`
+- **PORTS** ต้องเห็น `0.0.0.0:1433->1433/tcp`
+
+<InfoBox title="ถ้า STATUS เป็น Exited" type="warning">
+  <p>ให้ดู log ด้วยคำสั่ง <code>docker logs sqlserver</code></p>
+  <p>error ที่พบบ่อยที่สุดคือ password ไม่ผ่านเกณฑ์ความปลอดภัย ให้ลบ container แล้วรันใหม่ด้วย password ที่แข็งแรงกว่า:</p>
+
+```bash
+docker rm sqlserver
+# แล้วรัน docker run ... ใหม่
+```
+
+</InfoBox>
+
+### 2.4 รอให้ SQL Server พร้อม
+
+SQL Server ใช้เวลาประมาณ 10–30 วินาทีหลัง container start ก่อนที่จะรับ connection ได้ วิธีตรวจสอบ:
+
+```bash
+docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd \
+  -S localhost -U sa -P "StrongPassword123!" -Q "SELECT 1"
+```
+
+ถ้าเห็นผลลัพธ์เป็น `1` แสดงว่า SQL Server พร้อมใช้งานแล้ว
+
+---
+
+## ส่วนที่ 3 — เตรียมไฟล์ Backup
+
+### 3.1 โครงสร้างโฟลเดอร์
+
+สร้างโฟลเดอร์สำหรับเก็บไฟล์ backup ในเครื่อง:
+
+```bash
+mkdir -p backup
+```
+
+วางไฟล์ backup ไว้ที่ `backup/INVS.bak` แล้วตรวจสอบ:
+
+```bash
+ls -lh backup/
+```
+
+### 3.2 Copy ไฟล์เข้า Container
+
+<NarrativeSection>
+
+SQL Server ที่รันใน container จะเข้าถึงไฟล์บนเครื่อง host โดยตรงไม่ได้ ต้อง copy เข้าไปก่อน
+
+</NarrativeSection>
+
+```bash
+# สร้างโฟลเดอร์ backup ใน container ก่อน
+docker exec sqlserver mkdir -p /var/opt/mssql/backup
+
+# copy ไฟล์เข้า container
+docker cp backup/INVS.bak sqlserver:/var/opt/mssql/backup/
+```
+
+ตรวจสอบว่า copy สำเร็จ:
+
+```bash
+docker exec sqlserver ls -lh /var/opt/mssql/backup/
+```
+
+<SideNote type="tip">
+  <p><strong>ทำไมต้อง copy เข้า /var/opt/mssql/backup/?</strong> เป็น path มาตรฐานที่ SQL Server บน Linux มี permission เขียน/อ่านได้ ถ้าวางใน path อื่นอาจเจอปัญหา permission denied ตอน restore</p>
+</SideNote>
+
+---
+
+## ส่วนที่ 4 — Restore Database
+
+### 4.1 เครื่องมือที่ใช้เชื่อมต่อ
+
+<Table>
+  <tr slot="head">
+    <th>เครื่องมือ</th>
+    <th>ประเภท</th>
+    <th>เหมาะสำหรับ</th>
+  </tr>
+  <Fragment slot="body">
+    <tr>
+      <td>Azure Data Studio</td>
+      <td>GUI (ฟรี)</td>
+      <td>ใช้งานทั่วไป recommend สำหรับมือใหม่</td>
+    </tr>
+    <tr>
+      <td>DBeaver</td>
+      <td>GUI (ฟรี)</td>
+      <td>รองรับหลาย database</td>
+    </tr>
+    <tr>
+      <td>TablePlus</td>
+      <td>GUI (มีทดลองใช้ฟรี)</td>
+      <td>UI สวย ใช้งานง่ายบน macOS</td>
+    </tr>
+    <tr>
+      <td><code>sqlcmd</code></td>
+      <td>CLI</td>
+      <td>รันผ่าน terminal ใน container ได้เลย</td>
+    </tr>
+  </Fragment>
+</Table>
+
+ค่า connection ที่ใช้ทุกเครื่องมือ:
+
+```
+Server:   localhost
+Port:     1433
+Username: sa
+Password: StrongPassword123!
+```
+
+### 4.2 ตรวจสอบ Logical Name ก่อน Restore
+
+<NarrativeSection>
+
+ก่อน restore ต้องรู้ "Logical Name" ของไฟล์ข้อมูลและ log ใน backup เพราะจะต้องใช้ตอนระบุ path ปลายทาง
+
+</NarrativeSection>
+
+```sql
+RESTORE FILELISTONLY
+FROM DISK = '/var/opt/mssql/backup/INVS.bak'
+```
+
+ผลลัพธ์ที่ได้จะคล้ายนี้:
+
+```
+LogicalName    PhysicalName                              Type
+-----------    -----------------------------------------  ----
+invs           C:\MSSQL\DATA\INVS.mdf                    D
+invs_log       C:\MSSQL\DATA\INVS_log.ldf                L
+```
+
+`D` คือ data file (`.mdf`) และ `L` คือ log file (`.ldf`) — จด `LogicalName` ทั้งสองตัวไว้ จะใช้ใน `MOVE` clause ในขั้นตอนถัดไป
+
+<SideNote type="note">
+  <p><strong>ทำไมต้องดู LogicalName?</strong> Backup ถูกสร้างบน Windows Server ซึ่ง physical path เป็น <code>C:\MSSQL\...</code> แต่ container ของเราเป็น Linux ดังนั้น SQL Server จะไม่สามารถ restore ไปยัง path เดิมได้ ต้องใช้ <code>MOVE</code> เพื่อบอก path ใหม่</p>
+</SideNote>
+
+### 4.3 รัน Restore
+
+แทนที่ `invs` และ `invs_log` ด้วย LogicalName ที่ได้จากขั้นตอนก่อน:
+
+```sql
+RESTORE DATABASE INVS
+FROM DISK = '/var/opt/mssql/backup/INVS.bak'
+WITH
+  MOVE 'invs'     TO '/var/opt/mssql/data/INVS.mdf',
+  MOVE 'invs_log' TO '/var/opt/mssql/data/INVS_log.ldf',
+  REPLACE
+```
+
+<CodeExplainer title="อธิบาย RESTORE options">
+  <details>
+    <summary><code>MOVE ... TO ...</code></summary>
+    <p>ระบุ path ใหม่บน Linux สำหรับแต่ละไฟล์</p>
+  </details>
+  <details>
+    <summary><code>REPLACE</code></summary>
+    <p>ถ้ามี database ชื่อ INVS อยู่แล้ว ให้ทับได้เลย</p>
+  </details>
+</CodeExplainer>
+
+กระบวนการ restore ใช้เวลาขึ้นอยู่กับขนาดไฟล์ อาจใช้เวลาตั้งแต่ 30 วินาที ถึงหลายนาที ถ้าสำเร็จจะเห็น:
+
+```
+RESTORE DATABASE successfully processed 153842 pages in 47.823 seconds (25.143 MB/sec).
+```
+
+### 4.4 Troubleshooting — ปัญหาที่พบบ่อยตอน Restore
+
+<InfoBox title="Cannot open backup device... Operating system error 5" type="danger">
+  <p><strong>สาเหตุ:</strong> ไฟล์ยังไม่ได้ copy เข้า container หรือ copy ไปผิด path</p>
+  <p><strong>แก้:</strong> ตรวจสอบอีกครั้ง:</p>
+
+```bash
+docker exec sqlserver ls -la /var/opt/mssql/backup/
+```
+
+</InfoBox>
+
+<InfoBox title="The database was backed up on a server running version X..." type="warning">
+  <p><strong>สาเหตุ:</strong> ไฟล์ backup ถูกสร้างจาก SQL Server เวอร์ชันใหม่กว่าที่รันอยู่</p>
+  <p><strong>แก้:</strong> เปลี่ยน image เป็นเวอร์ชันที่ตรงกัน เช่น ถ้า backup มาจาก SQL Server 2019 ให้ใช้:</p>
+
+```bash
+docker run -d \
+  --name sqlserver \
+  -e "ACCEPT_EULA=Y" \
+  -e "SA_PASSWORD=StrongPassword123!" \
+  -p 1433:1433 \
+  mcr.microsoft.com/mssql/server:2019-latest
+```
+
+</InfoBox>
+
+<InfoBox title="Directory lookup for the file ... failed" type="warning">
+  <p><strong>สาเหตุ:</strong> ไม่ได้ใส่ <code>MOVE</code> clause หรือใส่ LogicalName ผิด</p>
+  <p><strong>แก้:</strong> รัน <code>RESTORE FILELISTONLY</code> อีกครั้งและตรวจสอบ LogicalName ให้ตรง</p>
+</InfoBox>
+
+---
+
+## ส่วนที่ 5 — ตรวจสอบฐานข้อมูล
+
+### 5.1 ดูรายชื่อ Database ทั้งหมด
+
+```sql
+SELECT name, state_desc
+FROM sys.databases
+ORDER BY name
+```
+
+ควรเห็น `INVS` ในรายการพร้อม `state_desc = ONLINE`:
+
+```
+name     state_desc
+-------  -----------
+INVS     ONLINE
+master   ONLINE
+model    ONLINE
+msdb     ONLINE
+tempdb   ONLINE
+```
+
+### 5.2 ดูตารางใน Database
+
+```sql
+USE INVS
+
+SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
+ORDER BY TABLE_NAME
+```
+
+<InfoBox title="ตรวจสอบ Restore สำเร็จ" type="success">
+  <p>ถ้าเห็นชื่อตารางเช่น <code>warehouse</code>, <code>drug_item</code>, <code>stock_transaction</code> เป็นต้น แสดงว่า restore สำเร็จสมบูรณ์</p>
+</InfoBox>
+
+### 5.3 ทดสอบ Query ข้อมูลจริง
+
+```sql
+USE INVS
+
+SELECT TOP 10 *
+FROM warehouse
+```
+
+ถ้าเห็นข้อมูลภาษาไทยแสดงผลถูกต้อง แสดงว่าระบบพร้อมใช้งาน
+
+---
+
+## ส่วนที่ 6 — ติดตั้ง ODBC Driver บน macOS
+
+### 6.1 ทำไมต้องใช้ ODBC Driver
+
+<NarrativeSection>
+
+Python ไม่สามารถคุยกับ SQL Server โดยตรงได้ ต้องผ่าน driver กลาง library `pyodbc` ทำหน้าที่เป็น bridge แต่ต้องการ driver ที่ติดตั้งใน OS ก่อน
+
+</NarrativeSection>
+
+### 6.2 ติดตั้งผ่าน Homebrew
+
+```bash
+brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+brew install msodbcsql17
+brew install mssql-tools
+```
+
+ตรวจสอบว่าติดตั้งสำเร็จ:
+
+```bash
+odbcinst -q -d
+```
+
+ผลลัพธ์:
+
+```
+[ODBC Driver 17 for SQL Server]
+```
+
+<SideNote type="tip">
+  <p><strong>ทำไมใช้ Driver 17 ไม่ใช่ 18?</strong> Driver 18 เปลี่ยน default ของ <code>Encrypt</code> จาก <code>No</code> เป็น <code>Yes</code> ทำให้ต้องเพิ่ม <code>TrustServerCertificate=yes</code> ใน connection string ซึ่งเราจะทำอยู่แล้ว แต่ Driver 17 มี compatibility กว้างกว่าและ error message ชัดเจนกว่าสำหรับ development</p>
+</SideNote>
+
+ถ้าต้องการใช้ Driver 18 แทน:
+
+```bash
+brew install msodbcsql18
+```
+
+แล้วเปลี่ยน `db_driver` ใน config เป็น `"ODBC Driver 18 for SQL Server"`
+
+---
+
+## ส่วนที่ 7 — ติดตั้ง Python Dependencies
+
+### 7.1 สร้าง Virtual Environment
+
+แนะนำให้ทำงานใน virtual environment เสมอ เพื่อไม่ให้ package ปะปนกัน:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+สังเกตว่า prompt เปลี่ยนเป็น `(.venv)` แสดงว่า activate แล้ว
+
+### 7.2 ติดตั้ง Package
+
+```bash
+pip install pyodbc fastapi uvicorn pydantic-settings python-dotenv
+```
+
+<Table>
+  <tr slot="head">
+    <th>Package</th>
+    <th>หน้าที่</th>
+  </tr>
+  <Fragment slot="body">
+    <tr>
+      <td><code>pyodbc</code></td>
+      <td>เชื่อมต่อกับ SQL Server ผ่าน ODBC</td>
+    </tr>
+    <tr>
+      <td><code>fastapi</code></td>
+      <td>web framework สำหรับสร้าง API</td>
+    </tr>
+    <tr>
+      <td><code>uvicorn</code></td>
+      <td>ASGI server สำหรับรัน FastAPI</td>
+    </tr>
+    <tr>
+      <td><code>pydantic-settings</code></td>
+      <td>อ่าน config จาก environment variable หรือ .env file</td>
+    </tr>
+    <tr>
+      <td><code>python-dotenv</code></td>
+      <td>โหลด .env file</td>
+    </tr>
+  </Fragment>
+</Table>
+
+---
+
+## ส่วนที่ 8 — สร้าง Config
+
+### 8.1 สร้างไฟล์ .env
+
+สร้างไฟล์ `.env` ที่ root ของ project:
+
+```
+DB_SERVER=localhost
+DB_PORT=1433
+DB_NAME=INVS
+DB_USER=sa
+DB_PASSWORD=StrongPassword123!
+```
+
+<InfoBox title="ความปลอดภัย" type="warning">
+  <p>ไม่ควร commit ไฟล์ <code>.env</code> ขึ้น Git เพิ่ม <code>.env</code> ใน <code>.gitignore</code>:</p>
+
+```bash
+echo ".env" >> .gitignore
+```
+
+</InfoBox>
+
+### 8.2 สร้างไฟล์ config.py
+
+```python
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    # Database
+    db_server: str = "localhost"
+    db_port: int = 1433
+    db_name: str = "INVS"
+    db_user: str = "sa"
+    db_password: str = ""
+    db_driver: str = "ODBC Driver 17 for SQL Server"
+
+    # Application
+    app_host: str = "0.0.0.0"
+    app_port: int = 8000
+
+    class Config:
+        env_file = ".env"
+        case_sensitive = False
+
+
+settings = Settings()
+```
+
+<NarrativeSection>
+
+`pydantic-settings` จะอ่านค่าจาก environment variable ก่อน ถ้าไม่มีจึงใช้ค่า default ลำดับความสำคัญคือ: **Environment Variable → .env file → Default value**
+
+</NarrativeSection>
+
+---
+
+## ส่วนที่ 9 — สร้าง Database Connection
+
+### 9.1 สร้างไฟล์ database.py
+
+```python
+import pyodbc
+from contextlib import contextmanager
+from config import settings
+
+
+def get_connection_string() -> str:
+    """สร้าง connection string สำหรับ SQL Server"""
+    return (
+        f"DRIVER={{{settings.db_driver}}};"
+        f"SERVER={settings.db_server},{settings.db_port};"
+        f"DATABASE={settings.db_name};"
+        f"UID={settings.db_user};"
+        f"PWD={settings.db_password};"
+        "TrustServerCertificate=yes;"
+        "Encrypt=no;"
+    )
+
+
+@contextmanager
+def get_db():
+    """Context manager สำหรับ database connection"""
+    conn = pyodbc.connect(get_connection_string())
+
+    # แก้ปัญหา encoding ภาษาไทย
+    conn.setdecoding(pyodbc.SQL_CHAR, encoding="utf-8")
+    conn.setdecoding(pyodbc.SQL_WCHAR, encoding="utf-8")
+    conn.setencoding("utf-8")
+
+    try:
+        yield conn
+    finally:
+        conn.close()
+```
+
+### 9.2 อธิบาย Connection String แต่ละ Parameter
+
+<CodeExplainer title="Connection String Parameters">
+  <details>
+    <summary><code>DRIVER=&#123;ODBC Driver 17 for SQL Server&#125;</code></summary>
+    <p>ชื่อ driver ที่ติดตั้งไว้ ต้องล้อมด้วย <code>&#123;&#125;</code> เป็น syntax ของ ODBC</p>
+  </details>
+  <details>
+    <summary><code>SERVER=localhost,1433</code></summary>
+    <p>format คือ <code>hostname,port</code> ใช้ comma ไม่ใช่ colon</p>
+  </details>
+  <details>
+    <summary><code>TrustServerCertificate=yes</code></summary>
+    <p>บอกให้ข้าม SSL certificate validation เพราะ SQL Server ที่รันใน Docker ใช้ self-signed certificate ถ้าไม่ใส่จะเจอ error "SSL Provider: The certificate chain was issued by an authority that is not trusted"</p>
+  </details>
+  <details>
+    <summary><code>Encrypt=no</code></summary>
+    <p>ปิด encryption สำหรับ development environment เพื่อความเร็ว production ควรเปิด</p>
+  </details>
+</CodeExplainer>
+
+---
+
+## ส่วนที่ 10 — ปัญหา Encoding ภาษาไทยและวิธีแก้
+
+### 10.1 ที่มาของปัญหา
+
+<NarrativeSection>
+
+ฐานข้อมูล INVS ในโรงพยาบาลส่วนใหญ่ถูกสร้างบน Windows Server ซึ่งใช้ encoding ค่าเริ่มต้นเป็น `TIS-620` หรือ `Windows-874` (cp874) สำหรับภาษาไทย แต่ macOS ใช้ `UTF-8`
+
+เมื่อ `pyodbc` อ่านข้อมูลจาก SQL Server โดยไม่ระบุ encoding จะพยายาม decode bytes ด้วย encoding ของระบบปฏิบัติการ ทำให้เกิด `UnicodeDecodeError` หรือข้อมูลภาษาไทยกลายเป็นตัวอักษรแปลก
+
+</NarrativeSection>
+
+### 10.2 วิธีแก้
+
+```python
+conn.setdecoding(pyodbc.SQL_CHAR, encoding="utf-8")
+conn.setdecoding(pyodbc.SQL_WCHAR, encoding="utf-8")
+conn.setencoding("utf-8")
+```
+
+<Table>
+  <tr slot="head">
+    <th>คำสั่ง</th>
+    <th>ความหมาย</th>
+  </tr>
+  <Fragment slot="body">
+    <tr>
+      <td><code>setdecoding(SQL_CHAR, ...)</code></td>
+      <td>กำหนด encoding สำหรับ column ประเภท CHAR, VARCHAR</td>
+    </tr>
+    <tr>
+      <td><code>setdecoding(SQL_WCHAR, ...)</code></td>
+      <td>กำหนด encoding สำหรับ column ประเภท NCHAR, NVARCHAR</td>
+    </tr>
+    <tr>
+      <td><code>setencoding(...)</code></td>
+      <td>กำหนด encoding สำหรับ parameter ที่ส่งไป SQL Server</td>
+    </tr>
+  </Fragment>
+</Table>
+
+<InfoBox title="รองรับทุก OS" type="success">
+  <p>ข้อดีของวิธีนี้คือใช้ UTF-8 ซึ่งรองรับทุก OS ทั้ง macOS ✅, Windows ✅ และ Linux ✅</p>
+</InfoBox>
+
+### 10.3 Troubleshooting — ยังเจอปัญหา Encoding
+
+ถ้ายังเจอ encoding ผิดหลังจากใช้ UTF-8 แล้ว ให้ตรวจสอบ collation ของฐานข้อมูล:
+
+```sql
+SELECT
+    name,
+    collation_name
+FROM sys.databases
+WHERE name = 'INVS'
+```
+
+<SideNote type="warning">
+  <p>ถ้า collation เป็น <code>Thai_CI_AS</code> หรือ <code>Thai_BIN</code> ข้อมูลถูกเก็บในรูปแบบ Thai ซึ่งต้องการการ decode เพิ่มเติม ลอง: <code>conn.setdecoding(pyodbc.SQL_CHAR, encoding="tis-620")</code></p>
+</SideNote>
+
+---
+
+## ส่วนที่ 11 — สร้าง FastAPI Application
+
+### 11.1 สร้างไฟล์ main.py
+
+```python
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from database import get_db
+
+app = FastAPI(
+    title="INVS API",
+    description="API สำหรับระบบคลังยา INVS",
+    version="1.0.0",
+)
+
+# อนุญาตให้ frontend เรียก API ได้ (CORS)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vite default port
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/health")
+def health_check():
+    """ตรวจสอบว่า API ทำงานอยู่"""
+    return {"status": "ok"}
+
+
+@app.get("/health/db")
+def health_check_db():
+    """ตรวจสอบว่าเชื่อมต่อฐานข้อมูลได้"""
+    try:
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT 1")
+            return {"status": "ok", "database": "connected"}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
+
+@app.get("/api/warehouses")
+def get_warehouses():
+    """ดึงข้อมูลคลังยาทั้งหมด"""
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM warehouse ORDER BY warehouse_id")
+        cols = [c[0] for c in cursor.description]
+        rows = cursor.fetchall()
+        return [dict(zip(cols, row)) for row in rows]
+
+
+if __name__ == "__main__":
+    import uvicorn
+    from config import settings
+
+    uvicorn.run(
+        "main:app",
+        host=settings.app_host,
+        port=settings.app_port,
+        reload=True,
+    )
+```
+
+### 11.2 รัน API Server
+
+```bash
+python main.py
+```
+
+หรือใช้ uvicorn โดยตรง:
+
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+flag `--reload` ทำให้ server restart อัตโนมัติเมื่อแก้ไขไฟล์ Python เหมาะสำหรับ development
+
+### 11.3 ทดสอบ Endpoint
+
+เปิด browser หรือใช้ `curl`:
+
+```bash
+# ทดสอบว่า API ทำงาน
+curl http://localhost:8000/health
+
+# ทดสอบ database connection
+curl http://localhost:8000/health/db
+
+# ดึงข้อมูลคลังยา
+curl http://localhost:8000/api/warehouses
+```
+
+เปิด Swagger UI สำหรับทดสอบ API แบบ interactive ที่ `http://localhost:8000/docs`
+
+### 11.4 Troubleshooting — ปัญหาที่พบบ่อยตอน Connect
+
+<InfoBox title="Can't open lib 'ODBC Driver 17 for SQL Server'" type="danger">
+  <p><strong>สาเหตุ:</strong> ติดตั้ง ODBC driver ไม่สำเร็จ หรือชื่อ driver ไม่ตรง</p>
+  <p><strong>แก้:</strong> ตรวจสอบ driver ที่ติดตั้ง:</p>
+
+```bash
+odbcinst -q -d
+```
+
+  <p>ใช้ชื่อที่เห็นใน output ตรงๆ ใน <code>db_driver</code> ใน <code>.env</code></p>
+</InfoBox>
+
+<InfoBox title="Login failed for user 'sa'" type="warning">
+  <p><strong>สาเหตุ:</strong> password ผิด หรือ SQL Server Authentication ถูกปิด</p>
+  <p><strong>แก้:</strong> ตรวจสอบ password ใน <code>.env</code> ให้ตรงกับที่ใช้ตอน <code>docker run</code></p>
+</InfoBox>
+
+<InfoBox title="Connection refused หรือ [08001]" type="warning">
+  <p><strong>สาเหตุ:</strong> SQL Server container ยังไม่ได้ start หรือ port 1433 ไม่ได้ map</p>
+  <p><strong>แก้:</strong></p>
+
+```bash
+docker ps  # ตรวจสอบ container status
+docker start sqlserver  # ถ้า container หยุดอยู่
+```
+
+</InfoBox>
+
+---
+
+## ส่วนที่ 12 — โครงสร้าง Project
+
+ก่อนรัน frontend ให้ตรวจสอบโครงสร้าง project:
+
+```
+project-root/
+├── .env                  # environment variables (ไม่ commit ขึ้น Git)
+├── .gitignore
+├── config.py             # application settings
+├── database.py           # database connection
+├── main.py               # FastAPI application
+├── requirements.txt      # Python dependencies
+├── backup/
+│   └── INVS.bak          # ไฟล์ backup (ไม่ควร commit ขึ้น Git)
+└── frontend/
+    ├── package.json
+    ├── vite.config.js
+    └── src/
+        └── ...
+```
+
+สร้าง `requirements.txt` สำหรับ reproducibility:
+
+```bash
+pip freeze > requirements.txt
+```
+
+---
+
+## ส่วนที่ 13 — รัน Frontend
+
+### 13.1 เข้าโฟลเดอร์ Frontend และติดตั้ง Package
+
+```bash
+cd frontend
+npm install
+```
+
+กระบวนการนี้จะสร้างโฟลเดอร์ `node_modules` และติดตั้ง dependency ทั้งหมดตาม `package.json`
+
+### 13.2 แก้ปัญหา Permission ของ Vite
+
+<InfoBox title="Permission denied สำหรับ Vite" type="warning">
+  <p>macOS บางเครื่องเจอ error <code>sh: vite: Permission denied</code> แก้ด้วย:</p>
+
+```bash
+chmod +x node_modules/.bin/vite
+```
+
+  <p>ถ้ายังไม่หาย:</p>
+
+```bash
+rm -rf node_modules
+npm install
+```
+
+</InfoBox>
+
+### 13.3 ตั้งค่า API URL ใน Frontend
+
+ตรวจสอบว่า frontend ชี้ไปที่ backend ถูกต้อง ปกติจะอยู่ในไฟล์ `.env` ของ frontend หรือใน `vite.config.js`:
+
+```javascript
+// vite.config.js
+export default {
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8000',
+    },
+  },
+}
+```
+
+### 13.4 รัน Development Server
+
+```bash
+npm run dev
+```
+
+ผลลัพธ์:
+
+```
+  VITE v5.0.0  ready in 234 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+```
+
+เปิด browser ที่ `http://localhost:5173`
+
+---
+
+## ส่วนที่ 14 — ทำให้ Docker Container รอดหลัง Restart
+
+### 14.1 ปัญหาที่จะเจอ
+
+<NarrativeSection>
+
+เมื่อ restart เครื่อง Docker container จะหยุดทำงาน แต่ข้อมูลที่ restore ไว้จะยังอยู่ (ถ้าไม่ได้ลบ container) เพียงแค่รัน container ใหม่:
+
+</NarrativeSection>
+
+```bash
+docker start sqlserver
+```
+
+### 14.2 ตั้งค่าให้ Container Start อัตโนมัติ
+
+```bash
+docker update --restart unless-stopped sqlserver
+```
+
+<InfoBox title="Auto-start สำเร็จ" type="success">
+  <p>หลังจากนี้ container จะ start อัตโนมัติเมื่อ Docker Desktop เปิด และเมื่อ restart เครื่อง</p>
+</InfoBox>
+
+---
+
+## ส่วนที่ 15 — สรุปภาพรวมระบบ
+
+เมื่อทุกอย่างเสร็จสมบูรณ์ระบบมีโครงสร้างดังนี้:
+
+```
+macOS
+├── Docker Desktop
+│   └── Container: sqlserver (port 1433)
+│       └── SQL Server 2022
+│           └── Database: INVS
+│               ├── warehouse
+│               ├── drug_item
+│               └── stock_transaction
+│
+├── Python (FastAPI + uvicorn)  →  http://localhost:8000
+│   ├── /health
+│   ├── /health/db
+│   ├── /docs (Swagger UI)
+│   └── /api/warehouses
+│
+└── Node.js (Vite + Vue/React)  →  http://localhost:5173
+    └── เรียก API ผ่าน localhost:8000
+```
+
+### ขั้นตอนเริ่มระบบใหม่ทุกครั้ง
+
+```bash
+# 1. เริ่ม SQL Server
+docker start sqlserver
+
+# 2. เริ่ม Backend (ใน terminal 1)
+source .venv/bin/activate
+python main.py
+
+# 3. เริ่ม Frontend (ใน terminal 2)
+cd frontend
+npm run dev
+```
+
+---
+
+## Appendix — คำสั่งที่ใช้บ่อย
+
+### Docker
+
+```bash
+# ดูสถานะ container ทั้งหมด
+docker ps -a
+
+# ดู log ของ SQL Server
+docker logs sqlserver
+
+# หยุด container
+docker stop sqlserver
+
+# เริ่ม container ที่หยุดอยู่
+docker start sqlserver
+
+# เข้าไปใน container (shell)
+docker exec -it sqlserver bash
+
+# รัน sqlcmd ใน container
+docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd \
+  -S localhost -U sa -P "StrongPassword123!"
+```
+
+### SQL Server
+
+```sql
+-- ดู database ทั้งหมด
+SELECT name, state_desc FROM sys.databases
+
+-- เปลี่ยน database
+USE INVS
+
+-- ดูตารางทั้งหมด
+SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
+
+-- ดู column ของตาราง
+SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'warehouse'
+```
+
+### Python
+
+```bash
+# ตรวจสอบ ODBC driver
+odbcinst -q -d
+
+# ทดสอบ connection จาก Python
+python3 -c "
+import pyodbc
+conn = pyodbc.connect(
+    'DRIVER={ODBC Driver 17 for SQL Server};'
+    'SERVER=localhost,1433;DATABASE=INVS;'
+    'UID=sa;PWD=StrongPassword123!;'
+    'TrustServerCertificate=yes;'
+)
+print('Connected:', conn)
+conn.close()
+"
+```
