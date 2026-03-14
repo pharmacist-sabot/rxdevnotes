@@ -1,0 +1,86 @@
+---
+import BlogPostCard from '@/components/blog/BlogPostCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getAllBlogPosts } from '@/lib/blog';
+
+const allPosts = await getAllBlogPosts();
+const invsPosts = allPosts
+  .filter(post => post.data.category === 'INVS')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="INVS Resources">
+  <div class="page-container">
+    <h1 class="page-title">INVS</h1>
+    <p class="page-subtitle">
+      พื้นที่สำหรับรวบรวมเครื่องมือ คู่มือ และบันทึกต่าง ๆ ที่เกี่ยวข้องกับระบบคลังยา INVS
+    </p>
+
+    {invsPosts.length > 0
+? (
+      <div class="post-grid">
+        {invsPosts.map(post => (
+          <BlogPostCard post={post} />
+        ))}
+      </div>
+    )
+: (
+      <div class="status-box">
+        <p>Coming Soon</p>
+      </div>
+    )}
+
+    <a href="/blog" class="cta-button">Back to Blog</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-container {
+    text-align: center;
+    padding: 4rem 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 1.25rem;
+    color: var(--font-color-light);
+    margin-bottom: 3rem;
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 420px));
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    text-align: left;
+  }
+
+  @media (max-width: 400px) {
+    .post-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .status-box {
+    border: 2px dashed var(--card-border-color);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .status-box p {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    color: var(--font-color-light);
+    margin: 0;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+</style>
