@@ -1,3 +1,9 @@
+## [1.8.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.8.0...v1.8.1) (2026-03-21)
+
+### 📝 Documentation
+
+* update README formatting and headings ([bb91537](https://github.com/pharmacist-sabot/rxdevnotes/commit/bb9153776b0c7e7c6c67e5fe85c1f268b0e5f24d))
+
 ## [1.8.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.7.0...v1.8.0) (2026-03-14)
 
 ### 🚀 New Features
