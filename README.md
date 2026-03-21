@@ -1,9 +1,9 @@
-# 🧠 RxDev Man
+# RxDev Man
 
 > **The Developer's Living Knowledge Base.**
 > A high-performance, interactive knowledge graph built for modern software engineers.
 
-🌐 **[Live Demo: rxdevman.com](https://www.rxdevman.com/)**
+**[Live Demo: rxdevman.com](https://www.rxdevman.com/)**
 
 ![Astro](https://img.shields.io/badge/Astro-5.0-FF5D01?style=flat&logo=astro)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat&logo=typescript)
@@ -15,9 +15,9 @@
 
 ---
 
-## 🔑 Key Features
+## Key Features
 
-### 📚 Rich Content Experience
+### Rich Content Experience
 
 - **MDX-Powered**: Author content in Markdown with the power of embedded components.
 - **Interactive Blocks**:
@@ -27,20 +27,20 @@
   - `<GitCommand />`: Copy-paste friendly terminal snippets.
 - **Syntax Highlighting**: Beautiful code blocks powered by Shiki (GitHub Dark theme).
 
-### ⚡ Performance & Architecture
+### Performance & Architecture
 
 - **Zero-JS by Default**: HTML-first rendering for optimal SEO and load times.
 - **Hybrid Rendering**: Static Site Generation (SSG) for content, with Server-Side Rendering (SSR) capabilities for dynamic features.
 - **Client-Side Search**: Instant, typo-tolerant search using **Pagefind**.
 
-### 📊 Analytics & Data
+### Analytics & Data
 
 - **Real-Time View Counts**: Integrated with **Supabase** to track article engagement.
 - **Type-Safe Content**: Validated frontmatter schemas using **Zod**.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category     | Technology                                    | Usage                       |
 | ------------ | --------------------------------------------- | --------------------------- |
@@ -55,7 +55,7 @@
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 /
@@ -80,7 +80,7 @@
 
 ---
 
-## 🧞 Getting Started
+## Getting Started
 
 Follow these steps to set up the project locally.
 
@@ -149,7 +149,7 @@ This command will:
 
 ---
 
-## 🎯 Roadmap
+## Roadmap
 
 - [ ] **Dark Mode Toggle**: User-selectable theme preferences
 - [ ] **Tag System**: Filter articles by technology/topic
@@ -161,7 +161,7 @@ This command will:
 
 ---
 
-## 📝 Contributing
+## Contributing
 
 We welcome contributions from the community!
 
@@ -173,7 +173,7 @@ We welcome contributions from the community!
 
 ---
 
-## 📜 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
