@@ -58,7 +58,7 @@
     40px 0 0 #27c93f;
 }
 
-/* Code inside pre - with line numbers */
+/* Code inside pre */
 .prose pre > code {
   background: none;
   padding: 0;
@@ -66,28 +66,13 @@
   font-size: inherit;
   line-height: inherit;
   display: block;
-  counter-reset: line;
 }
 
-/* Each line gets a line number */
+/* Each line */
 .prose pre > code > .line {
   display: block;
-  padding-left: 3.2rem;
   position: relative;
-  counter-increment: line;
   min-height: 1.2em;
-}
-
-.prose pre > code > .line::before {
-  content: counter(line);
-  position: absolute;
-  left: 0;
-  width: 1.8rem;
-  padding-right: 0.5rem;
-  text-align: right;
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 0.8em;
-  user-select: none;
 }
 
 /* Mobile adjustments */
