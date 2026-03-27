@@ -1,3 +1,9 @@
+## [1.9.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.8.1...v1.9.0) (2026-03-27)
+
+### 🚀 New Features
+
+* add new blog post on Windows delete file commands and update package lock ([c2d2db1](https://github.com/pharmacist-sabot/rxdevnotes/commit/c2d2db177d7b6345f65f4efc6c169c8e1df6d365))
+
 ## [1.8.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.8.0...v1.8.1) (2026-03-21)
 
 ### 📝 Documentation
