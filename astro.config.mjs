@@ -8,6 +8,9 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://rxdevman.com',
+  security: {
+    checkOrigin: false,
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
