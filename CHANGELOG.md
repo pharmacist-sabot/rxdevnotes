@@ -1,3 +1,9 @@
+## [1.9.2](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.9.1...v1.9.2) (2026-03-28)
+
+### ♻️ Refactoring
+
+* improve error handling and standardize JSON response formats for view API endpoints ([bd6133e](https://github.com/pharmacist-sabot/rxdevnotes/commit/bd6133e1d3e5acb6bf90f2fac9c183cfe18a4199))
+
 ## [1.9.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.9.0...v1.9.1) (2026-03-28)
 
 ### 📝 Documentation
