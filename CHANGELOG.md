@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.9.0...v1.9.1) (2026-03-28)
+
+### 📝 Documentation
+
+* remove table in article windows-delete-files-commands ([139a9db](https://github.com/pharmacist-sabot/rxdevnotes/commit/139a9dbc3d2adf8c27b9794fb7d23c71fcff323e))
+
 ## [1.9.0](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.8.1...v1.9.0) (2026-03-27)
 
 ### 🚀 New Features
