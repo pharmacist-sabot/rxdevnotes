@@ -1,3 +1,9 @@
+## [1.9.3](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.9.2...v1.9.3) (2026-03-28)
+
+### 🐛 Bug Fixes
+
+* disable checkOrigin for CSRF protection from www subdomain ([75d66e2](https://github.com/pharmacist-sabot/rxdevnotes/commit/75d66e2aa9edd861997686d8509ad349c9d62a77))
+
 ## [1.9.2](https://github.com/pharmacist-sabot/rxdevnotes/compare/v1.9.1...v1.9.2) (2026-03-28)
 
 ### ♻️ Refactoring
