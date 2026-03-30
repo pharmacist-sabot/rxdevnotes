@@ -73,7 +73,7 @@ export const POST: APIRoute = async ({ params }) => {
   }
   catch (err) {
     console.error('Unexpected POST views error:', err);
-    return new Response(JSON.stringify({ error: 'Internal server error', details: err instanceof Error ? err.message : err }), {
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
