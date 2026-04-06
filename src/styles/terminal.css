@@ -24,7 +24,7 @@
 
 /* Terminal Header Bar */
 .prose pre::before {
-  content: 'RxDev Man';
+  content: 'rxdevman';
   position: absolute;
   top: 0;
   left: 0;

@@ -22,7 +22,10 @@ const currentYear = new Date().getFullYear();
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{`${title} | RxDev Man`}</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#232748" />
+    <title>{`${title} | rxdevman`}</title>
     <slot name="head" />
   </head>
   <body>
@@ -36,7 +39,7 @@ const currentYear = new Date().getFullYear();
     <footer class="site-footer">
       <div class="container footer-container">
         <div class="footer-about">
-          <h3 class="footer-title">RxDev Man</h3>
+          <h3 class="footer-title"><span class="footer-rx">rx</span><span class="footer-devman">devman</span></h3>
           <p>
             เริ่มต้นจากเภสัชกรรม สู่ความหลงใหลในการพัฒนา
             บันทึกการเดินทางจากวงการสุขภาพสู่โลกเทคโนโลยี
@@ -56,7 +59,7 @@ const currentYear = new Date().getFullYear();
           </ul>
         </div>
         <div class="footer-bottom">
-          <p>&copy; {currentYear} RxDev Man. All rights reserved.</p>
+          <p>&copy; {currentYear} rxdevman. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -76,15 +79,22 @@ const currentYear = new Date().getFullYear();
         gap: 2rem;
       }
       .footer-title {
-        font-family: var(--font-serif);
-        color: var(--font-color);
-        font-size: 1.5rem;
+        font-family: var(--font-sans);
+        font-size: 1.125rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
         margin-bottom: 0.5rem;
+      }
+      .footer-rx {
+        color: #4b63c5;
+      }
+      .footer-devman {
+        color: #232748;
       }
       .footer-about p {
         color: var(--font-color-light);
         max-width: 400px;
-        font-size: 1rem;
+        font-size: 0.875rem;
       }
       .footer-subtitle {
         font-family: var(--font-sans);
@@ -103,6 +113,7 @@ const currentYear = new Date().getFullYear();
       .footer-links a {
         color: var(--font-color-light);
         text-decoration: none;
+        font-size: 0.875rem;
         transition: color 0.2s ease;
       }
       .footer-links a:hover {
@@ -114,7 +125,7 @@ const currentYear = new Date().getFullYear();
         margin-top: 2rem;
         padding-top: 2rem;
         border-top: 1px solid var(--card-border-color);
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         color: var(--font-color-light);
       }
 
