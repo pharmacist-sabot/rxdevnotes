@@ -1,3 +1,14 @@
+## [1.10.0](https://github.com/pharmacist-sabot/rxdevman/compare/v1.9.3...v1.10.0) (2026-04-06)
+
+### 🚀 New Features
+
+* rebrand to rxdevman with new logo, icons, manifest, and updated typography and layout styles ([#12](https://github.com/pharmacist-sabot/rxdevman/issues/12)) ([4fb0c57](https://github.com/pharmacist-sabot/rxdevman/commit/4fb0c57bc6a024d10f7d3e5f2ff1258384b25a3a))
+
+### 📦 Dependency Updates
+
+* configure vercel security headers ([75398b9](https://github.com/pharmacist-sabot/rxdevman/commit/75398b9257c660a3768f4a037bde2dd67024d55e))
+* update repository references from rxdevnotes to rxdevman in documentation ([6794bea](https://github.com/pharmacist-sabot/rxdevman/commit/6794bea4cab7dfa69be99b3ba93a9056d4ec9cb6))
+
 ## [1.9.3](https://github.com/pharmacist-sabot/rxdevman/compare/v1.9.2...v1.9.3) (2026-03-28)
 
 ### 🐛 Bug Fixes
