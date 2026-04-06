@@ -94,8 +94,8 @@ Follow these steps to set up the project locally.
 1.  **Clone the repository**
 
     ```bash
-    git clone https://github.com/pharmacist-sabot/rxdevnotes.git
-    cd rxdevnotes
+    git clone https://github.com/pharmacist-sabot/rxdevman.git
+    cd rxdevman
     ```
 
 2.  **Install dependencies**
