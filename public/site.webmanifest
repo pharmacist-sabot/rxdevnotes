@@ -1,0 +1,22 @@
+{
+  "name": "rxdevman",
+  "short_name": "rxdevman",
+  "description": "A developer's living knowledge base, curated by a pharmacist turned programmer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2f5fc",
+  "theme_color": "#232748",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

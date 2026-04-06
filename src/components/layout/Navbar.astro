@@ -3,12 +3,27 @@
 ---
 <header class="navbar" id="navbar">
   <div class="navbar-container container">
-    <a href="/" class="logo" aria-label="RxDev Man Homepage">
-      <svg width="48" height="48" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 24h40c26 0 40 16 40 40s-14 40-40 40H24V24Z" stroke="currentColor" stroke-width="6" fill="none" />
-        <path d="M64 44v40l16-20-16-20Z" fill="currentColor" />
+    <a href="/" class="logo" aria-label="rxdevman Homepage">
+      <svg class="logo-svg" width="40" height="40" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g transform="translate(5, 5) scale(0.95)">
+          <path
+            d="M60 50 V150 M60 50 H110 C135 50 145 70 145 85 C145 105 130 115 110 115 H60 M110 115 L145 150"
+            fill="none"
+            stroke="#232748"
+            stroke-width="14"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M92 73 L112 93 M112 73 L92 93"
+            fill="none"
+            stroke="#7e9ddc"
+            stroke-width="12"
+            stroke-linecap="round"
+          />
+        </g>
       </svg>
-      <span class="logo-text">RxDev Man</span>
+      <span class="logo-text"><span class="logo-rx">rx</span><span class="logo-devman">devman</span></span>
     </a>
 
     <nav class="nav-links" id="nav-links">
@@ -74,6 +89,7 @@ window.addEventListener('scroll', () => {
   }
 
   .navbar-container {
+    --nav-font-size: 1.125rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -96,19 +112,25 @@ window.addEventListener('scroll', () => {
   }
   .logo-text {
     font-family: var(--font-sans);
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--font-color);
-    transition: color 0.2s ease;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    transition: opacity 0.2s ease;
+  }
+  .logo-rx {
+    color: #4b63c5;
+  }
+  .logo-devman {
+    color: #232748;
   }
   .logo:hover .logo-text {
-    color: var(--brand-color);
+    opacity: 0.8;
   }
 
   .nav-links {
     display: flex;
     gap: 2.5rem;
-     font-size: 1.2rem;
+    font-size: var(--nav-font-size);
   }
   .nav-links a {
     color: var(--font-color);
@@ -168,8 +190,13 @@ window.addEventListener('scroll', () => {
   }
 
   @media (max-width: 768px) {
+    .navbar-container {
+      --nav-font-size: 1.2rem;
+    }
     .nav-links {
-      display: none;
+      display: flex;
+      visibility: hidden;
+      pointer-events: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -181,15 +208,17 @@ window.addEventListener('scroll', () => {
       height: 100vh;
       background: var(--card-bg-color);
       transform: translateX(100%);
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s;
       z-index: 1000;
     }
     .nav-links.active {
       display: flex;
+      visibility: visible;
+      pointer-events: auto;
       transform: translateX(0);
     }
     .nav-links a {
-      font-size: 1.2rem;
+      font-size: var(--nav-font-size);
     }
     .hamburger {
       display: flex;
