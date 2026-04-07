@@ -1,3 +1,13 @@
+## [1.10.2](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.1...v1.10.2) (2026-04-07)
+
+### 📦 Dependency Updates
+
+* **package:** update dependencies @astrojs/vercel to v.10.0.4 ([3328b08](https://github.com/pharmacist-sabot/rxdevman/commit/3328b08f406e2cf04cf63cdc62459df8554502c0))
+
+### ♻️ Refactoring
+
+* migrate to Astro 6 content layer ([cdfddd1](https://github.com/pharmacist-sabot/rxdevman/commit/cdfddd1964015c1d615a212f36e6b208a0b6a598))
+
 ## [1.10.1](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.0...v1.10.1) (2026-04-07)
 
 ### 📝 Documentation
