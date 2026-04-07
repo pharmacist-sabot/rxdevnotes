@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.0...v1.10.1) (2026-04-07)
+
+### 📝 Documentation
+
+* update benefits of touch typing article ([fc7ccac](https://github.com/pharmacist-sabot/rxdevman/commit/fc7ccac8c277b37edabfc6b06493e453702861d5))
+
 ## [1.10.0](https://github.com/pharmacist-sabot/rxdevman/compare/v1.9.3...v1.10.0) (2026-04-06)
 
 ### 🚀 New Features
