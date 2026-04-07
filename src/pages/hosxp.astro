@@ -3,34 +3,35 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="HOSxP Resources">
-  <div class="page-container">
-    <h1 class="page-title">HOSxP</h1>
-    <p class="page-subtitle">
-      พื้นที่สำหรับรวบรวมเครื่องมือ คู่มือ และบันทึกต่าง ๆ ที่เกี่ยวข้องกับการพัฒนา HOSxP
+  <div class="container hosxp-container">
+    <h1 class="hosxp-title">HOSxP</h1>
+    <p class="hosxp-subtitle">
+      พื้นที่สำหรับรวบรวมเครื่องมือ คู่มือ และบันทึกต่าง ๆ ที่เกี่ยวข้องกับการพัฒนาโปรแกรม HOSxP
     </p>
-    <div class="status-box">
+
+    <div class="status-box" role="status" aria-live="polite">
       <p>Coming Soon</p>
     </div>
+
     <a href="/blog" class="cta-button">Back to Blog</a>
   </div>
 </BaseLayout>
 
 <style>
-  .page-container {
+  .hosxp-container {
     text-align: center;
-    padding: 4rem 0;
-    max-width: 700px;
-    margin: 0 auto;
+    /* .container provides max-width and centering */
+    padding-block: var(--space-12);
   }
 
-  .page-title {
-    margin-bottom: 0.5rem;
+  .hosxp-title {
+    margin-bottom: var(--space-2);
   }
 
-  .page-subtitle {
+  .hosxp-subtitle {
     font-size: var(--text-base);
     color: var(--font-color-light);
-    margin-bottom: var(--space-12);
+    margin-bottom: var(--space-8);
   }
 
   .status-box {
