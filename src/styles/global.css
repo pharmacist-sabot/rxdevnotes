@@ -58,6 +58,10 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
+
+  /* --- Layout widths --- */
+  --container-max-width: 1200px;
+  --prose-max-width: 800px;
 }
 
 /* ==============================================
@@ -174,7 +178,7 @@
 @layer components {
   /* --- Layout: Container --- */
   .container {
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
     padding: 0 var(--space-6);
   }
@@ -265,7 +269,7 @@
      All child rules scoped under .prose.
      ----------------------------------------------- */
   .prose {
-    max-width: 800px;
+    max-width: var(--prose-max-width);
     margin: 0 auto;
     overflow-wrap: break-word;
     word-wrap: break-word;
