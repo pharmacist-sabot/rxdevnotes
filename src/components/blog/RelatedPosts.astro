@@ -5,6 +5,7 @@ import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 
 import { calculateReadingTime } from '@/utils/reading-time';
+import { getEntrySlug } from '@/utils/slugify';
 
 type Props = {
   relatedPosts: CollectionEntry<'blog'>[];
@@ -13,6 +14,7 @@ type Props = {
 const { relatedPosts } = Astro.props;
 
 const processed = relatedPosts.map((post) => {
+  const slug = getEntrySlug(post.id);
   const { title, pubDate, category, heroImage, description } = post.data;
 
   // Guard date parsing — fall back gracefully on invalid dates
@@ -40,9 +42,9 @@ throw new Error('Invalid date');
   const excerpt = description || bodyExcerpt;
 
   return {
-    slug: post.slug,
+    slug,
     title,
-    href: `/blog/${post.slug}`,
+    href: `/blog/${slug}`,
     category,
     heroImage: heroImage ?? undefined,
     excerpt,

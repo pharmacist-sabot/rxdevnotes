@@ -1,5 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
 
+import { getEntrySlug } from '@/utils/slugify';
+
 /**
  * Safely parse a date, returning 0 for invalid dates
  */
@@ -24,7 +26,7 @@ export function getRelatedPosts(
 ): CollectionEntry<'blog'>[] {
   // Filter out the current post and posts without valid pubDate
   const otherPosts = allPosts.filter(
-    post => post.slug !== currentSlug && post.data.pubDate,
+    post => getEntrySlug(post.id) !== currentSlug && post.data.pubDate,
   );
 
   // Calculate scores for each post
