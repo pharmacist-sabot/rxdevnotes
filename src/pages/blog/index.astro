@@ -17,7 +17,7 @@ const sortedPosts = allPosts.sort(
 ---
 <BaseLayout title="All Articles">
   <div class="blog-header">
-    <h1>All Articles</h1>
+    <h3>All Articles</h3>
     <p>
      แหล่งรวบรวมทุกสิ่งที่ผมเขียนไว้ ลองอ่านบันทึกของผมเกี่ยวกับการพัฒนาเว็บ แนวทางปฏิบัติที่ดีที่สุด และสิ่งที่ผมค้นพบด้วยตัวเอง
     </p>
@@ -37,12 +37,13 @@ const sortedPosts = allPosts.sort(
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+    padding: 4rem 0;
   }
   .blog-header h1 {
     margin-bottom: 0.5rem;
   }
   .blog-header p {
-    font-size: 0.875rem;
+    font-size: var(--text-base);
     color: var(--font-color-light);
   }
 

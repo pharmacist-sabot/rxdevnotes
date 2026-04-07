@@ -211,7 +211,7 @@ const platforms = [
     padding: 1.75rem 1.5rem;
     background: var(--card-bg-color);
     border: 1px solid var(--card-border-color);
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     box-shadow:
       0 4px 6px -1px var(--shadow-color),
       0 2px 4px -1px var(--shadow-color);
@@ -335,11 +335,11 @@ const platforms = [
   }
 
   .copy-btn.copied {
-    color: var(--success-color) !important;
-    background-color: rgba(16, 185, 129, 0.12) !important;
-    border-color: var(--success-color) !important;
-    transform: translateY(-3px) scale(1.08) !important;
-    box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.3) !important;
+    color: var(--success-color);
+    background-color: rgba(16, 185, 129, 0.12);
+    border-color: var(--success-color);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.3);
   }
 
   .copy-btn.copied .icon-check {
@@ -433,7 +433,7 @@ const platforms = [
   @media (max-width: 480px) {
     .share-wrapper {
       padding: 1.5rem 1rem;
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
     }
 
     .share-btn {

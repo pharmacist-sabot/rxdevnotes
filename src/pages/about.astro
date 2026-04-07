@@ -6,8 +6,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   <div class="about-page-container">
     <div class="about-grid">
       <div class="text-content">
-        <h1>จากเภสัชกรสู่โปรแกรมเมอร์</h1>
-        <p class="lead">
+        <h3>จากเภสัชกรสู่โปรแกรมเมอร์</h3>
+        <p>
           เส้นทางของผมเริ่มต้นที่เคาน์เตอร์จ่ายยาท่ามกลางใบสั่งยาและการดูแลผู้ป่วย
           มาวันนี้ผมเปลี่ยนมาสร้างสรรค์โซลูชันดิจิทัล เขียนโค้ดที่สะอาดตา
           และออกแบบประสบการณ์ผู้ใช้ที่เข้าใจง่าย
@@ -30,7 +30,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
           และเผยแพร่แหล่งข้อมูลที่เป็นประโยชน์ซึ่งผมได้ใช้ตลอดเส้นทางนี้
         </p>
 
-        <h2>ช่องทางการติดต่อ</h2>
+        <h3>ช่องทางการติดต่อ</h3>
         <p>
           ผมเปิดรับการพูดคุยเกี่ยวกับโปรเจกต์ใหม่ๆ แลกเปลี่ยนความรู้
           หรือเรื่องราวเกี่ยวกับเทคโนโลยีเสมอ อย่าลังเลที่จะติดต่อมานะครับ
@@ -65,27 +65,20 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .about-page-container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 4rem 1.5rem;
+    padding: 4rem var(--space-6);
   }
 
   .about-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 3rem;
+    gap: var(--space-12);
     align-items: start;
   }
 
-  .lead {
-    font-size: 0.875rem;
-    color: var(--font-color);
-    margin-bottom: 2rem;
-    line-height: 1.6;
-  }
-
   h2 {
-    margin-top: 2.5rem;
+    margin-top: var(--space-10);
     border-top: 1px solid var(--card-border-color);
-    padding-top: 2rem;
+    padding-top: var(--space-8);
   }
 
   .image-content {
@@ -94,7 +87,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
 
   .profile-image-about {
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     width: 100%;
     border: 1px solid var(--card-border-color);
     box-shadow: 0 8px 25px var(--shadow-hover-color);
@@ -103,8 +96,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   .social-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
   }
 
   .social-link {
@@ -112,7 +105,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border: 1px solid var(--card-border-color);
     color: var(--font-color);
     padding: 0.5rem 1.2rem;
-    border-radius: 99px;
+    border-radius: var(--radius-full);
     font-weight: 500;
     transition: all 0.2s ease;
   }
@@ -122,10 +115,23 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     color: var(--card-bg-color);
     transform: translateY(-2px);
   }
+  .social-link:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .social-link {
+      transition: none;
+    }
+    .social-link:hover {
+      transform: none;
+    }
+  }
 
   @media (max-width: 768px) {
     .about-page-container {
-      padding: 2rem 1.5rem;
+      padding: var(--space-8) var(--space-6);
     }
     .about-grid {
       grid-template-columns: 1fr;

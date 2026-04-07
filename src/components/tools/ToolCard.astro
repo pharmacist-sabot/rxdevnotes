@@ -14,7 +14,7 @@ const { title, description, href, icon } = Astro.props;
     <Icon name={icon} class="card-icon" />
   </div>
   <div class="text-content">
-    <h3>{title}</h3>
+    <h4>{title}</h4>
     <p>{description}</p>
   </div>
   <span class="cta-arrow">&rarr;</span>
@@ -34,13 +34,13 @@ const { title, description, href, icon } = Astro.props;
     display: grid;
     place-items: center;
     background-color: color-mix(in srgb, var(--brand-color) 10%, transparent);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
   }
   .card-icon {
     font-size: 1.75rem;
     color: var(--brand-color);
   }
-  h3 {
+  h4 {
     margin: 0 0 0.25rem;
   }
   p {
@@ -56,5 +56,18 @@ const { title, description, href, icon } = Astro.props;
   .tool-card:hover .cta-arrow {
     color: var(--brand-color);
     transform: translateX(5px);
+  }
+  .tool-card:focus-visible {
+    outline: 3px solid var(--brand-color);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-arrow {
+      transition: none;
+    }
+    .tool-card:hover .cta-arrow {
+      transform: none;
+    }
   }
 </style>

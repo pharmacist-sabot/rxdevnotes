@@ -33,15 +33,15 @@ const icons = {
     /* Layout: Inline Block (Stable) */
     position: relative;
     display: flex;
-    gap: 1.25rem;
-    margin: 2.5rem 0;
+    gap: var(--space-5);
+    margin: var(--space-10) 0;
 
     /* Decoration: Minimalist left border */
-    padding-left: 1.5rem;
+    padding-left: var(--space-6);
     border-left: 3px solid var(--card-border-color);
 
     /* Typography */
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
     line-height: 1.7;
     color: var(--font-color-light);
     font-family: var(--font-sans);
@@ -108,10 +108,10 @@ const icons = {
   @media (max-width: 768px) {
     .side-note {
       width: 100%; /* Full width for mobile */
-      margin: 1.5rem 0;
-      gap: 1rem;
-      padding-left: 1rem;
-      font-size: 0.9rem;
+      margin: var(--space-6) 0;
+      gap: var(--space-4);
+      padding-left: var(--space-4);
+      font-size: var(--text-xs);
     }
   }
 </style>

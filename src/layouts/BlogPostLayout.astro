@@ -139,12 +139,12 @@ const preloadHero = heroImage
 
   .post-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-12);
   }
   .category-link {
     font-family: var(--font-mono);
     text-transform: uppercase;
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     font-weight: 500;
     color: var(--font-color-light);
     letter-spacing: 0.05em;
@@ -154,16 +154,16 @@ const preloadHero = heroImage
   }
   h1 {
     margin: 0.5rem 0 1rem;
-    font-size: 1.125rem;
+    font-size: var(--text-2xl);
   }
   .description {
-    font-size: 0.875rem;
+    font-size: var(--text-sm);
     color: var(--font-color);
     max-width: 680px;
     margin: 0 auto 1.5rem;
   }
   .meta {
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     color: var(--font-color-light);
     font-family: var(--font-sans);
     display: flex;
@@ -201,16 +201,26 @@ const preloadHero = heroImage
   .tag-chip {
     background: var(--card-bg-color);
     border: 1px solid var(--card-border-color);
-    padding: 0.4rem 1rem;
-    border-radius: 99px;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
     color: var(--font-color-light);
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     transition: all 0.2s ease;
   }
   .tag-chip:hover {
     background: var(--font-color);
     border-color: var(--font-color);
     color: var(--card-bg-color);
+  }
+  .tag-chip:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-chip {
+      transition: none;
+    }
   }
 
   @media (max-width: 1024px) {

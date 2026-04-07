@@ -1,6 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* ==============================================
+   rxdevman — Global Stylesheet
+   Cascade order: reset → base → components → utilities → overrides
+   Fonts are loaded via <link> in BaseLayout.astro (no @import)
+   ============================================== */
+
+@layer reset, base, components, utilities, overrides;
+
+/* ==============================================
+   Design Tokens
+   All colors, spacing, radii, and typography are
+   defined here. Never hardcode these values elsewhere.
+   ============================================== */
 
 :root {
+  /* --- Colors --- */
   --brand-color: #4b63c5;
   --accent-color: #7e9ddc;
   --font-color: #232748;
@@ -8,230 +21,350 @@
   --bg-color: #f2f5fc;
   --card-bg-color: #ffffff;
   --card-border-color: #e2e9f7;
-
   --shadow-color: rgba(75, 99, 197, 0.08);
   --shadow-hover-color: rgba(75, 99, 197, 0.15);
 
-  /* Semantic Colors */
+  /* --- Semantic Colors --- */
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --danger-color: #ef4444;
 
-  /* Typography */
+  /* --- Typography — Font Families --- */
   --font-sans: 'Prompt', system-ui, sans-serif;
   --font-serif: var(--font-sans);
   --font-mono: 'JetBrains Mono', monospace;
+
+  /* --- Typography — Fluid Text Scale --- */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.2vw, 0.95rem);
+  --text-base: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.3rem);
+  --text-xl: clamp(1.25rem, 1.15rem + 0.6vw, 1.6rem);
+  --text-2xl: clamp(1.5rem, 1.35rem + 0.8vw, 2rem);
+  --text-3xl: clamp(1.875rem, 1.65rem + 1.2vw, 2.75rem);
+
+  /* --- Spacing --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* --- Border Radii --- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ==============================================
+   @layer reset
+   Universal box-model reset. No opinionated styles.
+   ============================================== */
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-color);
-  color: var(--font-color);
-  line-height: 1.7;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ==============================================
+   @layer base
+   Raw HTML element defaults — no class selectors.
+   ============================================== */
+
+@layer base {
+  /* --- Document Body --- */
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-color);
+    color: var(--font-color);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* --- Heading Defaults --- */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+    line-height: 1.4;
+    font-weight: 700;
+    color: var(--font-color);
+    margin-bottom: var(--space-3);
+  }
+
+  /* --- Typography Hierarchy (CRITICAL — never set these to 1rem) --- */
+  h1 {
+    font-size: var(--text-3xl);
+  }
+  h2 {
+    font-size: var(--text-2xl);
+    margin-top: var(--space-10);
+  }
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+  }
+  h4 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+  h5 {
+    font-size: var(--text-base);
+    font-weight: 600;
+  }
+  h6 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  /* --- Paragraphs --- */
+  p {
+    margin-bottom: var(--space-5);
+    color: var(--font-color-light);
+    font-size: var(--text-base);
+    font-weight: 400;
+  }
+
+  /* --- Anchors --- */
+  a {
+    color: var(--brand-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--accent-color);
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: none;
+    }
+  }
+
+  /* --- Images --- */
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+  }
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
+/* ==============================================
+   @layer components
+   Reusable UI patterns. All values must use tokens.
+   ============================================== */
 
-@media (max-width: 768px) {
+@layer components {
+  /* --- Layout: Container --- */
   .container {
-    padding: 0 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
   }
-}
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-sans);
-  line-height: 1.4;
-  font-weight: 700;
-  color: var(--font-color);
-  margin-bottom: 0.75rem;
-}
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 var(--space-4);
+    }
+  }
 
-h1 {
-  font-size: 1rem;
-}
-
-h2 {
-  font-size: 1rem;
-  margin-top: 2.5rem;
-}
-
-h3 {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-h4 {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-p {
-  margin-bottom: 1.25rem;
-  color: var(--font-color-light);
-  font-size: 0.875rem;
-  font-weight: 400;
-}
-
-a {
-  color: var(--brand-color);
-  text-decoration: none;
-  transition: color 0.2s ease;
-  font-weight: 500;
-}
-
-a:hover {
-  color: var(--accent-color);
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 12px;
-}
-
-.card {
-  background: var(--card-bg-color);
-  border: 1px solid var(--card-border-color);
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow:
-    0 4px 6px -1px var(--shadow-color),
-    0 2px 4px -1px var(--shadow-color);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 10px 25px -5px var(--shadow-hover-color),
-    0 8px 10px -6px var(--shadow-hover-color);
-  border-color: var(--brand-color);
-}
-
-@media (max-width: 768px) {
+  /* -----------------------------------------------
+     Card Base
+     Specific cards (.blog-card, .tool-card, etc.)
+     must extend this class and only override layout
+     or content differences.
+     ----------------------------------------------- */
   .card {
-    padding: 1.25rem;
+    background: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: 0 4px 6px -1px var(--shadow-color);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
   }
-}
 
-.cta-button {
-  display: inline-block;
-  background-color: var(--brand-color);
-  color: #ffffff;
-  padding: 0.8rem 1.8rem;
-  border-radius: 99px;
-  font-weight: 500;
-  text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
-  box-shadow: 0 4px 6px rgba(75, 99, 197, 0.2);
-}
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px var(--shadow-hover-color);
+    border-color: var(--brand-color);
+  }
 
-.cta-button:hover {
-  background-color: var(--font-color);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(75, 99, 197, 0.3);
-}
+  @media (prefers-reduced-motion: reduce) {
+    .card {
+      transition: none;
+    }
 
-.prose {
-  max-width: 800px;
-  margin: 0 auto;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-}
+    .card:hover {
+      transform: none;
+    }
+  }
 
-.prose > :first-child {
-  margin-top: 0;
-}
+  /* --- CTA Button --- */
+  .cta-button {
+    display: inline-block;
+    background-color: var(--brand-color);
+    color: #ffffff;
+    padding: 0.8rem 1.8rem;
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px var(--shadow-hover-color);
+  }
 
-.prose h2,
-.prose h3 {
-  scroll-margin-top: 80px;
-}
+  .cta-button:hover {
+    background-color: var(--font-color);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--shadow-hover-color);
+  }
 
-.prose ul,
-.prose ol {
-  padding-left: 0;
-  margin-left: 1.8rem;
-  margin-bottom: 1.25rem;
-  color: var(--font-color-light);
-  list-style-position: outside;
-}
+  .cta-button:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 3px;
+    border-radius: var(--radius-full);
+  }
 
-.prose li {
-  margin-bottom: 0.75rem;
-  padding-left: 0.5rem;
-}
+  @media (prefers-reduced-motion: reduce) {
+    .cta-button {
+      transition: none;
+    }
 
-.prose code {
-  font-family: var(--font-mono);
-  background-color: var(--card-border-color);
-  color: var(--brand-color);
-  padding: 0.2em 0.4em;
-  border-radius: 6px;
-  font-size: 0.9em;
-  word-break: break-word;
-}
+    .cta-button:hover {
+      transform: none;
+    }
+  }
 
-.prose pre {
-  background-color: var(--font-color);
-  color: #f8fafc;
-  border: 1px solid var(--card-border-color);
-  padding: 1.5rem;
-  border-radius: 12px;
-  overflow-x: auto;
-  margin: 2rem 0;
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  font-weight: 400;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
+  /* -----------------------------------------------
+     Prose
+     Long-form MDX content container.
+     All child rules scoped under .prose.
+     ----------------------------------------------- */
+  .prose {
+    max-width: 800px;
+    margin: 0 auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
 
-@media (max-width: 900px) {
+  .prose > :first-child {
+    margin-top: 0;
+  }
+
+  .prose h2,
+  .prose h3 {
+    scroll-margin-top: 80px;
+  }
+
+  /* Lists */
+  .prose ul,
+  .prose ol {
+    padding-left: 0;
+    margin-left: var(--space-8);
+    margin-bottom: var(--space-5);
+    color: var(--font-color-light);
+    list-style-position: outside;
+  }
+
+  .prose li {
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-2);
+  }
+
+  /* Inline code */
+  .prose code {
+    font-family: var(--font-mono);
+    background-color: var(--card-border-color);
+    color: var(--brand-color);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius-sm);
+    font-size: 0.9em;
+    word-break: break-word;
+  }
+
+  /* Code blocks (base styles — terminal.css overrides these) */
   .prose pre {
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 8px;
+    background-color: var(--font-color);
+    color: #f8fafc;
+    border: 1px solid var(--card-border-color);
+    padding: var(--space-6);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--space-8) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    font-weight: 400;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  @media (max-width: 768px) {
+    .prose pre {
+      margin-left: 0;
+      margin-right: 0;
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  /* Reset code inside pre (inherits from block) */
+  .prose pre > code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
   }
 }
 
-.prose pre > code {
-  background: none;
-  padding: 0;
-  color: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
+/* ==============================================
+   @layer overrides
+   Third-party compatibility patches.
+   Use sparingly — document each override.
+   ============================================== */
 
-/* ป้องกัน Shiki theme ถูก override */
-.prose pre.shiki,
-.prose pre.shiki code {
-  background: unset !important;
-  color: unset !important;
+@layer overrides {
+  /*
+   * Shiki syntax highlighter compatibility.
+   * Prevents .prose pre base styles from bleeding into
+   * Shiki-rendered blocks which carry their own theme colors.
+   * Using specificity via @layer overrides instead of !important.
+   */
+  .prose pre.shiki,
+  .prose pre.shiki code {
+    background: unset;
+    color: unset;
+  }
 }
