@@ -40,8 +40,6 @@
   --text-base: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
   --text-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.3rem);
   --text-xl: clamp(1.25rem, 1.15rem + 0.6vw, 1.6rem);
-  --text-2xl: clamp(1.5rem, 1.35rem + 0.8vw, 2rem);
-  --text-3xl: clamp(1.875rem, 1.65rem + 1.2vw, 2.75rem);
 
   /* --- Spacing --- */
   --space-1: 0.25rem;
@@ -109,26 +107,20 @@
     margin-bottom: var(--space-3);
   }
 
-  /* --- Typography Hierarchy (CRITICAL — never set these to 1rem) --- */
+  /* --- Typography Hierarchy (3 levels only: h1 → xl, h2 → lg, h3 → base) --- */
   h1 {
-    font-size: var(--text-3xl);
+    font-size: var(--text-xl);
   }
   h2 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-lg);
     margin-top: var(--space-10);
   }
   h3 {
-    font-size: var(--text-xl);
-    font-weight: 600;
-  }
-  h4 {
-    font-size: var(--text-lg);
-    font-weight: 600;
-  }
-  h5 {
     font-size: var(--text-base);
     font-weight: 600;
   }
+  h4,
+  h5,
   h6 {
     font-size: var(--text-sm);
     font-weight: 600;
