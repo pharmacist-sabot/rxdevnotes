@@ -10,9 +10,9 @@ const invsPosts = allPosts
 ---
 
 <BaseLayout title="INVS Resources">
-  <div class="page-container">
-    <h1 class="page-title">INVS</h1>
-    <p class="page-subtitle">
+  <main class="container invs-container" role="main">
+    <h1 class="invs-title">INVS</h1>
+    <p class="invs-subtitle">
       พื้นที่สำหรับรวบรวมเครื่องมือ คู่มือ และบันทึกต่าง ๆ ที่เกี่ยวข้องกับโปรแกรมจัดซื้อและบริหารคลังเวชภัณฑ์ยา INVS
     </p>
 
@@ -25,31 +25,30 @@ const invsPosts = allPosts
       </div>
     )
 : (
-      <div class="status-box">
+      <div class="status-box" role="status" aria-live="polite">
         <p>Coming Soon</p>
       </div>
     )}
 
     <a href="/blog" class="cta-button">Back to Blog</a>
-  </div>
+  </main>
 </BaseLayout>
 
 <style>
-  .page-container {
+  .invs-container {
     text-align: center;
-    padding: 4rem 0;
-    max-width: 900px;
-    margin: 0 auto;
+    /* .container provides max-width and centering */
+    padding: var(--space-12) var(--space-6);
   }
 
-  .page-title {
-    margin-bottom: 0.5rem;
+  .invs-title {
+    margin-bottom: var(--space-2);
   }
 
-  .page-subtitle {
+  .invs-subtitle {
     font-size: var(--text-base);
     color: var(--font-color-light);
-    margin-bottom: var(--space-12);
+    margin-bottom: var(--space-8);
   }
 
   .post-grid {
