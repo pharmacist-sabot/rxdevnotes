@@ -4,41 +4,39 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Developer Tools">
-    <div class="page-header">
-        <h1>Tools & Projects</h1>
-        <p>
-            รวมเว็บแอปและเครื่องมือที่ผมสร้างขึ้นเพื่อแก้ปัญหาจริงในงานด้านเภสัชกรรมไปจนถึงช่วยให้นักพัฒนาทำงานได้สะดวกขึ้น
-        </p>
-    </div>
+        <div class="container page-header">
+            <h1>Tools & Projects</h1>
+            <p>
+                รวมเว็บแอปและเครื่องมือที่ผมสร้างขึ้นเพื่อแก้ปัญหาจริงในงานด้านเภสัชกรรมไปจนถึงช่วยให้นักพัฒนาทำงานได้สะดวกขึ้น
+            </p>
+        </div>
 
-    <div class="tools-grid">
-        <ToolCard
-          title="ระบบเบิกจ่ายยาออนไลน์"
-          description="เว็บแอปพลิเคชันสำหรับจัดการการเบิกจ่ายยาภายในคปสอ.สระโบสถ์"
-          href="/tools/cupsabot"
-          icon="heroicons:beaker"
-        />
+        <div class="tools-grid">
+            <ToolCard
+              title="ระบบเบิกจ่ายยาออนไลน์"
+              description="เว็บแอปพลิเคชันสำหรับจัดการการเบิกจ่ายยาภายในคปสอ.สระโบสถ์"
+              href="/tools/cupsabot"
+              icon="heroicons:beaker"
+            />
 
-        <ToolCard
-          title="บัญชียาสมุนไพร รพ.สระโบสถ์"
-          description="ระบบสืบค้นข้อมูลยาสมุนไพรและเงื่อนไขการเบิกจ่ายของ สปสช."
-          href="/tools/herbs-app"
-          icon="heroicons:sparkles"
-        />
-        <!-- You can add more <ToolCard /> here for future tools -->
-    </div>
+            <ToolCard
+              title="บัญชียาสมุนไพร รพ.สระโบสถ์"
+              description="ระบบสืบค้นข้อมูลยาสมุนไพรและเงื่อนไขการเบิกจ่ายของ สปสช."
+              href="/tools/herbs-app"
+              icon="heroicons:sparkles"
+            />
+        </div>
 </BaseLayout>
 
 <style>
     .page-header {
         text-align: center;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 4rem 0 0;
+        margin-inline: auto;
+        padding-top: var(--space-12);
+        padding-bottom: var(--space-2);
     }
     .page-header h1 {
-        margin-bottom: 0.5rem;
+        margin-bottom: var(--space-2);
     }
     .page-header p {
         font-size: var(--text-base);
@@ -47,6 +45,6 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     .tools-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 1.5rem;
+        gap: var(--space-6);
     }
 </style>

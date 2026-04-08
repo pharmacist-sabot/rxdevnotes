@@ -46,7 +46,7 @@ const repoUrl = 'https://github.com/pharmacist-sabot/herbs-app';
         </div>
 
         <div class="project-details">
-            <h1>คุณสมบัติหลัก</h1>
+            <h2>คุณสมบัติหลัก</h2>
             <FeatureGrid>
                 <FeatureCard title="Google Sheets Backend" icon="table-cells">
                     ใช้ Google Sheets เป็นฐานข้อมูล
@@ -75,7 +75,7 @@ const repoUrl = 'https://github.com/pharmacist-sabot/herbs-app';
             </FeatureGrid>
 
             <div class="tech-stack-section">
-                <h4>Tech Stack</h4>
+                <h2>Tech Stack</h2>
                 <div class="stack-items">
                     <span class="stack-item">Vue.js 3</span>
                     <span class="stack-item">Vite</span>
@@ -91,24 +91,24 @@ const repoUrl = 'https://github.com/pharmacist-sabot/herbs-app';
 <style>
     .project-header {
         text-align: center;
-        margin: 2rem 0 4rem;
+        margin: var(--space-8) 0 var(--space-12);
     }
     .subtitle {
         font-size: var(--text-base);
         max-width: 700px;
-        margin: 1rem auto 2rem;
-        line-height: 1.6;
+        margin: var(--space-4) auto var(--space-8);
+        line-height: 1.7;
     }
     .button-group {
         display: flex;
         justify-content: center;
-        gap: 1rem;
+        gap: var(--space-4);
         align-items: center;
         flex-wrap: wrap;
     }
     .launch-button {
-        font-size: 1.1rem;
-        padding: 1rem 2.5rem;
+        font-size: var(--text-base);
+        padding: var(--space-4) var(--space-10);
     }
     .repo-link {
         color: var(--font-color);
@@ -121,7 +121,7 @@ const repoUrl = 'https://github.com/pharmacist-sabot/herbs-app';
 
     .screenshot-container {
         max-width: 1000px;
-        margin: 0 auto 4rem;
+        margin: 0 auto var(--space-12);
         text-align: center;
     }
     .main-screenshot {
@@ -131,33 +131,26 @@ const repoUrl = 'https://github.com/pharmacist-sabot/herbs-app';
         width: 100%;
         height: auto;
     }
-    .screenshot-fallback {
-        font-size: var(--text-sm);
-        color: var(--font-color-light);
-        opacity: 0.7;
-        margin-top: 1rem;
-    }
 
     .project-details {
-        max-width: 900px;
         margin: 0 auto;
     }
 
     .tech-stack-section {
-        margin-top: 4rem;
+        margin-top: var(--space-12);
         text-align: center;
     }
     .stack-items {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
+        gap: var(--space-3);
+        margin-top: var(--space-6);
         justify-content: center;
     }
     .stack-item {
         background-color: var(--card-bg-color);
         border: 1px solid var(--card-border-color);
-        padding: 0.5rem 1.2rem;
+        padding: var(--space-2) var(--space-5);
         border-radius: var(--radius-full);
         font-size: var(--text-sm);
         font-weight: 500;
@@ -166,20 +159,20 @@ const repoUrl = 'https://github.com/pharmacist-sabot/herbs-app';
 
     @media (max-width: 768px) {
         .project-header {
-            margin: 1rem 0 3rem;
+            margin: var(--space-4) 0 var(--space-10);
         }
         .subtitle {
-            font-size: 1.1rem;
+            font-size: var(--text-base);
         }
         .launch-button {
-            font-size: 1rem;
-            padding: 0.8rem 2rem;
+            font-size: var(--text-base);
+            padding: var(--space-3) var(--space-8);
         }
         .screenshot-container {
-            margin-bottom: 3rem;
+            margin-bottom: var(--space-10);
         }
         .tech-stack-section {
-            margin-top: 3rem;
+            margin-top: var(--space-10);
         }
     }
 </style>
