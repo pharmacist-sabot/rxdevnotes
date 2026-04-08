@@ -1,3 +1,9 @@
+## [1.10.3](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.2...v1.10.3) (2026-04-08)
+
+### ♻️ Refactoring
+
+* standardize component spacing, typography, and border-radius ([#13](https://github.com/pharmacist-sabot/rxdevman/issues/13)) ([c637b3a](https://github.com/pharmacist-sabot/rxdevman/commit/c637b3a1f2575ec9dfa2946cd06dea902b55a209))
+
 ## [1.10.2](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.1...v1.10.2) (2026-04-07)
 
 ### 📦 Dependency Updates
