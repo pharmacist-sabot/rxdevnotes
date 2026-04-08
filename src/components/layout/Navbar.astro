@@ -110,16 +110,16 @@ window.addEventListener('scroll', () => {
   }
   .logo-text {
     font-family: var(--font-sans);
-    font-size: 24px;
+    font-size: var(--text-xl);
     font-weight: 700;
     letter-spacing: -0.02em;
     transition: opacity 0.2s ease;
   }
   .logo-rx {
-    color: #4b63c5;
+    color: var(--brand-color);
   }
   .logo-devman {
-    color: #232748;
+    color: var(--font-color);
   }
   .logo:hover .logo-text {
     opacity: 0.8;
@@ -156,12 +156,27 @@ window.addEventListener('scroll', () => {
     width: 100%;
   }
 
+  .nav-links a:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+  .logo:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+  .hamburger:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 3px;
+  }
+
   .hamburger {
     display: none;
     width: 36px;
     height: 36px;
     border: 1px solid var(--card-border-color);
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -232,5 +247,21 @@ window.addEventListener('scroll', () => {
 
   body.no-scroll {
     overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .navbar,
+    .logo-svg,
+    .logo-text,
+    .nav-links,
+    .nav-links a,
+    .nav-links a::after,
+    .hamburger,
+    .bar {
+      transition: none;
+    }
+    .logo:hover .logo-svg {
+      transform: none;
+    }
   }
 </style>

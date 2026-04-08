@@ -25,7 +25,7 @@ const { title, icon } = Astro.props;
     background-color: transparent;
     padding: 1rem;
     color: var(--font-color);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     transition: background-color 0.2s ease-in-out;
   }
 
@@ -48,7 +48,7 @@ const { title, icon } = Astro.props;
     width: 44px;
     height: 44px;
     background-color: color-mix(in srgb, var(--brand-color) 10%, transparent);
-    border-radius: 50%;
+    border-radius: var(--radius-full);
   }
 
   .card-icon {
@@ -59,7 +59,7 @@ const { title, icon } = Astro.props;
 
   h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: var(--text-lg);
     font-weight: 600;
     font-family: var(--font-sans);
     color: var(--font-color);
@@ -73,5 +73,11 @@ const { title, icon } = Astro.props;
   .card-content :global(a) {
     color: var(--brand-color);
     text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feature-card {
+      transition: none;
+    }
   }
 </style>

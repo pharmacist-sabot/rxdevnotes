@@ -96,17 +96,6 @@ const excerpt = description || bodyExcerpt;
     height: 100%;
     padding: 0;
     overflow: hidden;
-    border-radius: 16px;
-    background-color: var(--card-bg-color);
-    border: 1px solid var(--card-border-color);
-    box-shadow: 0 4px 6px -1px var(--shadow-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  }
-
-  .blog-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px -5px var(--shadow-hover-color);
-    border-color: var(--brand-color);
   }
 
   .card-link {
@@ -123,7 +112,7 @@ const excerpt = description || bodyExcerpt;
   .card-link:focus-visible {
     outline: 3px solid var(--brand-color);
     outline-offset: 2px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
   }
 
   /* --- Image Styles --- */
@@ -168,7 +157,7 @@ const excerpt = description || bodyExcerpt;
   /* --- Content Styles --- */
   .card-content {
     flex-grow: 1;
-    padding: 1.5rem 1.5rem 0 1.5rem;
+    padding: var(--space-6) var(--space-6) 0 var(--space-6);
   }
 
   .card-meta {
@@ -182,7 +171,7 @@ const excerpt = description || bodyExcerpt;
 
   .category {
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
     color: var(--brand-color);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -190,7 +179,7 @@ const excerpt = description || bodyExcerpt;
   }
 
   .reading-time {
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     color: var(--font-color-light);
     opacity: 0.8;
     font-weight: 500;
@@ -198,7 +187,7 @@ const excerpt = description || bodyExcerpt;
 
   .title {
     font-family: var(--font-sans);
-    font-size: 1rem;
+    font-size: var(--text-base);
     line-height: 1.4;
     margin: 0 0 0.75rem;
     color: var(--font-color);
@@ -210,7 +199,7 @@ const excerpt = description || bodyExcerpt;
   }
 
   .description {
-    font-size: 0.875rem;
+    font-size: var(--text-sm);
     color: var(--font-color-light);
     line-height: 1.6;
     margin: 0;
@@ -222,12 +211,12 @@ const excerpt = description || bodyExcerpt;
   }
 
   .card-footer {
-    padding: 1rem 1.5rem 1.5rem 1.5rem;
+    padding: var(--space-4) var(--space-6) var(--space-6) var(--space-6);
     margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
   }
 
   time {
@@ -239,7 +228,7 @@ const excerpt = description || bodyExcerpt;
   .read-more {
     color: var(--brand-color);
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     transition: transform 0.2s ease;
     display: inline-block;
     will-change: transform;
@@ -285,11 +274,11 @@ const excerpt = description || bodyExcerpt;
 
   @media (max-width: 768px) {
     .card-content {
-      padding: 1.25rem 1.25rem 0 1.25rem;
+      padding: var(--space-5) var(--space-5) 0 var(--space-5);
     }
 
     .card-footer {
-      padding: 1rem 1.25rem 1.25rem 1.25rem;
+      padding: var(--space-4) var(--space-5) var(--space-5) var(--space-5);
     }
 
     .card-meta {
