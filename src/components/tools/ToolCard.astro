@@ -14,7 +14,7 @@ const { title, description, href, icon } = Astro.props;
     <Icon name={icon} class="card-icon" />
   </div>
   <div class="text-content">
-    <h1>{title}</h1>
+    <h2>{title}</h2>
     <p>{description}</p>
   </div>
   <span class="cta-arrow">&rarr;</span>
@@ -40,7 +40,7 @@ const { title, description, href, icon } = Astro.props;
     font-size: 1.75rem;
     color: var(--brand-color);
   }
-  h1 {
+  h2 {
     margin: 0 0 0.25rem;
   }
   p {
