@@ -4,27 +4,29 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
 <BaseLayout title="Welcome">
   <div class="home-container">
-    <div class="intro-grid">
-      <div class="intro-text-content">
-        <p class="greeting">HI, I'M SURADET</p>
-        <h1 class="headline">
-          Pharmacist by Training,<br />Developer by Passion.
-        </h1>
-        <p class="description">
-          ยินดีต้อนรับสู่ RxDev Man นะครับ ^^
-          ผมสร้างเว็บบล็อกนี้ขึ้นมาเพื่อบันทึกสิ่งที่ได้เรียนรู้ในโลกของการเขียนโปรแกรม
-          ในเว็บบล็อกนี้หลักๆก็จะเน้นไปที่บทความครับ
-          อาจจะมีเครื่องมือที่ผมสร้างขึ้นเองบ้าง หรืออาจจะมีอะไรเพิ่มเติมในอนาคต
-          ถ้าอยากรู้ว่ามีอะไรบ้าง มาค้นหากันเลยครับ
-        </p>
-        <a href="/blog" class="cta-button">Explore My Notes</a>
-      </div>
-      <div class="profile-image-container">
-        <img
-          src="/images/common/profile-placeholder.jpg"
-          alt="A portrait of the author"
-          class="profile-image"
-        />
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-text-content">
+          <p class="greeting">HI, I'M SURADET</p>
+          <h1 class="headline">
+            Pharmacist by Training,<br />Developer by Passion.
+          </h1>
+          <p class="description">
+            ยินดีต้อนรับสู่ RxDev Man นะครับ ^^
+            ผมสร้างเว็บบล็อกนี้ขึ้นมาเพื่อบันทึกสิ่งที่ได้เรียนรู้ในโลกของการเขียนโปรแกรม
+            ในเว็บบล็อกนี้หลักๆก็จะเน้นไปที่บทความครับ
+            อาจจะมีเครื่องมือที่ผมสร้างขึ้นเองบ้าง หรืออาจจะมีอะไรเพิ่มเติมในอนาคต
+            ถ้าอยากรู้ว่ามีอะไรบ้าง มาค้นหากันเลยครับ
+          </p>
+          <a href="/blog" class="cta-button">Explore My Notes</a>
+        </div>
+        <div class="profile-image-container">
+          <img
+            src="/images/common/profile-placeholder.jpg"
+            alt="A portrait of the author"
+            class="profile-image"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -36,15 +38,14 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 280px);
-    padding: 2rem 0;
+    padding: var(--space-8) 0;
   }
 
   .intro-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     align-items: center;
-    gap: 4rem;
-    max-width: 1100px;
+    gap: var(--space-12);
   }
 
   .greeting {
