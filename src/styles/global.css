@@ -1,17 +1,7 @@
-/* ==============================================
-   rxdevman — Global Stylesheet
-   Cascade order: reset → base → components → utilities → overrides
-   Fonts are loaded via <link> in BaseLayout.astro (no @import)
-   ============================================== */
-
+/* --- rxdevman — Global Stylesheet --- */
 @layer reset, base, components, utilities, overrides;
 
-/* ==============================================
-   Design Tokens
-   All colors, spacing, radii, and typography are
-   defined here. Never hardcode these values elsewhere.
-   ============================================== */
-
+/* --- Design Tokens --- */
 :root {
   /* --- Colors --- */
   --brand-color: #4b63c5;
@@ -64,11 +54,7 @@
   --prose-max-width: 800px;
 }
 
-/* ==============================================
-   @layer reset
-   Universal box-model reset. No opinionated styles.
-   ============================================== */
-
+/* --- @layer reset --- */
 @layer reset {
   *,
   *::before,
@@ -79,11 +65,7 @@
   }
 }
 
-/* ==============================================
-   @layer base
-   Raw HTML element defaults — no class selectors.
-   ============================================== */
-
+/* --- @layer base --- */
 @layer base {
   /* --- Document Body --- */
   body {
@@ -111,7 +93,7 @@
     margin-bottom: var(--space-3);
   }
 
-  /* --- Typography Hierarchy (3 levels only: h1 → xl, h2 → lg, h3 → base) --- */
+  /* --- Typography Hierarchy --- */
   h1 {
     font-size: var(--text-xl);
   }
@@ -170,11 +152,7 @@
   }
 }
 
-/* ==============================================
-   @layer components
-   Reusable UI patterns. All values must use tokens.
-   ============================================== */
-
+/* --- @layer components --- */
 @layer components {
   /* --- Layout: Container --- */
   .container {
@@ -189,12 +167,7 @@
     }
   }
 
-  /* -----------------------------------------------
-     Card Base
-     Specific cards (.blog-card, .tool-card, etc.)
-     must extend this class and only override layout
-     or content differences.
-     ----------------------------------------------- */
+  /* --- Card Base --- */
   .card {
     background: var(--card-bg-color);
     border: 1px solid var(--card-border-color);
@@ -263,11 +236,7 @@
     }
   }
 
-  /* -----------------------------------------------
-     Prose
-     Long-form MDX content container.
-     All child rules scoped under .prose.
-     ----------------------------------------------- */
+  /* --- Prose ---*/
   .prose {
     max-width: var(--prose-max-width);
     margin: 0 auto;
@@ -284,7 +253,7 @@
     scroll-margin-top: 80px;
   }
 
-  /* Lists */
+  /* --- Lists --- */
   .prose ul,
   .prose ol {
     padding-left: 0;
@@ -299,7 +268,7 @@
     padding-left: var(--space-2);
   }
 
-  /* Inline code */
+  /* --- Inline code --- */
   .prose code {
     font-family: var(--font-mono);
     background-color: var(--card-border-color);
@@ -310,7 +279,7 @@
     word-break: break-word;
   }
 
-  /* Code blocks (base styles — terminal.css overrides these) */
+  /* --- Code blocks --- */
   .prose pre {
     background-color: var(--font-color);
     color: #f8fafc;
@@ -335,7 +304,7 @@
     }
   }
 
-  /* Reset code inside pre (inherits from block) */
+  /* --- Reset code inside pre (inherits from block) --- */
   .prose pre > code {
     background: none;
     padding: 0;
@@ -345,11 +314,7 @@
   }
 }
 
-/* ==============================================
-   @layer overrides
-   Third-party compatibility patches.
-   Use sparingly — document each override.
-   ============================================== */
+/* --- @layer overrides --- */
 
 @layer overrides {
   /*
