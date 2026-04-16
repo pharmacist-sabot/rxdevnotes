@@ -1,3 +1,9 @@
+## [1.10.7](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.6...v1.10.7) (2026-04-16)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency eslint-plugin-astro to v1.7.0 ([#19](https://github.com/pharmacist-sabot/rxdevman/issues/19)) ([60d2c8c](https://github.com/pharmacist-sabot/rxdevman/commit/60d2c8cee101f52a40e3d129b137e0b1dad87cf4))
+
 ## [1.10.6](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.5...v1.10.6) (2026-04-16)
 
 ### 📦 Dependency Updates
