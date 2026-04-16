@@ -1,3 +1,11 @@
+## [1.10.4](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.3...v1.10.4) (2026-04-16)
+
+### 📦 Dependency Updates
+
+* **bot:** config Renovate ([#14](https://github.com/pharmacist-sabot/rxdevman/issues/14)) ([bfbdbe9](https://github.com/pharmacist-sabot/rxdevman/commit/bfbdbe9db5d40410e846780c43e5490b6615b5d1))
+* **deps:** update dependency astro to v6.1.7 ([#15](https://github.com/pharmacist-sabot/rxdevman/issues/15)) ([2418ebf](https://github.com/pharmacist-sabot/rxdevman/commit/2418ebffd9993e12e4a6887d908b48c3e24b6750))
+* **tool:** add https to link cupsabot ([a62dd26](https://github.com/pharmacist-sabot/rxdevman/commit/a62dd26cc26e002082ed1d8c8b03a2b0e412d02a))
+
 ## [1.10.3](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.2...v1.10.3) (2026-04-08)
 
 ### ♻️ Refactoring
