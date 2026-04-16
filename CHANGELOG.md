@@ -1,3 +1,9 @@
+## [1.10.8](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.7...v1.10.8) (2026-04-16)
+
+### 🐛 Bug Fixes
+
+* **deps:** update dependency astro-auto-import to ^0.5.0 ([#20](https://github.com/pharmacist-sabot/rxdevman/issues/20)) ([699c2cc](https://github.com/pharmacist-sabot/rxdevman/commit/699c2cce4b29c133335822aae75c5f78b8358216))
+
 ## [1.10.7](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.6...v1.10.7) (2026-04-16)
 
 ### 📦 Dependency Updates
