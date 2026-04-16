@@ -1,3 +1,9 @@
+## [1.10.5](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.4...v1.10.5) (2026-04-16)
+
+### 📦 Dependency Updates
+
+* **deps:** update actions/setup-node action to v6.3.0 ([#16](https://github.com/pharmacist-sabot/rxdevman/issues/16)) ([0151309](https://github.com/pharmacist-sabot/rxdevman/commit/0151309ee8037bceb5630bb79fcc14a48e5d300e))
+
 ## [1.10.4](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.3...v1.10.4) (2026-04-16)
 
 ### 📦 Dependency Updates
