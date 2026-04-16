@@ -1,3 +1,9 @@
+## [1.10.9](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.8...v1.10.9) (2026-04-16)
+
+### 📦 Dependency Updates
+
+* **deps:** update actions/checkout action to v6.0.2 ([#21](https://github.com/pharmacist-sabot/rxdevman/issues/21)) ([8c60740](https://github.com/pharmacist-sabot/rxdevman/commit/8c607405942d75b06277e82d750480bbe8357486))
+
 ## [1.10.8](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.7...v1.10.8) (2026-04-16)
 
 ### 🐛 Bug Fixes
