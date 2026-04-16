@@ -1,3 +1,9 @@
+## [1.10.6](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.5...v1.10.6) (2026-04-16)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency @supabase/supabase-js to v2.103.2 ([#18](https://github.com/pharmacist-sabot/rxdevman/issues/18)) ([5907630](https://github.com/pharmacist-sabot/rxdevman/commit/5907630da62e2bc89e8bec971c986a03c8cd6f73))
+
 ## [1.10.5](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.4...v1.10.5) (2026-04-16)
 
 ### 📦 Dependency Updates
