@@ -1,3 +1,9 @@
+## [1.10.19](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.18...v1.10.19) (2026-04-18)
+
+### 🐛 Bug Fixes
+
+* **deps:** update dependency zod to v4 ([#29](https://github.com/pharmacist-sabot/rxdevman/issues/29)) ([1b5912d](https://github.com/pharmacist-sabot/rxdevman/commit/1b5912d15f8890cf99697f2b5503cc229cf3399d))
+
 ## [1.10.18](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.17...v1.10.18) (2026-04-18)
 
 ### 🐛 Bug Fixes
