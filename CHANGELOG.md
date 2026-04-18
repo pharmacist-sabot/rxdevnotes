@@ -1,3 +1,9 @@
+## [1.10.16](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.15...v1.10.16) (2026-04-18)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency eslint-plugin-format to v2 ([#25](https://github.com/pharmacist-sabot/rxdevman/issues/25)) ([c98f20c](https://github.com/pharmacist-sabot/rxdevman/commit/c98f20c50375248e16131917d3662c968c7b4629))
+
 ## [1.10.15](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.14...v1.10.15) (2026-04-18)
 
 ### 📦 Dependency Updates
