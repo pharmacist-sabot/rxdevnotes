@@ -87,7 +87,7 @@ Follow these steps to set up the project locally.
 ### Prerequisites
 
 - **Node.js**: v18.17.1 or higher
-- **Package Manager**: npm, pnpm, or yarn
+- **Package Manager**: bun
 
 ### Installation
 
@@ -101,7 +101,7 @@ Follow these steps to set up the project locally.
 2.  **Install dependencies**
 
     ```bash
-    npm install
+    bun install
     ```
 
 3.  **Configure Environment Variables**
@@ -114,7 +114,7 @@ Follow these steps to set up the project locally.
 
 4.  **Start the development server**
     ```bash
-    npm run dev
+    bun run dev
     ```
     Visit `http://localhost:4321` to see the site.
 
@@ -123,7 +123,7 @@ Follow these steps to set up the project locally.
 To build the static site and index the search:
 
 ```bash
-npm run build
+bun run build
 ```
 
 This command will:
@@ -140,12 +140,12 @@ This command will:
 
 **Search not working:**
 
-- Run `npm run build` to generate the search index.
+- Run `bun run build` to generate the search index.
 - The search feature requires the production build to function properly.
 
 **Port already in use:**
 
-- Change the dev server port: `npm run dev -- --port 3000`
+- Change the dev server port: `bun run dev -- --port 3000`
 
 ---
 
