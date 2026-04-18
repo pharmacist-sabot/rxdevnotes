@@ -1,3 +1,9 @@
+## [1.10.13](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.12...v1.10.13) (2026-04-18)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency @antfu/eslint-config to v8 ([#23](https://github.com/pharmacist-sabot/rxdevman/issues/23)) ([fbadc63](https://github.com/pharmacist-sabot/rxdevman/commit/fbadc6322df9439187dd33329d90ae3f921d6cef))
+
 ## [1.10.12](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.11...v1.10.12) (2026-04-18)
 
 ### 📝 Documentation
