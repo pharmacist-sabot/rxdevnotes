@@ -1,3 +1,14 @@
+## [1.10.12](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.11...v1.10.12) (2026-04-18)
+
+### 📝 Documentation
+
+* update README to reflect migration from npm to bun ([b12749e](https://github.com/pharmacist-sabot/rxdevman/commit/b12749e32a43ea74e8ab958a5e6ccb644bbf1aec))
+
+### 📦 Dependency Updates
+
+* add blog collection schema and update eslint import sorting configuration ([c173e60](https://github.com/pharmacist-sabot/rxdevman/commit/c173e60e6b03fccdba4e3ef79244fdc774c5e45d))
+* migrate CI/CD workflows from npm to bun ([682ed4d](https://github.com/pharmacist-sabot/rxdevman/commit/682ed4d9022d9a56ba35d3f5c75203f2850ccc32))
+
 ## [1.10.11](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.10...v1.10.11) (2026-04-18)
 
 ### 📦 Dependency Updates
