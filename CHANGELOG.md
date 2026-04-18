@@ -1,3 +1,9 @@
+## [1.10.11](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.10...v1.10.11) (2026-04-18)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency node to v24 ([#26](https://github.com/pharmacist-sabot/rxdevman/issues/26)) ([108be34](https://github.com/pharmacist-sabot/rxdevman/commit/108be3497de43a250aab638c0efee6d9fd2f25ae))
+
 ## [1.10.10](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.9...v1.10.10) (2026-04-17)
 
 ### 📦 Dependency Updates
