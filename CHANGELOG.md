@@ -1,3 +1,9 @@
+## [1.10.18](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.17...v1.10.18) (2026-04-18)
+
+### 🐛 Bug Fixes
+
+* **deps:** update dependency typescript to v6 ([#28](https://github.com/pharmacist-sabot/rxdevman/issues/28)) ([85102ef](https://github.com/pharmacist-sabot/rxdevman/commit/85102efb8bf0b822d0491ff9fffb2f75c481290b))
+
 ## [1.10.17](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.16...v1.10.17) (2026-04-18)
 
 ### 📦 Dependency Updates
