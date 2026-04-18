@@ -1,3 +1,10 @@
+## [1.10.15](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.14...v1.10.15) (2026-04-18)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency eslint to v10 ([#24](https://github.com/pharmacist-sabot/rxdevman/issues/24)) ([eee5339](https://github.com/pharmacist-sabot/rxdevman/commit/eee53399b33c30661191a26d21999233bec64c67))
+* update dependencies and add markdown file ignores to ESLint configuration ([c4fca16](https://github.com/pharmacist-sabot/rxdevman/commit/c4fca163356e4ad08268a79c1987fafda911c800))
+
 ## [1.10.14](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.13...v1.10.14) (2026-04-18)
 
 ### 📦 Dependency Updates
