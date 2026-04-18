@@ -1,3 +1,10 @@
+## [1.10.14](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.13...v1.10.14) (2026-04-18)
+
+### 📦 Dependency Updates
+
+* **deps:** update actions/setup-node action to v6 ([#30](https://github.com/pharmacist-sabot/rxdevman/issues/30)) ([b310868](https://github.com/pharmacist-sabot/rxdevman/commit/b3108680120af83181c060c9250da478fa287480))
+* update ESLint configuration scope and migrate build scripts to bun ([2dcc141](https://github.com/pharmacist-sabot/rxdevman/commit/2dcc141f000fbfbd0e44e2fa670c2e27a7c0964c))
+
 ## [1.10.13](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.12...v1.10.13) (2026-04-18)
 
 ### 📦 Dependency Updates
