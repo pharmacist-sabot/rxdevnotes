@@ -13,6 +13,7 @@ export default antfu({
     quotes: 'single',
   },
 }, {
+  files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.astro'],
   rules: {
     'ts/no-redeclare': 'off',
     'ts/consistent-type-definitions': ['error', 'type'],
@@ -26,6 +27,9 @@ export default antfu({
         filename: 'tsconfig.json',
       },
     }],
+  },
+}, {
+  rules: {
     'unicorn/filename-case': ['error', {
       cases: {
         kebabCase: true,

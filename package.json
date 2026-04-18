@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && npm run pagefind",
-    "pagefind": "npx pagefind --site dist",
+    "build": "astro build && bun run pagefind",
+    "pagefind": "bunx pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky",
