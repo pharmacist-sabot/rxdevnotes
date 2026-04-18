@@ -1,3 +1,9 @@
+## [1.10.17](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.16...v1.10.17) (2026-04-18)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency path-to-regexp to v8 ([#27](https://github.com/pharmacist-sabot/rxdevman/issues/27)) ([3514f11](https://github.com/pharmacist-sabot/rxdevman/commit/3514f112cb555f7c88c6f516fd2ccb6262d82a82))
+
 ## [1.10.16](https://github.com/pharmacist-sabot/rxdevman/compare/v1.10.15...v1.10.16) (2026-04-18)
 
 ### 📦 Dependency Updates
