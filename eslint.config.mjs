@@ -14,6 +14,7 @@ export default antfu({
   },
 }, {
   files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.astro'],
+  ignores: ['**/*.md', '**/*.md/**'],
   rules: {
     'ts/no-redeclare': 'off',
     'ts/consistent-type-definitions': ['error', 'type'],
