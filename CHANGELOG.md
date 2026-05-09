@@ -1,3 +1,10 @@
+## [1.10.20](https://github.com/suradet-ps/rxdevman/compare/v1.10.19...v1.10.20) (2026-05-09)
+
+### 📦 Dependency Updates
+
+* **deps:** update commitlint monorepo to v21 ([#31](https://github.com/suradet-ps/rxdevman/issues/31)) ([ee8cda9](https://github.com/suradet-ps/rxdevman/commit/ee8cda98a7f0c425e5a8b73fa54ae4f633d6cf2d))
+* update repo links to https://github.com/suradet-ps/rxdevman ([6da8132](https://github.com/suradet-ps/rxdevman/commit/6da813214605ce649148ed4faf479abe740f9f56))
+
 ## [1.10.19](https://github.com/suradet-ps/rxdevman/compare/v1.10.18...v1.10.19) (2026-04-18)
 
 ### 🐛 Bug Fixes
