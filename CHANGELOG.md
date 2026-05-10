@@ -1,3 +1,13 @@
+## [1.12.0](https://github.com/suradet-ps/rxdevman/compare/v1.11.0...v1.12.0) (2026-05-10)
+
+### 🚀 New Features
+
+* add HerbReady SVG icon and integrate it into project showcase ([d9aa5cf](https://github.com/suradet-ps/rxdevman/commit/d9aa5cfa22f0d582004b7205a07e2ea526bbb4a5))
+
+### 📦 Dependency Updates
+
+* update HerbReady project details and feature descriptions for clarity ([dd2f66d](https://github.com/suradet-ps/rxdevman/commit/dd2f66d9f62f6bd3a9c1873cb84e5eaf9d3b5dba))
+
 ## [1.11.0](https://github.com/suradet-ps/rxdevman/compare/v1.10.21...v1.11.0) (2026-05-10)
 
 ### 🚀 New Features
