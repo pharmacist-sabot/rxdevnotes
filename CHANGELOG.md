@@ -1,3 +1,13 @@
+## [1.11.0](https://github.com/suradet-ps/rxdevman/compare/v1.10.21...v1.11.0) (2026-05-10)
+
+### 🚀 New Features
+
+* add HerbReady project page and update HOSxP index with new tool ([9d882ce](https://github.com/suradet-ps/rxdevman/commit/9d882cec4c84c7a420680ed727de4cecc274b199))
+
+### 📦 Dependency Updates
+
+* **package:** update dependencies and devDependencies to latest versions ([5f8dd75](https://github.com/suradet-ps/rxdevman/commit/5f8dd755ac060478b03ab23345b9a324b020327b))
+
 ## [1.10.21](https://github.com/suradet-ps/rxdevman/compare/v1.10.20...v1.10.21) (2026-05-10)
 
 ### 📦 Dependency Updates
