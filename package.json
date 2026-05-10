@@ -1,7 +1,7 @@
 {
   "name": "rxdev-man",
   "type": "module",
-  "version": "1.10.20",
+  "version": "1.10.21",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

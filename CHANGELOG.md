@@ -1,3 +1,9 @@
+## [1.10.21](https://github.com/suradet-ps/rxdevman/compare/v1.10.20...v1.10.21) (2026-05-10)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency lint-staged to v17 ([#32](https://github.com/suradet-ps/rxdevman/issues/32)) ([8697fa0](https://github.com/suradet-ps/rxdevman/commit/8697fa02165b9039297fdc1bbf4759b4633b2b6f))
+
 ## [1.10.20](https://github.com/suradet-ps/rxdevman/compare/v1.10.19...v1.10.20) (2026-05-09)
 
 ### 📦 Dependency Updates
