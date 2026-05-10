@@ -14,21 +14,21 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/mdx": "^5.0.4",
     "@astrojs/sitemap": "^3.7.2",
-    "@astrojs/vercel": "^10.0.4",
+    "@astrojs/vercel": "^10.0.6",
     "@iconify-json/fa6-brands": "^1.2.6",
     "@iconify-json/heroicons": "^1.2.3",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/ri": "^1.2.10",
-    "@supabase/supabase-js": "^2.103.3",
-    "astro": "^6.1.7",
+    "@supabase/supabase-js": "^2.105.4",
+    "astro": "^6.3.1",
     "astro-auto-import": "^0.5.1",
     "astro-icon": "^1.1.5",
     "astro-pagefind": "^1.8.6",
-    "typescript": "^6.0.0",
-    "zod": "^4.0.0"
+    "typescript": "^6.0.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^8.2.0",
@@ -36,14 +36,14 @@
     "@commitlint/config-conventional": "^21.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.6",
+    "@semantic-release/github": "^12.0.8",
     "@semantic-release/npm": "^13.1.5",
     "conventional-changelog-conventionalcommits": "^9.3.1",
-    "eslint": "^10.0.0",
+    "eslint": "^10.3.0",
     "eslint-plugin-astro": "^1.7.0",
-    "eslint-plugin-format": "^2.0.0",
+    "eslint-plugin-format": "^2.0.1",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.0",
+    "lint-staged": "^17.0.4",
     "semantic-release": "^25.0.3"
   },
   "overrides": {
