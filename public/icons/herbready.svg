@@ -1,0 +1,45 @@
+<svg width="512" height="512" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" stop-opacity="1" />
+      <stop offset="100%" stop-color="#047857" stop-opacity="1" />
+    </linearGradient>
+
+    <filter id="elevation-4" x="-15%" y="-15%" width="130%" height="135%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur" />
+      <feOffset in="blur" dx="0" dy="2" result="offsetBlur1" />
+      <feFlood flood-color="#000" flood-opacity="0.14"/>
+      <feComposite in2="offsetBlur1" operator="in"/>
+      
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur2" />
+      <feOffset in="blur2" dx="0" dy="1" result="offsetBlur2" />
+      <feFlood flood-color="#000" flood-opacity="0.2"/>
+      <feComposite in2="offsetBlur2" operator="in"/>
+
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <path d="M128 15C75 15 30 60 30 110C30 180 128 245 128 245C128 245 226 180 226 110C226 60 181 15 128 15Z"
+        fill="url(#bg_grad)" />
+
+  <g filter="url(#elevation-4)">
+    <rect x="60" y="70" width="136" height="110" rx="12" fill="white" />
+    <path d="M60 82C60 75.3726 65.3726 70 72 70H184C190.627 70 196 75.3726 196 82V100H60V82Z" fill="#EF4444" />
+    
+    <circle cx="95" cy="130" r="8" fill="#4B5563" />
+    <circle cx="161" cy="130" r="8" fill="#4B5563" />
+    <circle cx="95" cy="160" r="8" fill="#4B5563" />
+    <circle cx="161" cy="160" r="8" fill="#4B5563" />
+  </g>
+  
+  <g transform="translate(135, 170) rotate(-10)" filter="url(#elevation-4)">
+    <rect x="0" y="0" width="85" height="40" rx="20" fill="#FBBF24" stroke="#B45309" stroke-width="2" />
+    <path d="M42 0H65C76 0 85 9 85 20C85 31 76 40 65 40H42V0Z" fill="#F97316" />
+    <rect x="0" y="0" width="85" height="40" rx="20" stroke="white" stroke-width="3" fill="none" />
+  </g>
+</svg>
