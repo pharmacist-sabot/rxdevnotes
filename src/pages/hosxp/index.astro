@@ -1,0 +1,43 @@
+---
+import ToolCard from '@/components/tools/ToolCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="HOSxP Resources">
+  <div class="container page-header">
+    <h1>HOSxP</h1>
+    <p>
+      พื้นที่สำหรับรวบรวมเครื่องมือ คู่มือ และบันทึกต่าง ๆ ที่เกี่ยวข้องกับการพัฒนาโปรแกรม HOSxP
+    </p>
+  </div>
+
+  <div class="tools-grid">
+    <ToolCard
+      title="HerbReady"
+      description="ระบบยาสมุนไพรพร้อมจ่าย — เปลี่ยนความยุ่งยากให้เป็นความมั่นใจ"
+      href="/hosxp/herbready"
+      icon="heroicons:sparkles"
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-inline: auto;
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-2);
+  }
+  .page-header h1 {
+    margin-bottom: var(--space-2);
+  }
+  .page-header p {
+    font-size: var(--text-base);
+    color: var(--font-color-light);
+  }
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-6);
+  }
+</style>
