@@ -31,7 +31,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^8.2.0",
+    "@antfu/eslint-config": "^9.0.0",
     "@commitlint/cli": "^21.0.0",
     "@commitlint/config-conventional": "^21.0.0",
     "@semantic-release/changelog": "^6.0.3",
