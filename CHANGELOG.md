@@ -1,3 +1,9 @@
+## [1.12.2](https://github.com/suradet-ps/rxdevman/compare/v1.12.1...v1.12.2) (2026-05-13)
+
+### 📦 Dependency Updates
+
+* **deps:** update dependency @antfu/eslint-config to v9 ([#34](https://github.com/suradet-ps/rxdevman/issues/34)) ([6112967](https://github.com/suradet-ps/rxdevman/commit/61129670b85f19102c76b809f247854bf1b607b5))
+
 ## [1.12.1](https://github.com/suradet-ps/rxdevman/compare/v1.12.0...v1.12.1) (2026-05-13)
 
 ### 🐛 Bug Fixes
