@@ -1,3 +1,13 @@
+## [1.12.1](https://github.com/suradet-ps/rxdevman/compare/v1.12.0...v1.12.1) (2026-05-13)
+
+### 🐛 Bug Fixes
+
+* **deps:** update dependency astro-pagefind to v2 ([#33](https://github.com/suradet-ps/rxdevman/issues/33)) ([66b5d0d](https://github.com/suradet-ps/rxdevman/commit/66b5d0d73aa365d75961835c300459860d7b621e))
+
+### 📦 Dependency Updates
+
+* update download section to indicate upcoming availability for Windows version ([10c2d5a](https://github.com/suradet-ps/rxdevman/commit/10c2d5a574f8efd589c8bbd17cb57523ed0516ed))
+
 ## [1.12.0](https://github.com/suradet-ps/rxdevman/compare/v1.11.0...v1.12.0) (2026-05-10)
 
 ### 🚀 New Features
